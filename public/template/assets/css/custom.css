@@ -1,0 +1,47 @@
+/* datatable */
+.dt-length label {
+    display: none !important;
+}
+
+.dt-length {
+    margin-right: 0.5rem;
+}
+
+.dt-length select,
+.dt-length .dt-input {
+    border-radius: 0.375rem;
+    color: rgb(255, 255, 255) !important;
+    background: rgb(46, 55, 164) !important;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid rgb(46, 55, 164);
+}
+
+.dt-container .dt-layout-row.dt-layout-table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* avatar input file */
+.file-info-text {
+    position: absolute;
+    z-index: 1;
+    left: 10px;
+    top: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.avatar-preview {
+    height: 100px;
+    width: 100px;
+    border: 2px solid rgba(46, 55, 164, 0.1);
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.is-invalid .select2-container--default .select2-selection--single {
+    border: 2px solid #dc3545 !important;
+}

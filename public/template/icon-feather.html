@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+        <title>Template - Bootstrap 5</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+        <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+
+        <!-- Select2 CSS -->
+        <link rel="stylesheet" type="text/css" href="assets/css/select2.min.css">
+
+        <!-- Feathericon CSS -->
+        <link rel="stylesheet" href="assets/css/feather.css">
+
+        <!-- Main CSS -->
+        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+    </head>
+    <body>
+
+		<!-- Main Wrapper -->
+        <div class="main-wrapper">
+
+			<!-- Header -->
+			<div class="header">
+				<div class="header-left">
+					<a href="index.html" class="logo">
+						<img src="assets/img/logo.png" width="35" height="35" alt=""> <span>TITLE</span>
+					</a>
+				</div>
+				<a id="toggle_btn" href="javascript:void(0);"><img src="assets/img/icons/bar-icon.svg"  alt=""></a>
+				<a id="mobile_btn" class="mobile_btn float-start" href="#sidebar"><img src="assets/img/icons/bar-icon.svg"  alt=""></a>
+				<div class="top-nav-search mob-view">
+					<form>
+						<input type="text" class="form-control" placeholder="Search here">
+						<a class="btn" ><img src="assets/img/icons/search-normal.svg" alt=""></a>
+					</form>
+				</div>
+				<ul class="nav user-menu float-end">
+					<li class="nav-item dropdown d-none d-md-block">
+						<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown"><img src="assets/img/icons/note-icon-02.svg" alt=""><span class="pulse"></span> </a>
+						<div class="dropdown-menu notifications">
+							<div class="topnav-dropdown-header">
+								<span>Notifications</span>
+							</div>
+							<div class="drop-scroll">
+								<ul class="notification-list">
+									<li class="notification-message">
+										<a href="activities.html">
+											<div class="media">
+												<span class="avatar">
+													<img alt="John Doe" src="assets/img/user.jpg" class="img-fluid">
+												</span>
+												<div class="media-body">
+													<p class="noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
+													<p class="noti-time"><span class="notification-time">4 mins ago</span></p>
+												</div>
+											</div>
+										</a>
+									</li>
+									<li class="notification-message">
+										<a href="activities.html">
+											<div class="media">
+												<span class="avatar">V</span>
+												<div class="media-body">
+													<p class="noti-details"><span class="noti-title">Tarah Shropshire</span> changed the task name <span class="noti-title">Appointment booking with payment gateway</span></p>
+													<p class="noti-time"><span class="notification-time">6 mins ago</span></p>
+												</div>
+											</div>
+										</a>
+									</li>
+									<li class="notification-message">
+										<a href="activities.html">
+											<div class="media">
+												<span class="avatar">L</span>
+												<div class="media-body">
+													<p class="noti-details"><span class="noti-title">Misty Tison</span> added <span class="noti-title">Domenic Houston</span> and <span class="noti-title">Claire Mapes</span> to project <span class="noti-title">Doctor available module</span></p>
+													<p class="noti-time"><span class="notification-time">8 mins ago</span></p>
+												</div>
+											</div>
+										</a>
+									</li>
+									<li class="notification-message">
+										<a href="activities.html">
+											<div class="media">
+												<span class="avatar">G</span>
+												<div class="media-body">
+													<p class="noti-details"><span class="noti-title">Rolland Webber</span> completed task <span class="noti-title">Patient and Doctor video conferencing</span></p>
+													<p class="noti-time"><span class="notification-time">12 mins ago</span></p>
+												</div>
+											</div>
+										</a>
+									</li>
+									<li class="notification-message">
+										<a href="activities.html">
+											<div class="media">
+												<span class="avatar">V</span>
+												<div class="media-body">
+													<p class="noti-details"><span class="noti-title">Bernardo Galaviz</span> added new task <span class="noti-title">Private chat module</span></p>
+													<p class="noti-time"><span class="notification-time">2 days ago</span></p>
+												</div>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="topnav-dropdown-footer">
+								<a href="activities.html">View all Notifications</a>
+							</div>
+						</div>
+					</li>
+					<li class="nav-item dropdown d-none d-md-block">
+						<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><img src="assets/img/icons/note-icon-01.svg" alt=""><span class="pulse"></span> </a>
+					</li>
+					<li class="nav-item dropdown has-arrow user-profile-list">
+						<a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
+							<div class="user-names">
+								<h5>Liam Michael </h5>
+								<span>Admin</span>
+							</div>
+							<span class="user-img">
+								<img  src="assets/img/user-06.jpg"  alt="Admin">
+							</span>
+						</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="profile.html">My Profile</a>
+							<a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
+							<a class="dropdown-item" href="settings.html">Settings</a>
+							<a class="dropdown-item" href="login.html">Logout</a>
+						</div>
+					</li>
+					<li class="nav-item ">
+						<a href="settings.html"  class="hasnotifications nav-link"><img src="assets/img/icons/setting-icon-01.svg" alt=""> </a>
+					</li>
+				</ul>
+				<div class="dropdown mobile-user-menu float-end">
+					<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></a>
+					<div class="dropdown-menu dropdown-menu-end">
+						<a class="dropdown-item" href="profile.html">My Profile</a>
+						<a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
+						<a class="dropdown-item" href="settings.html">Settings</a>
+						<a class="dropdown-item" href="login.html">Logout</a>
+					</div>
+				</div>
+			</div>
+			<!-- /Header -->
+				<!-- Sidebar -->
+				<div class="sidebar" id="sidebar">
+					<div class="sidebar-inner slimscroll">
+						<div id="sidebar-menu" class="sidebar-menu">
+							<ul>
+								<li class="menu-title">Main</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-01.svg" alt=""></span> <span> Dashboard </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="index.html">Admin Dashboard</a></li>
+										<li><a href="doctor-dashboard.html">Doctor Dashboard</a></li>
+										<li><a href="patient-dashboard.html">Patient Dashboard</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-02.svg" alt=""></span> <span> Doctors </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="doctors.html">Doctor List</a></li>
+										<li><a href="add-doctor.html">Add Doctor</a></li>
+										<li><a href="edit-doctor.html">Edit Doctor</a></li>
+										<li><a href="doctor-profile.html">Doctor Profile</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-03.svg" alt=""></span> <span>Patients </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="patients.html">Patients List</a></li>
+										<li><a href="add-patient.html">Add Patients</a></li>
+										<li><a href="edit-patient.html">Edit Patients</a></li>
+										<li><a href="patient-profile.html">Patients Profile</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-08.svg" alt=""></span> <span> Staff </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="staff-list.html">Staff List</a></li>
+										<li><a href="add-staff.html">Add Staff</a></li>
+										<li><a href="staff-profile.html">Staff Profile</a></li>
+										<li><a href="staff-leave.html">Leaves</a></li>
+										<li><a href="staff-holiday.html">Holidays</a></li>
+										<li><a href="staff-attendance.html">Attendance</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-04.svg" alt=""></span> <span> Appointments </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="appointments.html">Appointment List</a></li>
+										<li><a href="add-appointment.html">Book Appointment</a></li>
+										<li><a href="edit-appointment.html">Edit Appointment</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-05.svg" alt=""></span> <span> Doctor Schedule </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="schedule.html">Schedule List</a></li>
+										<li><a href="add-schedule.html">Add Schedule</a></li>
+										<li><a href="edit-schedule.html">Edit Schedule</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-06.svg" alt=""></span> <span> Departments </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="departments.html">Department List</a></li>
+										<li><a href="add-department.html">Add Department</a></li>
+										<li><a href="edit-department.html">Edit Department</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-07.svg" alt=""></span> <span> Accounts </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="invoices.html">Invoices</a></li>
+										<li><a href="payments.html">Payments</a></li>
+										<li><a href="expenses.html">Expenses</a></li>
+										<li><a href="taxes.html">Taxes</a></li>
+										<li><a href="provident-fund.html">Provident Fund</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-09.svg" alt=""></span> <span> Payroll </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="salary.html"> Employee Salary </a></li>
+										<li><a href="salary-view.html"> Payslip </a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="chat.html"><span class="menu-side"><img src="assets/img/icons/menu-icon-10.svg" alt=""></span> <span>Chat</span></a>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-11.svg" alt=""></span> <span> Calls</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="voice-call.html">Voice Call</a></li>
+										<li><a href="video-call.html">Video Call</a></li>
+										<li><a href="incoming-call.html">Incoming Call</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-12.svg" alt=""></span> <span> Email</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="compose.html">Compose Mail</a></li>
+										<li><a href="inbox.html">Inbox</a></li>
+										<li><a href="mail-view.html">Mail View</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-13.svg" alt=""></span> <span> Blog</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="blog.html">Blog</a></li>
+										<li><a href="blog-details.html">Blog View</a></li>
+										<li><a href="add-blog.html">Add Blog</a></li>
+										<li><a href="edit-blog.html">Edit Blog</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="assets.html"><i class="fa fa-cube"></i> <span>Assets</span></a>
+								</li>
+								<li>
+									<a href="activities.html"><span class="menu-side"><img src="assets/img/icons/menu-icon-14.svg" alt=""></span> <span>Activities</span></a>
+								</li>
+								<li class="submenu">
+									<a href="#"><i class="fa fa-flag"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="expense-reports.html"> Expense Report </a></li>
+										<li><a href="invoice-reports.html"> Invoice Report </a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-15.svg" alt=""></span> <span> Invoice </span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="invoices-list.html"> Invoices List </a></li>
+										<li><a href="invoices-grid.html"> Invoices Grid</a></li>
+										<li><a href="add-invoice.html"> Add Invoices</a></li>
+										<li><a href="edit-invoices.html"> Edit Invoices</a></li>
+										<li><a href="view-invoice.html"> Invoices Details</a></li>
+										<li><a href="invoices-settings.html"> Invoices Settings</a></li>
+									</ul>
+								</li>
+
+								<li>
+									<a href="settings.html"><span class="menu-side"><img src="assets/img/icons/menu-icon-16.svg" alt=""></span> <span>Settings</span></a>
+								</li>
+								<li class="menu-title">UI Interface</li>
+								<li class="submenu">
+									<a href="#"><i class="fa fa-laptop"></i> <span> Base UI</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="alerts.html">Alerts</a></li>
+										<li><a href="accordions.html">Accordions</a></li>
+										<li><a href="avatar.html">Avatar</a></li>
+										<li><a href="badges.html">Badges</a></li>
+										<li><a href="buttons.html">Buttons</a></li>
+										<li><a href="buttongroup.html">Button Group</a></li>
+										<li><a href="breadcrumbs.html">Breadcrumb</a></li>
+										<li><a href="cards.html">Cards</a></li>
+										<li><a href="carousel.html">Carousel</a></li>
+										<li><a href="dropdowns.html">Dropdowns</a></li>
+										<li><a href="grid.html">Grid</a></li>
+										<li><a href="images.html">Images</a></li>
+										<li><a href="lightbox.html">Lightbox</a></li>
+										<li><a href="media.html">Media</a></li>
+										<li><a href="modal.html">Modals</a></li>
+										<li><a href="offcanvas.html">Offcanvas</a></li>
+										<li><a href="pagination.html">Pagination</a></li>
+										<li><a href="popover.html">Popover</a></li>
+										<li><a href="progress.html">Progress Bars</a></li>
+										<li><a href="placeholders.html">Placeholders</a></li>
+										<li><a href="rangeslider.html">Range Slider</a></li>
+										<li><a href="spinners.html">Spinner</a></li>
+										<li><a href="sweetalerts.html">Sweet Alerts</a></li>
+										<li><a href="tab.html">Tabs</a></li>
+										<li><a href="toastr.html">Toasts</a></li>
+										<li><a href="tooltip.html">Tooltip</a></li>
+										<li><a href="typography.html">Typography</a></li>
+										<li><a href="video.html">Video</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><i class="fa fa-box"></i> <span> Elements</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="ribbon.html">Ribbon</a></li>
+										<li><a href="clipboard.html">Clipboard</a></li>
+										<li><a href="drag-drop.html">Drag & Drop</a></li>
+										<li><a href="rating.html">Rating</a></li>
+										<li><a href="text-editor.html">Text Editor</a></li>
+										<li><a href="counter.html">Counter</a></li>
+										<li><a href="scrollbar.html">Scrollbar</a></li>
+										<li><a href="notification.html">Notification</a></li>
+										<li><a href="stickynote.html">Sticky Note</a></li>
+										<li><a href="timeline.html">Timeline</a></li>
+										<li><a href="horizontal-timeline.html">Horizontal Timeline</a></li>
+										<li><a href="form-wizard.html">Form Wizard</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><i class="fa fa-chart-simple"></i> <span>Charts</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="chart-apex.html">Apex Charts</a></li>
+										<li><a href="chart-js.html">Chart Js</a></li>
+										<li><a href="chart-morris.html">Morris Charts</a></li>
+										<li><a href="chart-flot.html">Flot Charts</a></li>
+										<li><a href="chart-peity.html">Peity Charts</a></li>
+										<li><a href="chart-c3.html">C3 Charts</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><i class="fa fa-award"></i> <span>Icons</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="icon-fontawesome.html">Fontawesome Icons</a></li>
+										<li><a href="icon-feather.html" class="active">Feather Icons</a></li>
+										<li><a href="icon-ionic.html">Ionic Icons</a></li>
+										<li><a href="icon-material.html">Material Icons</a></li>
+										<li><a href="icon-pe7.html">Pe7 Icons</a></li>
+										<li><a href="icon-simpleline.html">Simpleline Icons</a></li>
+										<li><a href="icon-themify.html">Themify Icons</a></li>
+										<li><a href="icon-weather.html">Weather Icons</a></li>
+										<li><a href="icon-typicon.html">Typicon Icons</a></li>
+										<li><a href="icon-flag.html">Flag Icons</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><i class="fa fa-edit"></i> <span> Forms</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="form-basic-inputs.html">Basic Inputs</a></li>
+										<li><a href="form-input-groups.html">Input Groups</a></li>
+										<li><a href="form-horizontal.html">Horizontal Form</a></li>
+										<li><a href="form-vertical.html">Vertical Form</a></li>
+										<li><a href="form-mask.html">Form Mask </a></li>
+										<li><a href="form-validation.html">Form Validation </a></li>
+										<li><a href="form-select2.html">Form Select2 </a></li>
+										<li><a href="form-fileupload.html">File Upload </a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="#"><i class="fa fa-table"></i> <span> Tables</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="tables-basic.html">Basic Tables</a></li>
+										<li><a href="tables-datatables.html">Data Table</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="calendar.html"><i class="fa fa-calendar"></i> <span>Calendar</span></a>
+								</li>
+								<li class="menu-title">Extras</li>
+								<li class="submenu">
+									<a href="#"><i class="fa fa-columns"></i> <span>Pages</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="login.html"> Login </a></li>
+										<li><a href="register.html"> Register </a></li>
+										<li><a href="forgot-password.html"> Forgot Password </a></li>
+										<li><a href="change-password2.html"> Change Password </a></li>
+										<li><a href="lock-screen.html"> Lock Screen </a></li>
+										<li><a href="profile.html"> Profile </a></li>
+										<li><a href="gallery.html"> Gallery </a></li>
+										<li><a href="error-404.html">404 Error </a></li>
+										<li><a href="error-500.html">500 Error </a></li>
+										<li><a href="blank-page.html"> Blank Page </a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);"><i class="fa fa-share-alt"></i> <span>Multi Level</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li class="submenu">
+											<a href="javascript:void(0);"><span>Level 1</span> <span class="menu-arrow"></span></a>
+											<ul style="display: none;">
+												<li><a href="javascript:void(0);"><span>Level 2</span></a></li>
+												<li class="submenu">
+													<a href="javascript:void(0);"> <span> Level 2</span> <span class="menu-arrow"></span></a>
+													<ul style="display: none;">
+														<li><a href="javascript:void(0);">Level 3</a></li>
+														<li><a href="javascript:void(0);">Level 3</a></li>
+													</ul>
+												</li>
+												<li><a href="javascript:void(0);"><span>Level 2</span></a></li>
+											</ul>
+										</li>
+										<li>
+											<a href="javascript:void(0);"><span>Level 1</span></a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<div class="logout-btn">
+								<a href="login.html"><span class="menu-side"><img src="assets/img/icons/logout.svg" alt=""></span> <span>Logout</span></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Sidebar -->
+
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard </a></li>
+									<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
+									<li class="breadcrumb-item active">Feather Icon</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<!-- Chart -->
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-header">
+									<h5 class="card-title">
+										Feather Icon
+									</h5>
+								</div>
+								<div class="card-body">
+									<div class="icons-items">
+										<ul class="icons-list">
+											<li><i class="feather-activity" data-bs-toggle="tooltip" title="fe fe-activity"></i></li>
+											<li><i class="feather-airplay" data-bs-toggle="tooltip" title="fe fe-airplay"></i></li>
+											<li><i class="feather-alert-circle" data-bs-toggle="tooltip" title="fe fe-alert-circle"></i></li>
+											<li><i class="feather-alert-octagon" data-bs-toggle="tooltip" title="fe fe-alert-octagon"></i></li>
+											<li><i class="feather-alert-triangle" data-bs-toggle="tooltip" title="fe fe-alert-triangle"></i></li>
+											<li><i class="feather-align-center" data-bs-toggle="tooltip" title="fe fe-align-center"></i></li>
+											<li><i class="feather-align-justify" data-bs-toggle="tooltip" title="fe fe-align-justify"></i></li>
+											<li><i class="feather-align-left" data-bs-toggle="tooltip" title="fe fe-align-left"></i></li>
+											<li><i class="feather-align-right" data-bs-toggle="tooltip" title="fe fe-align-right"></i></li>
+											<li><i class="feather-anchor" data-bs-toggle="tooltip" title="fe fe-anchor"></i></li>
+											<li><i class="feather-aperture" data-bs-toggle="tooltip" title="fe fe-aperture"></i></li>
+											<li><i class="feather-arrow-down" data-bs-toggle="tooltip" title="fe fe-arrow-down"></i></li>
+											<li><i class="feather-arrow-down-circle" data-bs-toggle="tooltip" title="fe fe-arrow-down-circle"></i></li>
+											<li><i class="feather-arrow-down-left" data-bs-toggle="tooltip" title="fe fe-arrow-down-left"></i></li>
+											<li><i class="feather-arrow-down-right" data-bs-toggle="tooltip" title="fe fe-arrow-down-right"></i></li>
+											<li><i class="feather-arrow-left" data-bs-toggle="tooltip" title="fe fe-arrow-left"></i></li>
+											<li><i class="feather-arrow-left-circle" data-bs-toggle="tooltip" title="fe fe-arrow-left-circle"></i></li>
+											<li><i class="feather-arrow-right" data-bs-toggle="tooltip" title="fe fe-arrow-right"></i></li>
+											<li><i class="feather-arrow-right-circle" data-bs-toggle="tooltip" title="fe fe-arrow-right-circle"></i></li>
+											<li><i class="feather-arrow-up" data-bs-toggle="tooltip" title="fe fe-arrow-up"></i></li>
+											<li><i class="feather-arrow-up-circle" data-bs-toggle="tooltip" title="fe fe-arrow-up-circle"></i></li>
+											<li><i class="feather-arrow-up-left" data-bs-toggle="tooltip" title="fe fe-arrow-up-left"></i></li>
+											<li><i class="feather-arrow-up-right" data-bs-toggle="tooltip" title="fe fe-arrow-up-right"></i></li>
+											<li><i class="feather-at-sign" data-bs-toggle="tooltip" title="fe fe-at-sign"></i></li>
+											<li><i class="feather-award" data-bs-toggle="tooltip" title="fe fe-award"></i></li>
+											<li><i class="feather-bar-chart" data-bs-toggle="tooltip" title="fe fe-bar-chart"></i></li>
+											<li><i class="feather-bar-chart-2" data-bs-toggle="tooltip" title="fe fe-bar-chart-2"></i></li>
+											<li><i class="feather-battery" data-bs-toggle="tooltip" title="fe fe-battery"></i></li>
+											<li><i class="feather-battery-charging" data-bs-toggle="tooltip" title="fe fe-battery-charging"></i></li>
+											<li><i class="feather-bell" data-bs-toggle="tooltip" title="fe fe-bell"></i></li>
+											<li><i class="feather-bell-off" data-bs-toggle="tooltip" title="fe fe-bell-off"></i></li>
+											<li><i class="feather-bluetooth" data-bs-toggle="tooltip" title="fe fe-bluetooth"></i></li>
+											<li><i class="feather-bold" data-bs-toggle="tooltip" title="fe fe-bold"></i></li>
+											<li><i class="feather-book" data-bs-toggle="tooltip" title="fe fe-book"></i></li>
+											<li><i class="feather-book-open" data-bs-toggle="tooltip" title="fe fe-book-open"></i></li>
+											<li><i class="feather-bookmark" data-bs-toggle="tooltip" title="fe fe-bookmark"></i></li>
+											<li><i class="feather-box" data-bs-toggle="tooltip" title="fe fe-box"></i></li>
+											<li><i class="feather-briefcase" data-bs-toggle="tooltip" title="fe fe-briefcase"></i></li>
+											<li><i class="feather-calendar" data-bs-toggle="tooltip" title="fe fe-calendar"></i></li>
+											<li><i class="feather-camera" data-bs-toggle="tooltip" title="fe fe-camera"></i></li>
+											<li><i class="feather-camera-off" data-bs-toggle="tooltip" title="fe fe-camera-off"></i></li>
+											<li><i class="feather-cast" data-bs-toggle="tooltip" title="fe fe-cast"></i></li>
+											<li><i class="feather-check" data-bs-toggle="tooltip" title="fe fe-check"></i></li>
+											<li><i class="feather-check-circle" data-bs-toggle="tooltip" title="fe fe-check-circle"></i></li>
+											<li><i class="feather-check-square" data-bs-toggle="tooltip" title="fe fe-check-square"></i></li>
+											<li><i class="feather-chevron-down" data-bs-toggle="tooltip" title="fe fe-chevron-down"></i></li>
+											<li><i class="feather-chevron-left" data-bs-toggle="tooltip" title="fe fe-chevron-left"></i></li>
+											<li><i class="feather-chevron-right" data-bs-toggle="tooltip" title="feather-chevron-right"></i></li>
+											<li><i class="feather-chevron-up" data-bs-toggle="tooltip" title="fe fe-chevron-up"></i></li>
+											<li><i class="feather-chevrons-down" data-bs-toggle="tooltip" title="fe fe-chevrons-down"></i></li>
+											<li><i class="feather-chevrons-left" data-bs-toggle="tooltip" title="fe fe-chevrons-left"></i></li>
+											<li><i class="feather-chevrons-right" data-bs-toggle="tooltip" title="fe fe-chevrons-right"></i></li>
+											<li><i class="feather-chevrons-up" data-bs-toggle="tooltip" title="fe fe-chevrons-up"></i></li>
+											<li><i class="feather-chrome" data-bs-toggle="tooltip" title="fe fe-chrome"></i></li>
+											<li><i class="feather-circle" data-bs-toggle="tooltip" title="fe fe-circle"></i></li>
+											<li><i class="feather-clipboard" data-bs-toggle="tooltip" title="fe fe-clipboard"></i></li>
+											<li><i class="feather-clock" data-bs-toggle="tooltip" title="fe fe-clock"></i></li>
+											<li><i class="feather-cloud" data-bs-toggle="tooltip" title="fe fe-cloud"></i></li>
+											<li><i class="feather-cloud-drizzle" data-bs-toggle="tooltip" title="fe fe-cloud-drizzle"></i></li>
+											<li><i class="feather-cloud-lightning" data-bs-toggle="tooltip" title="fe fe-cloud-lightning"></i></li>
+											<li><i class="feather-cloud-off" data-bs-toggle="tooltip" title="fe fe-cloud-off"></i></li>
+											<li><i class="feather-cloud-rain" data-bs-toggle="tooltip" title="fe fe-cloud-rain"></i></li>
+											<li><i class="feather-cloud-snow" data-bs-toggle="tooltip" title="fe fe-cloud-snow"></i></li>
+											<li><i class="feather-code" data-bs-toggle="tooltip" title="fe fe-code"></i></li>
+											<li><i class="feather-codepen" data-bs-toggle="tooltip" title="fe fe-codepen"></i></li>
+											<li><i class="feather-command" data-bs-toggle="tooltip" title="fe fe-command"></i></li>
+											<li><i class="feather-compass" data-bs-toggle="tooltip" title="fe fe-compass"></i></li>
+											<li><i class="feather-copy" data-bs-toggle="tooltip" title="fe fe-copy"></i></li>
+											<li><i class="feather-corner-down-left" data-bs-toggle="tooltip" title="fe fe-corner-down-left"></i></li>
+											<li><i class="feather-corner-down-right" data-bs-toggle="tooltip" title="fe fe-corner-down-right"></i></li>
+											<li><i class="feather-corner-left-down" data-bs-toggle="tooltip" title="fe fe-corner-left-down"></i></li>
+											<li><i class="feather-corner-left-up" data-bs-toggle="tooltip" title="fe fe-corner-left-up"></i></li>
+											<li><i class="feather-corner-right-down" data-bs-toggle="tooltip" title="fe fe-corner-right-down"></i></li>
+											<li><i class="feather-corner-right-up" data-bs-toggle="tooltip" title="fe fe-corner-right-up"></i></li>
+											<li><i class="feather-corner-up-left" data-bs-toggle="tooltip" title="fe fe-corner-up-left"></i></li>
+											<li><i class="feather-corner-up-right" data-bs-toggle="tooltip" title="fe fe-corner-up-right"></i></li>
+											<li><i class="feather-cpu" data-bs-toggle="tooltip" title="fe fe-cpu"></i></li>
+											<li><i class="feather-credit-card" data-bs-toggle="tooltip" title="fe fe-credit-card"></i></li>
+											<li><i class="feather-crop" data-bs-toggle="tooltip" title="fe fe-crop"></i></li>
+											<li><i class="feather-crosshair" data-bs-toggle="tooltip" title="fe fe-crosshair"></i></li>
+											<li><i class="feather-database" data-bs-toggle="tooltip" title="fe fe-database"></i></li>
+											<li><i class="feather-delete" data-bs-toggle="tooltip" title="fe fe-delete"></i></li>
+											<li><i class="feather-disc" data-bs-toggle="tooltip" title="fe fe-disc"></i></li>
+											<li><i class="feather-dollar-sign" data-bs-toggle="tooltip" title="fe fe-dollar-sign"></i></li>
+											<li><i class="feather-download" data-bs-toggle="tooltip" title="fe fe-download"></i></li>
+											<li><i class="feather-download-cloud" data-bs-toggle="tooltip" title="fe fe-download-cloud"></i></li>
+											<li><i class="feather-droplet" data-bs-toggle="tooltip" title="fe fe-droplet"></i></li>
+											<li><i class="feather-edit" data-bs-toggle="tooltip" title="fe fe-edit"></i></li>
+											<li><i class="feather-edit-2" data-bs-toggle="tooltip" title="fe fe-edit-2"></i></li>
+											<li><i class="feather-edit-3" data-bs-toggle="tooltip" title="fe fe-edit-3"></i></li>
+											<li><i class="feather-external-link" data-bs-toggle="tooltip" title="fe fe-external-link"></i></li>
+											<li><i class="feather-eye" data-bs-toggle="tooltip" title="fe fe-eye"></i></li>
+											<li><i class="feather-eye-off" data-bs-toggle="tooltip" title="fe fe-eye-off"></i></li>
+											<li><i class="feather-facebook" data-bs-toggle="tooltip" title="fe fe-facebook"></i></li>
+											<li><i class="feather-fast-forward" data-bs-toggle="tooltip" title="fe fe-fast-forward"></i></li>
+											<li><i class="feather-feather" data-bs-toggle="tooltip" title="fe fe-feather"></i></li>
+											<li><i class="feather-file" data-bs-toggle="tooltip" title="fe fe-file"></i></li>
+											<li><i class="feather-file-minus" data-bs-toggle="tooltip" title="fe fe-file-minus"></i></li>
+											<li><i class="feather-file-plus" data-bs-toggle="tooltip" title="fe fe-file-plus"></i></li>
+											<li><i class="feather-file-text" data-bs-toggle="tooltip" title="fe fe-file-text"></i></li>
+											<li><i class="feather-film" data-bs-toggle="tooltip" title="fe fe-film"></i></li>
+											<li><i class="feather-filter" data-bs-toggle="tooltip" title="fe fe-filter"></i></li>
+											<li><i class="feather-flag" data-bs-toggle="tooltip" title="fe fe-flag"></i></li>
+											<li><i class="feather-folder" data-bs-toggle="tooltip" title="fe fe-folder"></i></li>
+											<li><i class="feather-folder-minus" data-bs-toggle="tooltip" title="fe fe-folder-minus"></i></li>
+											<li><i class="feather-folder-plus" data-bs-toggle="tooltip" title="fe fe-folder-plus"></i></li>
+											<li><i class="feather-git-branch" data-bs-toggle="tooltip" title="fe fe-git-branch"></i></li>
+											<li><i class="feather-git-commit" data-bs-toggle="tooltip" title="fe fe-git-commit"></i></li>
+											<li><i class="feather-git-merge" data-bs-toggle="tooltip" title="fe fe-git-merge"></i></li>
+											<li><i class="feather-git-pull-request" data-bs-toggle="tooltip" title="fe fe-git-pull-request"></i></li>
+											<li><i class="feather-github" data-bs-toggle="tooltip" title="fe fe-github"></i></li>
+											<li><i class="feather-gitlab" data-bs-toggle="tooltip" title="fe fe-gitlab"></i></li>
+											<li><i class="feather-globe" data-bs-toggle="tooltip" title="fe fe-globe"></i></li>
+											<li><i class="feather-grid" data-bs-toggle="tooltip" title="fe fe-grid"></i></li>
+											<li><i class="feather-hard-drive" data-bs-toggle="tooltip" title="fe fe-hard-drive"></i></li>
+											<li><i class="feather-hash" data-bs-toggle="tooltip" title="fe fe-hash"></i></li>
+											<li><i class="feather-headphones" data-bs-toggle="tooltip" title="fe fe-headphones"></i></li>
+											<li><i class="feather-heart" data-bs-toggle="tooltip" title="fe fe-heart"></i></li>
+											<li><i class="feather-help-circle" data-bs-toggle="tooltip" title="fe fe-help-circle"></i></li>
+											<li><i class="feather-home" data-bs-toggle="tooltip" title="fe fe-home"></i></li>
+											<li><i class="feather-image" data-bs-toggle="tooltip" title="fe fe-image"></i></li>
+											<li><i class="feather-inbox" data-bs-toggle="tooltip" title="fe fe-inbox"></i></li>
+											<li><i class="feather-info" data-bs-toggle="tooltip" title="fe fe-info"></i></li>
+											<li><i class="feather-instagram" data-bs-toggle="tooltip" title="fe fe-instagram"></i></li>
+											<li><i class="feather-italic" data-bs-toggle="tooltip" title="fe fe-italic"></i></li>
+											<li><i class="feather-layers" data-bs-toggle="tooltip" title="fe fe-layers"></i></li>
+											<li><i class="feather-layout" data-bs-toggle="tooltip" title="fe fe-layout"></i></li>
+											<li><i class="feather-life-buoy" data-bs-toggle="tooltip" title="fe fe-life-buoy"></i></li>
+											<li><i class="feather-link" data-bs-toggle="tooltip" title="fe fe-link"></i></li>
+											<li><i class="feather-link-2" data-bs-toggle="tooltip" title="fe fe-link-2"></i></li>
+											<li><i class="feather-linkedin" data-bs-toggle="tooltip" title="fe fe-linkedin"></i></li>
+											<li><i class="feather-list" data-bs-toggle="tooltip" title="fe fe-list"></i></li>
+											<li><i class="feather-loader" data-bs-toggle="tooltip" title="fe fe-loader"></i></li>
+											<li><i class="feather-lock" data-bs-toggle="tooltip" title="fe fe-lock"></i></li>
+											<li><i class="feather-log-in" data-bs-toggle="tooltip" title="fe fe-log-in"></i></li>
+											<li><i class="feather-log-out" data-bs-toggle="tooltip" title="fe fe-log-out"></i></li>
+											<li><i class="feather-mail" data-bs-toggle="tooltip" title="fe fe-mail"></i></li>
+											<li><i class="feather-map" data-bs-toggle="tooltip" title="fe fe-map"></i></li>
+											<li><i class="feather-map-pin" data-bs-toggle="tooltip" title="fe fe-map-pin"></i></li>
+											<li><i class="feather-maximize" data-bs-toggle="tooltip" title="fe fe-maximize"></i></li>
+											<li><i class="feather-maximize-2" data-bs-toggle="tooltip" title="fe fe-maximize-2"></i></li>
+											<li><i class="feather-menu" data-bs-toggle="tooltip" title="fe fe-menu"></i></li>
+											<li><i class="feather-message-circle" data-bs-toggle="tooltip" title="fe fe-message-circle"></i></li>
+											<li><i class="feather-message-square" data-bs-toggle="tooltip" title="fe fe-message-square"></i></li>
+											<li><i class="feather-mic" data-bs-toggle="tooltip" title="fe fe-mic"></i></li>
+											<li><i class="feather-mic-off" data-bs-toggle="tooltip" title="fe fe-mic-off"></i></li>
+											<li><i class="feather-minimize" data-bs-toggle="tooltip" title="fe fe-minimize"></i></li>
+											<li><i class="feather-minimize-2" data-bs-toggle="tooltip" title="fe fe-minimize-2"></i></li>
+											<li><i class="feather-minus" data-bs-toggle="tooltip" title="fe fe-minus"></i></li>
+											<li><i class="feather-minus-circle" data-bs-toggle="tooltip" title="fe fe-minus-circle"></i></li>
+											<li><i class="feather-minus-square" data-bs-toggle="tooltip" title="fe fe-minus-square"></i></li>
+											<li><i class="feather-monitor" data-bs-toggle="tooltip" title="fe fe-monitor"></i></li>
+											<li><i class="feather-moon" data-bs-toggle="tooltip" title="fe fe-moon"></i></li>
+											<li><i class="feather-more-horizontal" data-bs-toggle="tooltip" title="fe fe-more-horizontal"></i></li>
+											<li><i class="feather-more-vertical" data-bs-toggle="tooltip" title="fe fe-more-vertical"></i></li>
+											<li><i class="feather-move" data-bs-toggle="tooltip" title="fe fe-move"></i></li>
+											<li><i class="feather-music" data-bs-toggle="tooltip" title="fe fe-music"></i></li>
+											<li><i class="feather-navigation" data-bs-toggle="tooltip" title="fe fe-navigation"></i></li>
+											<li><i class="feather-navigation-2" data-bs-toggle="tooltip" title="fe fe-navigation-2"></i></li>
+											<li><i class="feather-octagon" data-bs-toggle="tooltip" title="fe fe-octagon"></i></li>
+											<li><i class="feather-package" data-bs-toggle="tooltip" title="fe fe-package"></i></li>
+											<li><i class="feather-paperclip" data-bs-toggle="tooltip" title="fe fe-paperclip"></i></li>
+											<li><i class="feather-pause" data-bs-toggle="tooltip" title="fe fe-pause"></i></li>
+											<li><i class="feather-pause-circle" data-bs-toggle="tooltip" title="fe fe-pause-circle"></i></li>
+											<li><i class="feather-percent" data-bs-toggle="tooltip" title="fe fe-percent"></i></li>
+											<li><i class="feather-phone" data-bs-toggle="tooltip" title="fe fe-phone"></i></li>
+											<li><i class="feather-phone-call" data-bs-toggle="tooltip" title="fe fe-phone-call"></i></li>
+											<li><i class="feather-phone-forwarded" data-bs-toggle="tooltip" title="fe fe-phone-forwarded"></i></li>
+											<li><i class="feather-phone-incoming" data-bs-toggle="tooltip" title="fe fe-phone-incoming"></i></li>
+											<li><i class="feather-phone-missed" data-bs-toggle="tooltip" title="fe fe-phone-missed"></i></li>
+											<li><i class="feather-phone-off" data-bs-toggle="tooltip" title="fe fe-phone-off"></i></li>
+											<li><i class="feather-phone-outgoing" data-bs-toggle="tooltip" title="fe fe-phone-outgoing"></i></li>
+											<li><i class="feather-pie-chart" data-bs-toggle="tooltip" title="fe fe-pie-chart"></i></li>
+											<li><i class="feather-play" data-bs-toggle="tooltip" title="fe fe-play"></i></li>
+											<li><i class="feather-play-circle" data-bs-toggle="tooltip" title="fe fe-play-circle"></i></li>
+											<li><i class="feather-plus" data-bs-toggle="tooltip" title="fe fe-plus"></i></li>
+											<li><i class="feather-plus-circle" data-bs-toggle="tooltip" title="fe fe-plus-circle"></i></li>
+											<li><i class="feather-plus-square" data-bs-toggle="tooltip" title="fe fe-plus-square"></i></li>
+											<li><i class="feather-pocket" data-bs-toggle="tooltip" title="fe fe-pocket"></i></li>
+											<li><i class="feather-power" data-bs-toggle="tooltip" title="fe fe-power"></i></li>
+											<li><i class="feather-printer" data-bs-toggle="tooltip" title="fe fe-printer"></i></li>
+											<li><i class="feather-radio" data-bs-toggle="tooltip" title="fe fe-radio"></i></li>
+											<li><i class="feather-refresh-ccw" data-bs-toggle="tooltip" title="fe fe-refresh-ccw"></i></li>
+											<li><i class="feather-refresh-cw" data-bs-toggle="tooltip" title="fe fe-refresh-cw"></i></li>
+											<li><i class="feather-repeat" data-bs-toggle="tooltip" title="fe fe-repeat"></i></li>
+											<li><i class="feather-rewind" data-bs-toggle="tooltip" title="fe fe-rewind"></i></li>
+											<li><i class="feather-rotate-ccw" data-bs-toggle="tooltip" title="fe fe-rotate-ccw"></i></li>
+											<li><i class="feather-rotate-cw" data-bs-toggle="tooltip" title="fe fe-rotate-cw"></i></li>
+											<li><i class="feather-rss" data-bs-toggle="tooltip" title="fe fe-rss"></i></li>
+											<li><i class="feather-save" data-bs-toggle="tooltip" title="fe fe-save"></i></li>
+											<li><i class="feather-scissors" data-bs-toggle="tooltip" title="fe fe-scissors"></i></li>
+											<li><i class="feather-search" data-bs-toggle="tooltip" title="fe fe-search"></i></li>
+											<li><i class="feather-send" data-bs-toggle="tooltip" title="fe fe-send"></i></li>
+											<li><i class="feather-server" data-bs-toggle="tooltip" title="fe fe-server"></i></li>
+											<li><i class="feather-settings" data-bs-toggle="tooltip" title="fe fe-settings"></i></li>
+											<li><i class="feather-share" data-bs-toggle="tooltip" title="fe fe-share"></i></li>
+											<li><i class="feather-share-2" data-bs-toggle="tooltip" title="fe fe-share-2"></i></li>
+											<li><i class="feather-shield" data-bs-toggle="tooltip" title="fe fe-shield"></i></li>
+											<li><i class="feather-shield-off" data-bs-toggle="tooltip" title="fe fe-shield-off"></i></li>
+											<li><i class="feather-shopping-bag" data-bs-toggle="tooltip" title="fe fe-shopping-bag"></i></li>
+											<li><i class="feather-shopping-cart" data-bs-toggle="tooltip" title="fe fe-shopping-cart"></i></li>
+											<li><i class="feather-shuffle" data-bs-toggle="tooltip" title="fe fe-shuffle"></i></li>
+											<li><i class="feather-sidebar" data-bs-toggle="tooltip" title="fe fe-sidebar"></i></li>
+											<li><i class="feather-skip-back" data-bs-toggle="tooltip" title="fe fe-skip-back"></i></li>
+											<li><i class="feather-skip-forward" data-bs-toggle="tooltip" title="fe fe-skip-forward"></i></li>
+											<li><i class="feather-slack" data-bs-toggle="tooltip" title="fe fe-slack"></i></li>
+											<li><i class="feather-slash" data-bs-toggle="tooltip" title="fe fe-slash"></i></li>
+											<li><i class="feather-sliders" data-bs-toggle="tooltip" title="fe fe-sliders"></i></li>
+											<li><i class="feather-smartphone" data-bs-toggle="tooltip" title="fe fe-smartphone"></i></li>
+											<li><i class="feather-speaker" data-bs-toggle="tooltip" title="fe fe-speaker"></i></li>
+											<li><i class="feather-square" data-bs-toggle="tooltip" title="fe fe-square"></i></li>
+											<li><i class="feather-star" data-bs-toggle="tooltip" title="fe fe-star"></i></li>
+											<li><i class="feather-stop-circle" data-bs-toggle="tooltip" title="fe fe-stop-circle"></i></li>
+											<li><i class="feather-sun" data-bs-toggle="tooltip" title="fe fe-sun"></i></li>
+											<li><i class="feather-sunrise" data-bs-toggle="tooltip" title="fe fe-sunrise"></i></li>
+											<li><i class="feather-sunset" data-bs-toggle="tooltip" title="fe fe-sunset"></i></li>
+											<li><i class="feather-tablet" data-bs-toggle="tooltip" title="fe fe-tablet"></i></li>
+											<li><i class="feather-tag" data-bs-toggle="tooltip" title="fe fe-tag"></i></li>
+											<li><i class="feather-target" data-bs-toggle="tooltip" title="fe fe-target"></i></li>
+											<li><i class="feather-terminal" data-bs-toggle="tooltip" title="fe fe-terminal"></i></li>
+											<li><i class="feather-thermometer" data-bs-toggle="tooltip" title="fe fe-thermometer"></i></li>
+											<li><i class="feather-thumbs-down" data-bs-toggle="tooltip" title="fe fe-thumbs-down"></i></li>
+											<li><i class="feather-thumbs-up" data-bs-toggle="tooltip" title="fe fe-thumbs-up"></i></li>
+											<li><i class="feather-toggle-left" data-bs-toggle="tooltip" title="fe fe-toggle-left"></i></li>
+											<li><i class="feather-toggle-right" data-bs-toggle="tooltip" title="fe fe-toggle-right"></i></li>
+											<li><i class="feather-trash" data-bs-toggle="tooltip" title="fe fe-trash"></i></li>
+											<li><i class="feather-trash-2" data-bs-toggle="tooltip" title="fe fe-trash-2"></i></li>
+											<li><i class="feather-trending-down" data-bs-toggle="tooltip" title="fe fe-trending-down"></i></li>
+											<li><i class="feather-trending-up" data-bs-toggle="tooltip" title="fe fe-trending-up"></i></li>
+											<li><i class="feather-triangle" data-bs-toggle="tooltip" title="fe fe-triangle"></i></li>
+											<li><i class="feather-truck" data-bs-toggle="tooltip" title="fe fe-truck"></i></li>
+											<li><i class="feather-tv" data-bs-toggle="tooltip" title="fe fe-tv"></i></li>
+											<li><i class="feather-twitter" data-bs-toggle="tooltip" title="fe fe-twitter"></i></li>
+											<li><i class="feather-type" data-bs-toggle="tooltip" title="fe fe-type"></i></li>
+											<li><i class="feather-umbrella" data-bs-toggle="tooltip" title="fe fe-umbrella"></i></li>
+											<li><i class="feather-underline" data-bs-toggle="tooltip" title="fe fe-underline"></i></li>
+											<li><i class="feather-unlock" data-bs-toggle="tooltip" title="fe fe-unlock"></i></li>
+											<li><i class="feather-upload" data-bs-toggle="tooltip" title="fe fe-upload"></i></li>
+											<li><i class="feather-upload-cloud" data-bs-toggle="tooltip" title="fe fe-upload-cloud"></i></li>
+											<li><i class="feather-user" data-bs-toggle="tooltip" title="fe fe-user"></i></li>
+											<li><i class="feather-user-check" data-bs-toggle="tooltip" title="fe fe-user-check"></i></li>
+											<li><i class="feather-user-minus" data-bs-toggle="tooltip" title="fe fe-user-minus"></i></li>
+											<li><i class="feather-user-plus" data-bs-toggle="tooltip" title="fe fe-user-plus"></i></li>
+											<li><i class="feather-user-x" data-bs-toggle="tooltip" title="fe fe-user-x"></i></li>
+											<li><i class="feather-users" data-bs-toggle="tooltip" title="fe fe-users"></i></li>
+											<li><i class="feather-video" data-bs-toggle="tooltip" title="fe fe-video"></i></li>
+											<li><i class="feather-video-off" data-bs-toggle="tooltip" title="fe fe-video-off"></i></li>
+											<li><i class="feather-voicemail" data-bs-toggle="tooltip" title="fe fe-voicemail"></i></li>
+											<li><i class="feather-volume" data-bs-toggle="tooltip" title="fe fe-volume"></i></li>
+											<li><i class="feather-volume-1" data-bs-toggle="tooltip" title="fe fe-volume-1"></i></li>
+											<li><i class="feather-volume-2" data-bs-toggle="tooltip" title="fe fe-volume-2"></i></li>
+											<li><i class="feather-volume-x" data-bs-toggle="tooltip" title="fe fe-volume-x"></i></li>
+											<li><i class="feather-watch" data-bs-toggle="tooltip" title="fe fe-watch"></i></li>
+											<li><i class="feather-wifi" data-bs-toggle="tooltip" title="fe fe-wifi"></i></li>
+											<li><i class="feather-wifi-off" data-bs-toggle="tooltip" title="fe fe-wifi-off"></i></li>
+											<li><i class="feather-wind" data-bs-toggle="tooltip" title="fe fe-wind"></i></li>
+											<li><i class="feather-x" data-bs-toggle="tooltip" title="fe fe-x"></i></li>
+											<li><i class="feather-x-circle" data-bs-toggle="tooltip" title="fe fe-x-circle"></i></li>
+											<li><i class="feather-x-square" data-bs-toggle="tooltip" title="fe fe-x-square"></i></li>
+											<li><i class="feather-zap" data-bs-toggle="tooltip" title="fe fe-zap"></i></li>
+											<li><i class="feather-zap-off" data-bs-toggle="tooltip" title="fe fe-zap-off"></i></li>
+											<li><i class="feather-zoom-in" data-bs-toggle="tooltip" title="fe fe-zoom-in"></i></li>
+											<li><i class="feather-zoom-out" data-bs-toggle="tooltip" title="fe fe-zoom-out"></i></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Chart -->
+
+					</div>
+
+				</div>
+				<div class="notification-box">
+					<div class="msg-sidebar notifications msg-noti">
+						<div class="topnav-dropdown-header">
+							<span>Messages</span>
+						</div>
+						<div class="drop-scroll msg-list-scroll" id="msg_list">
+							<ul class="list-box">
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">R</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author">Richard Miles </span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item new-message">
+											<div class="list-left">
+												<span class="avatar">J</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author">John Doe</span>
+												<span class="message-time">1 Aug</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">T</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author"> Tarah Shropshire </span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">M</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author">Mike Litorus</span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">C</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author"> Catherine Manseau </span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">D</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author"> Domenic Houston </span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">B</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author"> Buster Wigton </span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">R</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author"> Rolland Webber </span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">C</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author"> Claire Mapes </span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">M</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author">Melita Faucher</span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">J</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author">Jeffery Lalor</span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">L</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author">Loren Gatlin</span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="chat.html">
+										<div class="list-item">
+											<div class="list-left">
+												<span class="avatar">T</span>
+											</div>
+											<div class="list-body">
+												<span class="message-author">Tarah Shropshire</span>
+												<span class="message-time">12:28 AM</span>
+												<div class="clearfix"></div>
+												<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+											</div>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="topnav-dropdown-footer">
+							<a href="chat.html">See all messages</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Page Wrapper -->
+
+        </div>
+		<!-- /Main Wrapper -->
+
+
+		<div class="sidebar-overlay" data-reff=""></div>
+		<!-- jQuery -->
+		<script src="assets/js/jquery-3.7.1.min.js"></script>
+
+		<!-- Bootstrap Core JS -->
+		<script src="assets/js/bootstrap.bundle.min.js"></script>
+
+		<!-- Feather Icon JS -->
+		<script src="assets/js/feather.min.js"></script>
+
+		<!-- Slimscroll JS -->
+		<script src="assets/js/jquery.slimscroll.js"></script>
+
+		<!-- Custom JS -->
+		<script src="assets/js/app.js"></script>
+
+	</body>
+</html>
