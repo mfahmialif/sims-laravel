@@ -19,18 +19,18 @@ cd sims-laravel
 
 Ganti `https://github.com/mfahmialif/sims-laravel.git` dengan URL repository GitHub Anda.
 
-### 2. Generate Application Key
-
-```
-php artisan key:generate
-```
-
-### 3. Install Dependency Composer
+### 2. Install Dependency Composer
 
 Pastikan Composer sudah terinstall, lalu jalankan:
 
 ```
 composer install
+```
+
+### 3. Generate Application Key
+
+```
+php artisan key:generate
 ```
 
 ### 4. Jalankan Migrasi Database
