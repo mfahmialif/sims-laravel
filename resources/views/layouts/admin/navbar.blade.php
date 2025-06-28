@@ -2,7 +2,7 @@
      <div class="header-left">
          <a href="index.html" class="logo">
              <img src="{{ asset('template') }}/assets/img/logo.png" width="35" height="35" alt="">
-             <span>TITLE</span>
+             <span>{{ config('app.name') }}</span>
          </a>
      </div>
      <a id="toggle_btn" href="javascript:void(0);"><img src="{{ asset('template') }}/assets/img/icons/bar-icon.svg"
@@ -109,8 +109,8 @@
          <li class="nav-item dropdown has-arrow user-profile-list">
              <a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
                  <div class="user-names">
-                     <h5>Liam Michael </h5>
-                     <span>Admin</span>
+                     <h5>{{ \Auth::user()->name }} </h5>
+                     <span>{{ \Auth::user()->role->nama }}</span>
                  </div>
                  <span class="user-img">
                      <img src="{{ asset('template') }}/assets/img/user-06.jpg" alt="Admin">
