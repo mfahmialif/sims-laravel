@@ -2,6 +2,10 @@
 
 Sistem ini adalah aplikasi manajemen siswa berbasis web yang dibangun menggunakan Laravel 8.
 
+# Template lengkap 
+
+Ada di https://github.com/mfahmialif/sims-laravel/tree/master/public/template 👆
+
 ## Instalasi
 
 Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini dari awal:
