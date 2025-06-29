@@ -16,7 +16,7 @@ class CreateMataPelajaranTable extends Migration
         Schema::create('mata_pelajaran', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('kode');
+            $table->string('kode')->unique();
             $table->enum('status',['aktif','tidak aktif']);
             $table->foreignId('kelas_id')->constrained('kelas');
             $table->timestamps();
