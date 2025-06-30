@@ -2,6 +2,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,14 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{siswa}/edit', [PendaftaranSiswaBaruController::class, 'edit'])->name('admin.pendaftaran-siswa-baru.edit');
         Route::put('/{siswa}/update', [PendaftaranSiswaBaruController::class, 'update'])->name('admin.pendaftaran-siswa-baru.update');
         Route::delete('/{siswa}/destroy', [PendaftaranSiswaBaruController::class, 'destroy'])->name('admin.pendaftaran-siswa-baru.destroy');
+    });
+    Route::prefix('siswa')->group(function () {
+        Route::get('/', [SiswaController::class, 'index'])->name('admin.siswa.index');
+        Route::get('/data', [SiswaController::class, 'data'])->name('admin.siswa.data');
+        Route::put('/update-status', [SiswaController::class, 'updateStatus'])->name('admin.siswa.update-status');
+        Route::get('/{siswa}/edit', [SiswaController::class, 'edit'])->name('admin.siswa.edit');
+        Route::put('/{siswa}/update', [SiswaController::class, 'update'])->name('admin.siswa.update');
+        Route::delete('/{siswa}/destroy', [SiswaController::class, 'destroy'])->name('admin.siswa.destroy');
     });
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.user.index');

@@ -19,13 +19,13 @@
         @enderror
     </div>
 </div>
-<div class="col-12 status_daftar d-none">
+<div class="col-12">
     <div class="input-block local-forms">
-        <label>Status Daftar <span class="login-danger">*</span></label>
-        <select class="form-control select2 @error('status_daftar') is-invalid @enderror" name="status_daftar">
-            <option value="">Pilih Status Daftar</option>
-            @foreach ($statusDaftar as $item)
-                <option value="{{ $item }}" {{ old('status_daftar') == $item ? 'selected' : '' }}>
+        <label>Status <span class="login-danger">*</span></label>
+        <select class="form-control select2 @error('status') is-invalid @enderror" name="status" required>
+            <option value="">Pilih Status</option>
+            @foreach ($status as $item)
+                <option value="{{ $item }}" {{ old('status') == $item ? 'selected' : '' }}>
                     {{ $item }} {{-- Sesuaikan nama kolom --}}
                 </option>
             @endforeach

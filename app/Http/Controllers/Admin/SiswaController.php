@@ -3,16 +3,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\Helper;
-use App\Models\Role;
 use App\Models\Siswa;
 use App\Models\TahunPelajaran;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 
-class PendaftaranSiswaBaruController extends Controller
+class SiswaController extends Controller
 {
     protected $rules = [
         // Foreign Keys
@@ -105,15 +102,15 @@ class PendaftaranSiswaBaruController extends Controller
     {
         $jenisKelamin   = Helper::getEnumValues('users', 'jenis_kelamin');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
-        $statusDaftar   = Helper::getEnumValues('siswa', 'status_daftar');
+        $status         = Helper::getEnumValues('siswa', 'status');
 
-        return view('admin.pendaftaran-siswa-baru.index', compact('jenisKelamin', 'tahunPelajaran', 'statusDaftar'));
+        return view('admin.siswa.index', compact('jenisKelamin', 'tahunPelajaran', 'status'));
     }
 
     public function data(Request $request)
     {
         $search = request('search.value');
-        $data   = Siswa::select('*');
+        $data   = Siswa::where('status_daftar', 'diterima')->select('*');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
                 $query->when($request->tahun_pelajaran_id, function ($q) use ($request) {
@@ -133,21 +130,21 @@ class PendaftaranSiswaBaruController extends Controller
                     <div class="d-flex align-items-center">
                         <img src="' . $row->foto . '" alt="Foto Siswa" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div>
-                            <a href="' . route("admin.pendaftaran-siswa-baru.edit", $row) . '">' . $row->nama_siswa . '</a><br>
+                            <a href="' . route("admin.siswa.edit", $row) . '">' . $row->nama_siswa . '</a><br>
                             <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
                             <small>NISN: ' . ($row->nisn ?? '-') . '</small>
                         </div>
                     </div>
                 ';
             })
-            ->editColumn('status_daftar', function ($row) {
-                return '<span class="badge bg-' . Helper::getColorStatus($row->status_daftar) . '">' . strtoupper($row->status_daftar) . '</span>';
+            ->editColumn('status', function ($row) {
+                return '<span class="badge bg-' . Helper::getColorStatus($row->status) . '">' . strtoupper($row->status) . '</span>';
             })
             ->addColumn('action', function ($row) {
                 $content = '<div class="dropdown dropdown-action">
                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="' . route("admin.pendaftaran-siswa-baru.edit", $row) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
+                            <a class="dropdown-item" href="' . route("admin.siswa.edit", $row) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
                             <form action="" onsubmit="deleteData(event)" method="POST">
                             ' . method_field('delete') . csrf_field() . '
                                 <input type="hidden" name="id" value="' . $row->id . '">
@@ -160,7 +157,7 @@ class PendaftaranSiswaBaruController extends Controller
                     </div>';
                 return $content;
             })
-            ->rawColumns(['action', 'nama_siswa', 'status_daftar'])
+            ->rawColumns(['action', 'nama_siswa', 'status'])
             ->toJson();
     }
 
@@ -169,140 +166,8 @@ class PendaftaranSiswaBaruController extends Controller
         $jenisKelamin   = Helper::getEnumValues('users', 'jenis_kelamin');
         $agama          = Helper::getEnumValues('siswa', 'agama');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
-        $statusDaftar   = Helper::getEnumValues('siswa', 'status_daftar');
-        return view('admin.pendaftaran-siswa-baru.add', compact('jenisKelamin', 'agama', 'tahunPelajaran', 'statusDaftar'));
-    }
-
-    public function store(Request $request)
-    {
-        try {
-            $request->validate($this->rules);
-
-            \DB::beginTransaction();
-            $role = Role::where('nama', 'siswa')->first();
-
-            //random password
-            $password = Str::random(8);
-            $user     = User::create([
-                'username'      => 'sis-' . time(),
-                'name'          => $request->nama_siswa,
-                'email'         => $request->email,
-                'password'      => Hash::make($password),
-                'jenis_kelamin' => $request->jenis_kelamin,
-                'role_id'       => $role->id,
-            ]);
-
-            $umur  = $request->tanggal_lahir ? Helper::hitungUmur($request->tanggal_lahir) : null;
-            $siswa = new Siswa();
-
-            // Mengisi Foreign Keys
-            $siswa->tahun_pelajaran_id = $request->tahun_pelajaran_id;
-            $siswa->user_id            = $user->id;
-
-            // Mengisi Informasi Siswa
-            $siswa->nis                      = $request->nis;
-            $siswa->nisn                     = $request->nisn;
-            $siswa->nama_siswa               = $request->nama_siswa;
-            $siswa->jenis_kelamin            = $request->jenis_kelamin;
-            $siswa->tempat_lahir             = $request->tempat_lahir;
-            $siswa->tanggal_lahir            = $request->tanggal_lahir;
-            $siswa->agama                    = $request->agama;
-            $siswa->nik_anak                 = $request->nik_anak;
-            $siswa->no_registrasi_akta_lahir = $request->no_registrasi_akta_lahir;
-            $siswa->kk                       = $request->kk;
-            $siswa->anak_ke                  = $request->anak_ke;
-            $siswa->jumlah_saudara_kandung   = $request->jumlah_saudara_kandung;
-            $siswa->umur_anak                = $umur;
-            $siswa->masuk_sekolah_sebagai    = $request->masuk_sekolah_sebagai;
-            $siswa->asal_sekolah_tk          = $request->asal_sekolah_tk;
-            $siswa->tinggi_badan             = $request->tinggi_badan;
-            $siswa->berat_badan              = $request->berat_badan;
-            $siswa->lingkar_kepala           = $request->lingkar_kepala;
-            $siswa->jarak_tempuh_ke_sekolah  = $request->jarak_tempuh_ke_sekolah;
-            $siswa->gol_darah                = $request->gol_darah;
-
-            // Mengisi Alamat Siswa
-            $siswa->alamat_anak_sesuai_kk = $request->alamat_anak_sesuai_kk;
-            $siswa->desa_kelurahan_anak   = $request->desa_kelurahan_anak;
-            $siswa->kecamatan_anak        = $request->kecamatan_anak;
-            $siswa->kabupaten_anak        = $request->kabupaten_anak;
-            $siswa->kode_pos_anak         = $request->kode_pos_anak;
-            $siswa->rt_anak               = $request->rt_anak;
-            $siswa->rw_anak               = $request->rw_anak;
-            $siswa->lintang               = $request->lintang;
-            $siswa->bujur                 = $request->bujur;
-
-            // Mengisi Informasi Keluarga (Orang Tua)
-            $siswa->nama_ayah                = $request->nama_ayah;
-            $siswa->nik_ayah                 = $request->nik_ayah;
-            $siswa->tahun_lahir_ayah         = $request->tahun_lahir_ayah;
-            $siswa->pendidikan_ayah          = $request->pendidikan_ayah;
-            $siswa->pekerjaan_ayah           = $request->pekerjaan_ayah;
-            $siswa->penghasilan_bulanan_ayah = $request->penghasilan_bulanan_ayah;
-
-            $siswa->nama_ibu_sesuai_ktp     = $request->nama_ibu_sesuai_ktp;
-            $siswa->nik_ibu                 = $request->nik_ibu;
-            $siswa->tahun_lahir_ibu         = $request->tahun_lahir_ibu;
-            $siswa->pendidikan_ibu          = $request->pendidikan_ibu;
-            $siswa->pekerjaan_ibu           = $request->pekerjaan_ibu;
-            $siswa->penghasilan_bulanan_ibu = $request->penghasilan_bulanan_ibu;
-
-            // Mengisi Alamat Keluarga
-            $siswa->alamat_ortu_sesuai_kk = $request->alamat_ortu_sesuai_kk;
-            $siswa->kelurahan_ortu        = $request->kelurahan_ortu;
-            $siswa->kecamatan_ortu        = $request->kecamatan_ortu;
-            $siswa->kabupaten_ortu        = $request->kabupaten_ortu;
-            $siswa->no_kartu_keluarga     = $request->no_kartu_keluarga;
-
-            $siswa->tinggal_bersama         = $request->tinggal_bersama;
-            $siswa->transportasi_ke_sekolah = $request->transportasi_ke_sekolah;
-            $siswa->nomor_telepon_orang_tua = $request->nomor_telepon_orang_tua;
-
-            // Mengisi Informasi Wali (Jika ada)
-            $siswa->nama_wali                = $request->nama_wali;
-            $siswa->nik_wali                 = $request->nik_wali;
-            $siswa->tahun_lahir_wali         = $request->tahun_lahir_wali;
-            $siswa->pendidikan_wali          = $request->pendidikan_wali;
-            $siswa->pekerjaan_wali           = $request->pekerjaan_wali;
-            $siswa->penghasilan_bulanan_wali = $request->penghasilan_bulanan_wali;
-            $siswa->alamat_wali              = $request->alamat_wali;
-            $siswa->rt_wali                  = $request->rt_wali;
-            $siswa->rw_wali                  = $request->rw_wali;
-            $siswa->desa_kelurahan_wali      = $request->desa_kelurahan_wali;
-            $siswa->kecamatan_wali           = $request->kecamatan_wali;
-            $siswa->kabupaten_wali           = $request->kabupaten_wali;
-            $siswa->kode_pos_wali            = $request->kode_pos_wali;
-            $siswa->nomor_telepon_wali       = $request->nomor_telepon_wali;
-
-                                                                         // Mengisi Status
-            $siswa->status_daftar = $request->status_daftar ?? 'daftar'; // Default 'daftar' jika tidak ada input
-            $siswa->status        = $request->input('status', 'aktif');  // Default 'aktif' jika tidak ada input
-
-            if ($request->hasFile('foto')) {
-                $siswa->foto = Helper::uploadFile($request->file('foto'), $request->nama_siswa, 'foto_siswa');
-            }
-
-            if ($request->hasFile('akta_lahir_path')) {
-                $siswa->akta_lahir_path = Helper::uploadFile($request->file('akta_lahir_path'), $request->nama_siswa, 'akta_lahir_path');
-            }
-
-            $siswa->save();
-
-            \DB::commit();
-            return redirect()->route('admin.pendaftaran-siswa-baru.index')->with('success', 'Data siswa baru berhasil ditambahkan.');
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            \DB::rollback();
-            return redirect()->route('admin.pendaftaran-siswa-baru.add')
-                ->withErrors($e->validator)
-                ->withInput()
-                ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));
-        } catch (\Throwable $th) {
-            \DB::rollback();
-            return redirect()->route('admin.pendaftaran-siswa-baru.add')
-                ->with('error', 'Terjadi kesalahan: ' . $th->getMessage())
-                ->withInput();
-        }
+        $status         = Helper::getEnumValues('siswa', 'status');
+        return view('admin.siswa.add', compact('jenisKelamin', 'agama', 'tahunPelajaran', 'status'));
     }
 
     public function edit(Siswa $siswa)
@@ -310,10 +175,10 @@ class PendaftaranSiswaBaruController extends Controller
         $jenisKelamin   = Helper::getEnumValues('users', 'jenis_kelamin');
         $agama          = Helper::getEnumValues('siswa', 'agama');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
-        $statusDaftar   = Helper::getEnumValues('siswa', 'status_daftar');
+        $status         = Helper::getEnumValues('siswa', 'status');
 
         $siswa = $siswa->load('user');
-        return view('admin.pendaftaran-siswa-baru.edit', compact('siswa', 'agama', 'jenisKelamin', 'tahunPelajaran', 'statusDaftar'));
+        return view('admin.siswa.edit', compact('siswa', 'agama', 'jenisKelamin', 'tahunPelajaran', 'status'));
     }
 
     public function update(Request $request, Siswa $siswa)
@@ -413,9 +278,7 @@ class PendaftaranSiswaBaruController extends Controller
             $siswa->kode_pos_wali            = $request->kode_pos_wali;
             $siswa->nomor_telepon_wali       = $request->nomor_telepon_wali;
 
-                                                                                // Mengisi Status
-            $siswa->status_daftar = $request->input('status_daftar', 'daftar'); // Default 'daftar' jika tidak ada input
-            $siswa->status        = $request->input('status', 'aktif');         // Default 'aktif' jika tidak ada input
+            $siswa->status = $request->status;
 
             if ($request->hasFile('foto')) {
                 if ($siswa->foto) {
@@ -434,15 +297,15 @@ class PendaftaranSiswaBaruController extends Controller
             $siswa->save();
 
             \DB::commit();
-            return redirect()->route('admin.pendaftaran-siswa-baru.index')->with('success', 'Siswa berhasil diupdate');
+            return redirect()->route('admin.siswa.index')->with('success', 'Siswa berhasil diupdate');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->route('admin.pendaftaran-siswa-baru.edit', ['siswa' => $siswa])
+            return redirect()->route('admin.siswa.edit', ['siswa' => $siswa])
                 ->withErrors($e->validator)
                 ->withInput()
                 ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));
         } catch (\Throwable $th) {
             \DB::rollback();
-            return redirect()->route('admin.pendaftaran-siswa-baru.edit', ['siswa' => $siswa])->with('error', $th->getMessage())->withInput();
+            return redirect()->route('admin.siswa.edit', ['siswa' => $siswa])->with('error', $th->getMessage())->withInput();
         }
     }
 
@@ -471,18 +334,18 @@ class PendaftaranSiswaBaruController extends Controller
         }
     }
 
-    public function updateStatusDaftar(Request $request)
+    public function updateStatus(Request $request)
     {
         try {
             $validated = $request->validate([
-                'siswa_id'      => 'required|array',
-                'siswa_id.*'    => 'integer|exists:siswa,id', // pastikan setiap id valid
-                'status_daftar' => 'required|string',         // tambahkan validasi untuk status
+                'siswa_id'   => 'required|array',
+                'siswa_id.*' => 'integer|exists:siswa,id', // pastikan setiap id valid
+                'status'     => 'required|string',         // tambahkan validasi untuk status
             ]);
 
             Siswa::whereIn('id', $validated['siswa_id'])
                 ->update([
-                    'status_daftar' => $validated['status_daftar'],
+                    'status' => $validated['status'],
                 ]);
 
             return response()->json([

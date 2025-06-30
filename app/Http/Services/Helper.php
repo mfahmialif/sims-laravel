@@ -158,6 +158,10 @@ class Helper
             'daftar'         => 'info',
             'diterima'       => 'success',
             'tidak diterima' => 'danger',
+            'aktif'          => 'success',
+            'tidak aktif'    => 'danger',
+            'cuti'           => 'secondary',
+            'lulus'          => 'info',
         ];
 
         return $color[$status];

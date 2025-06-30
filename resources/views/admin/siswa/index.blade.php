@@ -1,15 +1,14 @@
 @extends('layouts.admin.template')
-@section('title', 'Pendaftaran Siswa Baru')
+@section('title', 'Siswa')
 @section('content')
     <!-- Page Header -->
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.pendaftaran-siswa-baru.index') }}">Pendaftaran Siswa
-                            Baru </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.siswa.index') }}">Siswa </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Data Pendaftaran Siswa Baru</li>
+                    <li class="breadcrumb-item active">Data Siswa</li>
                 </ul>
             </div>
         </div>
@@ -20,10 +19,10 @@
         <div class="col-sm-12">
 
             <div class="alert alert-info" role="alert">
-                Untuk menambahkan siswa, ganti status menjadi <b>DITERIMA</b>.<br>
-                Gunakan kolom centang dan klik list edit <i class="feather-menu"></i> untuk mengedit status dengan cepat.
+                Siswa hanya bisa ditambahkan dari <b>data pendaftaran siswa baru</b> dengan status <b>DITERIMA</b>.<br>
+                Jika klik tambah <b><i class="feather-plus"></i></b> maka akan diarahkan ke halaman <b>pendaftaran siswa
+                    baru</b>.
             </div>
-
 
             <div class="col-12">
                 <div class="input-block local-forms">
@@ -45,7 +44,7 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Data Pendaftaran Siswa Baru</h3>
+                                    <h3>Data Siswa</h3>
                                     <div class="doctor-search-blk mt-3 mt-md-0">
                                         <div class="top-nav-search table-search-blk">
                                             <form onsubmit="event.preventDefault(); searchDataTable('#table1');">
@@ -72,10 +71,9 @@
                                                         alt="">
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    @foreach ($statusDaftar as $item)
+                                                    @foreach ($status as $item)
                                                         <li><button class="dropdown-item"
-                                                                onclick="changeStatusDaftar('{{ $item }}')">Ganti
-                                                                status:
+                                                                onclick="changeStatusDaftar('{{ $item }}')">Ganti status:
                                                                 <b>{{ strtoupper($item) }}</b></button></li>
                                                     @endforeach
                                                 </ul>
@@ -158,7 +156,7 @@
         }
 
         function dataTable(tableId) {
-            var url = "{{ route('admin.pendaftaran-siswa-baru.data') }}"
+            var url = "{{ route('admin.siswa.data') }}"
             var datatable = $(tableId).DataTable({
                 // responsive: true,
                 dom: "rt<'d-flex justify-content-end m-3 align-items-center'l p><'d-flex justify-content-between m-3'iB>",
@@ -208,8 +206,8 @@
                         className: "text-middle"
                     },
                     {
-                        data: 'status_daftar',
-                        name: 'status_daftar',
+                        data: 'status',
+                        name: 'status',
                         className: "text-middle"
                     },
                     {
@@ -245,7 +243,7 @@
                 dangerMode: true,
             }).then((willDelete) => {
                 if (willDelete) {
-                    var url = "{{ route('admin.pendaftaran-siswa-baru.destroy', ['siswa' => '_siswa']) }}";
+                    var url = "{{ route('admin.siswa.destroy', ['siswa' => '_siswa']) }}";
                     url = url.replace('_siswa', id);
                     var fd = new FormData($(event.target)[0]);
                     $.ajax({
@@ -266,7 +264,7 @@
             });
         }
 
-        function changeStatusDaftar(statusDaftar) {
+        function changeStatusDaftar(status) {
 
             let siswa_id = [];
             // Ambil semua checkbox yang diceklis
@@ -281,11 +279,11 @@
 
             $.ajax({
                 type: "PUT",
-                url: "{{ route('admin.pendaftaran-siswa-baru.update-status-daftar') }}",
+                url: "{{ route('admin.siswa.update-status') }}",
                 data: {
                     _token: "{{ csrf_token() }}",
                     siswa_id: siswa_id,
-                    status_daftar: statusDaftar
+                    status: status
                 },
                 success: function(response) {
                     showToastr(response.status, response.message);
