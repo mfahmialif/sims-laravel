@@ -39,6 +39,7 @@ class CreateSiswaTable extends Migration
             $table->integer('lingkar_kepala')->nullable();                // in cm
             $table->decimal('jarak_tempuh_ke_sekolah', 8, 2)->nullable(); // in km
             $table->string('gol_darah')->nullable();
+            $table->string('foto')->nullable();
 
             // Student Address
             $table->text('alamat_anak_sesuai_kk');

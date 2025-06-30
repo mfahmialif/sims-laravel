@@ -3,6 +3,9 @@
                 alt=""></span>
         <span> Siswa Baru </span> <span class="menu-arrow"></span></a>
     <ul style="display: none;">
-        <li><a href="doctors.html">Pendaftaran Siswa Baru</a></li>
+        <li>
+            <a class="{{ request()->RouteIs('admin.pendaftaran-siswa-baru.*') ? 'active' : '' }}"
+                href="{{ route('admin.pendaftaran-siswa-baru.index') }}">Pendaftaran Siswa Baru</a>
+        </li>
     </ul>
 </li>
