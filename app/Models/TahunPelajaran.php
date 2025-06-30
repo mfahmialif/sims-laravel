@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TahunPelajaran extends Model
 {
     use HasFactory;
+
     protected $table ="tahun_pelajaran";
-    protected $fillable =["kode","nama","status"];
+    protected $guarded =[];
 }
