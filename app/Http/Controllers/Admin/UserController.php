@@ -127,7 +127,7 @@ class UserController extends Controller
 
             if ($request->hasFile('avatar')) {
                 if ($user->avatar) {
-                    Helper::deleteFile($user->avatar);
+                    Helper::deleteFile($user->avatar, 'avatar');
                 }
                 $user->avatar = Helper::uploadFile($request->file('avatar'), $request->username, 'avatar');
             }

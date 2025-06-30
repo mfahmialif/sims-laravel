@@ -25,8 +25,9 @@ class CreateSiswaTable extends Migration
             $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan']);
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
-            $table->string('agama');
+            $table->enum('agama', ['Islam', 'Kristen', 'Hindu', 'Budha', 'Konghucu'])->default('Islam');
             $table->string('nik_anak')->nullable();
+            $table->string('kk')->nullable();
             $table->string('no_registrasi_akta_lahir')->nullable();
             $table->string('akta_lahir_path')->nullable(); // Assuming this is a file path
             $table->integer('anak_ke')->nullable();

@@ -31,6 +31,8 @@
     overflow: hidden;
     cursor: pointer;
     font-size: 0.8rem;
+    width: 90%;
+    white-space: nowrap;
 }
 
 .avatar-preview {

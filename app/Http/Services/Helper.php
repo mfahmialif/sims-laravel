@@ -1,9 +1,10 @@
 <?php
 namespace App\Http\Services;
 
-use App\Models\Departemen;
-use App\Models\Jadwal;
+use Carbon\Carbon;
 use App\Models\Tahun;
+use App\Models\Jadwal;
+use App\Models\Departemen;
 
 class Helper
 {
@@ -479,5 +480,10 @@ class Helper
         }
 
         return false;
+    }
+
+    public static function hitungUmur($tanggalLahir)
+    {
+        return Carbon::parse($tanggalLahir)->age;
     }
 }
