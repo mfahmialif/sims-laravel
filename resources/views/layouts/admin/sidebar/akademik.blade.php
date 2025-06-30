@@ -5,6 +5,6 @@
      <ul style="display: none;">
          <li><a href="staff-list.html">Mata Pelajaran</a></li>
          <li><a href="add-staff.html">Kurikulum</a></li>
-         <li><a href="staff-profile.html">Kelas</a></li>
+         <li><a href="{{ route('admin.kelas.index') }}">Kelas</a></li>
      </ul>
  </li>

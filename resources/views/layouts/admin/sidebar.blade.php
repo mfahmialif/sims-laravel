@@ -9,7 +9,6 @@
                 @include('layouts.admin.sidebar.akademik')
                 @include('layouts.admin.sidebar.siswa')
                 @include('layouts.admin.sidebar.laporan')
-
                 <li class="menu-title">Pengaturan</li>
                 @include('layouts.admin.sidebar.sistem')
 

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\Kelas;
 use Illuminate\Support\Facades\Route;
 
 /*
