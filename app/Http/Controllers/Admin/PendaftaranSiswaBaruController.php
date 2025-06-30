@@ -331,6 +331,7 @@ class PendaftaranSiswaBaruController extends Controller
 
             $user        = $siswa->user;
             $user->email = $request->email;
+            $user->jenis_kelamin = $request->jenis_kelamin;
             $user->save();
 
             $umur = $request->tanggal_lahir ? Helper::hitungUmur($request->tanggal_lahir) : null;
