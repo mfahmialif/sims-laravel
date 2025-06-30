@@ -79,6 +79,9 @@
             // MENGISI DATA UMUM (INPUT TEXT, DATE, NUMBER)
             // -------------------------------------------------------------------
             form.find('input[name="email"]').val(getValue('user.email'));
+            form.find('.status_daftar').removeClass('d-none');
+            form.find('.status_daftar').attr('required', true);
+
 
             // Informasi Siswa
             form.find('input[name="nis"]').val(getValue('nis'));
@@ -158,17 +161,22 @@
             form.find('select[name="tahun_pelajaran_id"]').val(getValue('tahun_pelajaran_id')).change();
             form.find('select[name="jenis_kelamin"]').val(getValue('jenis_kelamin')).change();
             form.find('select[name="agama"]').val(getValue('agama')).change();
+            form.find('select[name="status_daftar"]').val(getValue('status_daftar')).change();
 
             // -------------------------------------------------------------------
             // MENAMPILKAN NAMA FILE YANG SUDAH DIUPLOAD
             // -------------------------------------------------------------------
             // Hanya tampilkan nama file dari database jika tidak ada old input untuk file tsb.
             if (!hasOldData && siswa.foto) {
-                $('#file-info-foto').text(siswa.foto);
+                $('#file-info').text(siswa.foto);
+                $('.view-foto').removeClass('d-none');
+                $('#view-foto').attr('href', "{{ asset('foto_siswa') }}" + '/' + siswa.foto);
             }
 
             if (!hasOldData && siswa.akta_lahir_path) {
-                $('#file-info-akta_lahir').text(siswa.akta_lahir_path);
+                $('#file-info-akta').text(siswa.akta_lahir_path);
+                $('.view-akta').removeClass('d-none');
+                $('#view-akta').attr('href', "{{ asset('akta_lahir_path') }}" + '/' + siswa.akta_lahir_path);
             }
         });
     </script>

@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Services;
 
-use Carbon\Carbon;
-use App\Models\Tahun;
-use App\Models\Jadwal;
 use App\Models\Departemen;
+use App\Models\Jadwal;
+use App\Models\Tahun;
+use Carbon\Carbon;
 
 class Helper
 {
@@ -150,6 +150,17 @@ class Helper
                 $code = '#54B4D3';
         }
         return $code;
+    }
+
+    public static function getColorStatus($status)
+    {
+        $color = [
+            'daftar'         => 'info',
+            'diterima'       => 'success',
+            'tidak diterima' => 'danger',
+        ];
+
+        return $color[$status];
     }
 
     public static function changeName($string)
@@ -486,4 +497,5 @@ class Helper
     {
         return Carbon::parse($tanggalLahir)->age;
     }
+
 }

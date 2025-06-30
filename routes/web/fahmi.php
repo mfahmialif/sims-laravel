@@ -16,6 +16,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/data', [PendaftaranSiswaBaruController::class, 'data'])->name('admin.pendaftaran-siswa-baru.data');
         Route::get('/add', [PendaftaranSiswaBaruController::class, 'add'])->name('admin.pendaftaran-siswa-baru.add');
         Route::post('/', [PendaftaranSiswaBaruController::class, 'store'])->name('admin.pendaftaran-siswa-baru.store');
+        Route::put('/update-status-daftar', [PendaftaranSiswaBaruController::class, 'updateStatusDaftar'])->name('admin.pendaftaran-siswa-baru.update-status-daftar');
         Route::get('/{siswa}/edit', [PendaftaranSiswaBaruController::class, 'edit'])->name('admin.pendaftaran-siswa-baru.edit');
         Route::put('/{siswa}/update', [PendaftaranSiswaBaruController::class, 'update'])->name('admin.pendaftaran-siswa-baru.update');
         Route::delete('/{siswa}/destroy', [PendaftaranSiswaBaruController::class, 'destroy'])->name('admin.pendaftaran-siswa-baru.destroy');

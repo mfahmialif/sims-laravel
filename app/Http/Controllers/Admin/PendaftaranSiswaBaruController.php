@@ -103,7 +103,10 @@ class PendaftaranSiswaBaruController extends Controller
 
     public function index()
     {
-        return view('admin.pendaftaran-siswa-baru.index');
+        $jenisKelamin   = Helper::getEnumValues('users', 'jenis_kelamin');
+        $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
+
+        return view('admin.pendaftaran-siswa-baru.index', compact('jenisKelamin', 'tahunPelajaran'));
     }
 
     public function data(Request $request)
@@ -112,10 +115,32 @@ class PendaftaranSiswaBaruController extends Controller
         $data   = Siswa::select('*');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
+                $query->when($request->tahun_pelajaran_id, function ($q) use ($request) {
+                    $q->where('tahun_pelajaran_id', $request->tahun_pelajaran_id);
+                });
                 $query->where(function ($query) use ($search) {
                     $query->orWhere('nama_siswa', 'LIKE', "%$search%");
                     $query->orWhere('jenis_kelamin', 'LIKE', "%$search%");
+                    $query->orWhere('nis', 'LIKE', "%$search%");
+                    $query->orWhere('nisn', 'LIKE', "%$search%");
+                    $query->orWhere('nik_anak', 'LIKE', "%$search%");
                 });
+            })
+            ->editColumn('nama_siswa', function ($row) {
+                $row->foto = $row->foto ? asset('foto_siswa/' . $row->foto) : asset('template/assets/img/user.jpg');
+                return '
+                    <div class="d-flex align-items-center">
+                        <img src="' . $row->foto . '" alt="Foto Siswa" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
+                        <div>
+                            <a href="' . route("admin.pendaftaran-siswa-baru.edit", $row) . '">' . $row->nama_siswa . '</a><br>
+                            <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
+                            <small>NISN: ' . ($row->nisn ?? '-') . '</small>
+                        </div>
+                    </div>
+                ';
+            })
+            ->editColumn('status_daftar', function ($row) {
+                return '<span class="badge bg-' . Helper::getColorStatus($row->status_daftar) . '">' . strtoupper($row->status_daftar) . '</span>';
             })
             ->addColumn('action', function ($row) {
                 $content = '<div class="dropdown dropdown-action">
@@ -134,7 +159,7 @@ class PendaftaranSiswaBaruController extends Controller
                     </div>';
                 return $content;
             })
-            ->rawColumns(['action', 'name'])
+            ->rawColumns(['action', 'nama_siswa', 'status_daftar'])
             ->toJson();
     }
 
@@ -143,7 +168,8 @@ class PendaftaranSiswaBaruController extends Controller
         $jenisKelamin   = Helper::getEnumValues('users', 'jenis_kelamin');
         $agama          = Helper::getEnumValues('siswa', 'agama');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
-        return view('admin.pendaftaran-siswa-baru.add', compact('jenisKelamin', 'agama', 'tahunPelajaran'));
+        $statusDaftar   = Helper::getEnumValues('siswa', 'status_daftar');
+        return view('admin.pendaftaran-siswa-baru.add', compact('jenisKelamin', 'agama', 'tahunPelajaran', 'statusDaftar'));
     }
 
     public function store(Request $request)
@@ -247,9 +273,9 @@ class PendaftaranSiswaBaruController extends Controller
             $siswa->kode_pos_wali            = $request->kode_pos_wali;
             $siswa->nomor_telepon_wali       = $request->nomor_telepon_wali;
 
-                                                                                // Mengisi Status
-            $siswa->status_daftar = $request->input('status_daftar', 'daftar'); // Default 'daftar' jika tidak ada input
-            $siswa->status        = $request->input('status', 'aktif');         // Default 'aktif' jika tidak ada input
+                                                                         // Mengisi Status
+            $siswa->status_daftar = $request->status_daftar ?? 'daftar'; // Default 'daftar' jika tidak ada input
+            $siswa->status        = $request->input('status', 'aktif');  // Default 'aktif' jika tidak ada input
 
             if ($request->hasFile('foto')) {
                 $siswa->foto = Helper::uploadFile($request->file('foto'), $request->nama_siswa, 'foto_siswa');
@@ -283,9 +309,10 @@ class PendaftaranSiswaBaruController extends Controller
         $jenisKelamin   = Helper::getEnumValues('users', 'jenis_kelamin');
         $agama          = Helper::getEnumValues('siswa', 'agama');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
+        $statusDaftar   = Helper::getEnumValues('siswa', 'status_daftar');
 
         $siswa = $siswa->load('user');
-        return view('admin.pendaftaran-siswa-baru.edit', compact('siswa', 'agama', 'jenisKelamin', 'tahunPelajaran'));
+        return view('admin.pendaftaran-siswa-baru.edit', compact('siswa', 'agama', 'jenisKelamin', 'tahunPelajaran', 'statusDaftar'));
     }
 
     public function update(Request $request, Siswa $siswa)
@@ -440,6 +467,40 @@ class PendaftaranSiswaBaruController extends Controller
                 'status'  => false,
                 'message' => $th->getMessage(),
             ]);
+        }
+    }
+
+    public function updateStatusDaftar(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'siswa_id'      => 'required|array',
+                'siswa_id.*'    => 'integer|exists:siswa,id', // pastikan setiap id valid
+                'status_daftar' => 'required|string',         // tambahkan validasi untuk status
+            ]);
+
+            Siswa::whereIn('id', $validated['siswa_id'])
+                ->update([
+                    'status_daftar' => $validated['status_daftar'],
+                ]);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Berhasil mengupdate status daftar',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 422,
+                'errors'  => $e->errors(), // kirim array error lengkap
+                'req'     => $request->all(),
+            ], 422);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'  => false,
+                'message' => $th->getMessage(),
+                'request' => $request->all(),
+            ], 500);
         }
     }
 }

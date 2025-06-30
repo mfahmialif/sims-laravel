@@ -19,9 +19,21 @@
     <div class="row">
         <div class="col-sm-12">
 
+            <div class="col-12">
+                <div class="input-block local-forms">
+                    <select class="form-control select2" id="filter_tahun_pelajaran_id" required>
+                        <option value="">Semua Tahun Pelajaran</option>
+                        @foreach ($tahunPelajaran as $item)
+                            <option value="{{ $item->id }}">
+                                {{ $item->nama }} {{ $item->semester }} {{-- Sesuaikan nama kolom --}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
             <div class="card card-table show-entire">
                 <div class="card-body">
-
                     <!-- Table Header -->
                     <div class="page-table-header mb-2">
                         <div class="row align-items-center">
@@ -47,6 +59,26 @@
                                                 class="btn btn-primary doctor-refresh ms-2"><img
                                                     src="{{ asset('template') }}/assets/img/icons/re-fresh.svg"
                                                     alt=""></a>
+                                            <div class="dropdown ms-2">
+                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <img src="{{ asset('template') }}/assets/img/icons/bar-icon.svg"
+                                                        alt="">
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <li><button class="dropdown-item"
+                                                            onclick="changeStatusDaftar('diterima')">Ganti status:
+                                                            <b>Diterima</b></button></li>
+                                                    <li><button class="dropdown-item"
+                                                            onclick="changeStatusDaftar('tidak diterima')">Ganti status:
+                                                            <b>Tidak
+                                                                Diterima</b></button>
+                                                    </li>
+                                                    <li><button class="dropdown-item"
+                                                            onclick="changeStatusDaftar('daftar')">Ganti status:
+                                                            <b>Daftar</b></button></li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -60,7 +92,6 @@
                                         src="{{ asset('template') }}/assets/img/icons/pdf-icon-03.svg" alt=""></a>
                                 <a href="javascript:;"><img src="{{ asset('template') }}/assets/img/icons/pdf-icon-04.svg"
                                         alt=""></a>
-
                             </div>
                         </div>
                     </div>
@@ -70,9 +101,16 @@
                         <table id="table1" class="table border-0 custom-table comman-table datatable mb-0 table-hover">
                             <thead>
                                 <tr>
+                                    <th style="width: 5%">
+                                        <div class="form-check check-tables">
+                                            <input class="form-check-input" id="check-all" type="checkbox"
+                                                value="something">
+                                        </div>
+                                    </th>
                                     <th style="width: 5%">No</th>
                                     <th>Nama</th>
                                     <th>Jenis Kelamin</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -92,6 +130,19 @@
         $('#search-table').focus();
 
         var searchTimeout = null;
+
+        $('#filter_tahun_pelajaran_id').change(function(e) {
+            e.preventDefault();
+            table1.ajax.reload();
+        });
+
+        $('#check-all').on('change', function() {
+            $('.check-table').prop('checked', this.checked);
+        });
+
+        $(document).on('change', '.check-table', function() {
+            $('#check-all').prop('checked', $('.check-table:checked').length === $('.check-table').length);
+        });
 
         function searchDataTable(tableId, refresh = false) {
             var time = refresh ? 0 : 700;
@@ -114,7 +165,7 @@
                 processing: true,
                 serverSide: true,
                 order: [
-                    [0, "desc"]
+                    [1, "desc"]
                 ],
                 search: {
                     return: true,
@@ -122,11 +173,24 @@
                 ajax: {
                     url: url,
                     data: function(d) {
+                        d.tahun_pelajaran_id = $('#filter_tahun_pelajaran_id').val();
                         // d.search = $('#search-table').val();
                     },
                 },
                 deferRender: true,
                 columns: [{
+                        data: 'id',
+                        render: function(data, type, row, meta) {
+                            return `
+                            <div class="form-check check-tables">
+                                <input class="form-check-input check-table status_daftar_checkbox" type="checkbox" name="status_daftar_checkbox[]" value="${data}">
+                            </div>
+                            `;
+                        },
+                        className: "text-middle",
+                        orderable: false,
+                    },
+                    {
                         data: 'id',
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
@@ -140,6 +204,11 @@
                     {
                         data: 'jenis_kelamin',
                         name: 'jenis_kelamin',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'status_daftar',
+                        name: 'status_daftar',
                         className: "text-middle"
                     },
                     {
@@ -192,6 +261,40 @@
                             showToastr(response.status, response.message);
                         }
                     });
+                }
+            });
+        }
+
+        function changeStatusDaftar(statusDaftar) {
+
+            let siswa_id = [];
+            // Ambil semua checkbox yang diceklis
+            $('.status_daftar_checkbox:checked').each(function() {
+                siswa_id.push($(this).val());
+            });
+
+            if (siswa_id.length === 0) {
+                swal('Peringatan!', 'Pilih setidaknya satu siswa terlebih dahulu.', 'warning');
+                return;
+            }
+
+            $.ajax({
+                type: "PUT",
+                url: "{{ route('admin.pendaftaran-siswa-baru.update-status-daftar') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    siswa_id: siswa_id,
+                    status_daftar: statusDaftar
+                },
+                success: function(response) {
+                    showToastr(response.status, response.message);
+                    table1.ajax.reload();
+                },
+                error: function(xhr) {
+                    toastr.error(xhr.responseText);
+                },
+                complete: function() {
+                    $('#check-all').prop('checked', false);
                 }
             });
         }

@@ -19,6 +19,22 @@
         @enderror
     </div>
 </div>
+<div class="col-12 status_daftar d-none">
+    <div class="input-block local-forms">
+        <label>Status Daftar <span class="login-danger">*</span></label>
+        <select class="form-control select2 @error('status_daftar') is-invalid @enderror" name="status_daftar">
+            <option value="">Pilih Status Daftar</option>
+            @foreach ($statusDaftar as $item)
+                <option value="{{ $item }}" {{ old('status_daftar') == $item ? 'selected' : '' }}>
+                    {{ $item }} {{-- Sesuaikan nama kolom --}}
+                </option>
+            @endforeach
+        </select>
+        @error('tahun_pelajaran_id')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
 <div class="col-12">
     <div class="input-block local-forms">
         <label>Email</label>
@@ -139,8 +155,8 @@
 <div class="col-12 col-md-6">
     <div class="input-block local-forms">
         <label>No Registrasi Akta Lahir</label>
-        <input class="form-control @error('no_registrasi_akta_lahir') is-invalid @enderror" name="no_registrasi_akta_lahir" type="text"
-            value="{{ old('no_registrasi_akta_lahir') }}">
+        <input class="form-control @error('no_registrasi_akta_lahir') is-invalid @enderror"
+            name="no_registrasi_akta_lahir" type="text" value="{{ old('no_registrasi_akta_lahir') }}">
         @error('no_registrasi_akta_lahir')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -159,8 +175,8 @@
 <div class="col-12 col-md-6">
     <div class="input-block local-forms">
         <label>Jumlah Saudara Kandung</label>
-        <input class="form-control @error('jumlah_saudara_kandung') is-invalid @enderror" name="jumlah_saudara_kandung"
-            type="number" value="{{ old('jumlah_saudara_kandung') }}">
+        <input class="form-control @error('jumlah_saudara_kandung') is-invalid @enderror"
+            name="jumlah_saudara_kandung" type="number" value="{{ old('jumlah_saudara_kandung') }}">
         @error('jumlah_saudara_kandung')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -518,6 +534,10 @@
                 {{ $message }}
             </div>
         @enderror
+        <div class="ms-2 mb-4 view-foto d-none">
+            <small class="text-decoration-underline"><a href="" id="view-foto">Lihat Berkas <i
+                        class="fa fa-eye"></i></a></small>
+        </div>
     </div>
 </div>
 <div class="col-12">
@@ -539,6 +559,11 @@
                 {{ $message }}
             </div>
         @enderror
+        <div class="ms-2 mb-4 view-akta d-none">
+            <small class="text-decoration-underline"><a href="" id="view-akta">Lihat Berkas <i
+                        class="fa fa-eye"></i></a></small>
+        </div>
+
     </div>
 </div>
 
