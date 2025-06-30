@@ -17,6 +17,7 @@ class CreateTahunPelajaranTable extends Migration
             $table->id();
             $table->string('kode')->unique();
             $table->string('nama');
+            $table->string('semester');
             $table->enum('status',['aktif','tidak aktif']);
             $table->timestamps();
         });

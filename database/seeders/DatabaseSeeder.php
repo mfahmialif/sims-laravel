@@ -41,6 +41,15 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        \DB::table('tahun_pelajaran')->insert([
+            [
+                'kode' => '20251',
+                'nama' => '2025/2026',
+                'semester' => 'Ganjil',
+                'status' => 'aktif',
+            ],
+        ]);
+
         // $batchSize = 500; // jumlah data per batch insert
         // $data      = [];
 
