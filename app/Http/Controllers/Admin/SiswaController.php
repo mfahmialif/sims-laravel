@@ -100,7 +100,7 @@ class SiswaController extends Controller
 
     public function index()
     {
-        $jenisKelamin   = Helper::getEnumValues('users', 'jenis_kelamin');
+        $jenisKelamin   = Helper::getEnumValues('siswa', 'jenis_kelamin');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
         $status         = Helper::getEnumValues('siswa', 'status');
 
@@ -110,18 +110,23 @@ class SiswaController extends Controller
     public function data(Request $request)
     {
         $search = request('search.value');
-        $data   = Siswa::where('status_daftar', 'diterima')->select('*');
+        $data   = Siswa::join('tahun_pelajaran', 'tahun_pelajaran.id', '=', 'siswa.tahun_pelajaran_id')
+            ->where('status_daftar', 'diterima')
+            ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
                 $query->when($request->tahun_pelajaran_id, function ($q) use ($request) {
-                    $q->where('tahun_pelajaran_id', $request->tahun_pelajaran_id);
+                    $q->where('siswa.tahun_pelajaran_id', $request->tahun_pelajaran_id);
+                });
+                $query->when($request->jenis_kelamin, function ($q) use ($request) {
+                    $q->where('siswa.jenis_kelamin', $request->jenis_kelamin);
                 });
                 $query->where(function ($query) use ($search) {
-                    $query->orWhere('nama_siswa', 'LIKE', "%$search%");
-                    $query->orWhere('jenis_kelamin', 'LIKE', "%$search%");
-                    $query->orWhere('nis', 'LIKE', "%$search%");
-                    $query->orWhere('nisn', 'LIKE', "%$search%");
-                    $query->orWhere('nik_anak', 'LIKE', "%$search%");
+                    $query->orWhere('siswa.nama_siswa', 'LIKE', "%$search%");
+                    $query->orWhere('siswa.jenis_kelamin', 'LIKE', "%$search%");
+                    $query->orWhere('siswa.nis', 'LIKE', "%$search%");
+                    $query->orWhere('siswa.nisn', 'LIKE', "%$search%");
+                    $query->orWhere('siswa.nik_anak', 'LIKE', "%$search%");
                 });
             })
             ->editColumn('nama_siswa', function ($row) {

@@ -24,17 +24,30 @@
                 Gunakan kolom centang dan klik list edit <i class="feather-menu"></i> untuk mengedit status dengan cepat.
             </div>
 
-
-            <div class="col-12">
-                <div class="input-block local-forms">
-                    <select class="form-control select2" id="filter_tahun_pelajaran_id" required>
-                        <option value="">Semua Tahun Pelajaran</option>
-                        @foreach ($tahunPelajaran as $item)
-                            <option value="{{ $item->id }}">
-                                {{ $item->nama }} {{ $item->semester }} {{-- Sesuaikan nama kolom --}}
-                            </option>
-                        @endforeach
-                    </select>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="input-block local-forms">
+                        <select class="form-control select2 filter-dt" id="filter_tahun_pelajaran_id" required>
+                            <option value="">Semua Tahun Pelajaran</option>
+                            @foreach ($tahunPelajaran as $item)
+                                <option value="{{ $item->id }}">
+                                    {{ $item->nama }} {{ $item->semester }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="input-block local-forms">
+                        <select class="form-control select2 filter-dt" id="filter_jenis_kelamin" required>
+                            <option value="">Semua Jenis Kelamin</option>
+                            @foreach ($jenisKelamin as $item)
+                                <option value="{{ $item }}">
+                                    {{ $item }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -109,6 +122,7 @@
                                         </div>
                                     </th>
                                     <th style="width: 5%">No</th>
+                                    <th>Tahun</th>
                                     <th>Nama</th>
                                     <th>Jenis Kelamin</th>
                                     <th>Status</th>
@@ -132,7 +146,7 @@
 
         var searchTimeout = null;
 
-        $('#filter_tahun_pelajaran_id').change(function(e) {
+        $('.filter-dt').change(function(e) {
             e.preventDefault();
             table1.ajax.reload();
         });
@@ -175,6 +189,7 @@
                     url: url,
                     data: function(d) {
                         d.tahun_pelajaran_id = $('#filter_tahun_pelajaran_id').val();
+                        d.jenis_kelamin = $('#filter_jenis_kelamin').val();
                         // d.search = $('#search-table').val();
                     },
                 },
@@ -196,6 +211,11 @@
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
+                    },
+                    {
+                        data: 'tahun_pelajaran_kode',
+                        name: 'tahun_pelajaran_kode',
+                        className: "text-middle"
                     },
                     {
                         data: 'nama_siswa',
