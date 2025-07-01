@@ -10,4 +10,7 @@ class TahunPelajaran extends Model
 
     protected $table ="tahun_pelajaran";
     protected $guarded =[];
+    function kurikulum()  {
+        return $this->hasMany(Kurikulum::class);
+    }
 }

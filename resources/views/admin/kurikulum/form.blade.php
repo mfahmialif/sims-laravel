@@ -1,16 +1,14 @@
 <div class="col-12 col-md-12">
     <div class="input-block local-forms">
-        <label>Romawi<span class="login-danger">*</span></label>
-        <select class="form-control select2 @error('romawi') is-invalid @enderror" name="romawi" required>
-            <option value="">Pilih Romawi</option>
-            <option value="I">I</option>
-            <option value="II">II</option>
-            <option value="III">III</option>
-            <option value="IV">IV</option>
-            <option value="V">V</option>
-            <option value="VI">VI</option>
+        <label>Tahun Pelajaran<span class="login-danger">*</span></label>
+        <select class="form-control select2 @error('tahun') is-invalid @enderror" name="tahun" required>
+            <option value="">Pilih Tahun Pelajaran</option>
+            @foreach ($tahun as $item)
+                 <option value="{{ $item->id }}">{{ $item->kode }}</option>
+            @endforeach
+           
         </select>
-        @error('romawi')
+        @error('tahun')
             <div class="invalid-feedback">
                 {{ $message }}
             </div>
@@ -19,28 +17,14 @@
 </div>
 <div class="col-12 col-md-12">
     <div class="input-block local-forms">
-        <label>Angka<span class="login-danger">*</span></label>
-        <select class="form-control select2 @error('angka') is-invalid @enderror" name="angka" required>
-            <option value="">Pilih Angka</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
+        <label>Mata Pelajaran<span class="login-danger">*</span></label>
+        <select class="form-control select2 @error('pelajaran') is-invalid @enderror" name="pelajaran" required>
+            <option value="">Pilih Mata Pelajaran</option>
+            @foreach ($mataPelajaran as $item)
+                 <option value="{{ $item->id }}">{{ $item->kode }}</option>
+            @endforeach
         </select>
-        @error('angka')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-        @enderror
-    </div>
-</div>
-<div class="col-12">
-    <div class="input-block local-forms">
-        <label>Email</label>
-        <textarea class="form-control  @error('keterangan') is-invalid @enderror"  name="keterangan" id="keterangan" cols="30" rows="10"></textarea>
-        @error('keterangan')
+        @error('pelajaran')
             <div class="invalid-feedback">
                 {{ $message }}
             </div>
@@ -50,7 +34,7 @@
 <div class="col-12">
     <div class="doctor-submit text-end">
         <button type="submit" class="btn btn-primary submit-form me-2">Simpan</button>
-        <button onclick="location.href = '{{ route('admin.kelas.index') }}'" type="button"
+        <button onclick="location.href = '{{ route('admin.kurikulum.index') }}'" type="button"
             class="btn btn-primary cancel-form">Batalkan</button>
     </div>
 </div>
@@ -60,7 +44,6 @@
         const previewImg = document.getElementById("preview");
         const fileInfo = document.getElementById("file-info");
         const uploadLabel = document.getElementById("upload-label");
-
         const defaultPreview = ""; // atau set URL default preview gambar di sini jika ada
 
         function handleFileUpload(input) {

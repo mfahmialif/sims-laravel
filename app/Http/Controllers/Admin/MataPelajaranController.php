@@ -3,31 +3,37 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kelas;
 use App\Models\MataPelajaran;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class MataPelajaranController extends Controller
 {
     private $rules = [
-        "romawi" => "required|string",
-        "angka" => "required|string",
-        "keterangan" => "required|string"
+        "nama" => "required|string",
+        "kode" => "required|string",
+        "status"=>"required|string",
+        "kelas" => "required|string"
     ];
     function index()
     {
-        return view('admin.kelas.index');
+        return view('admin.mata-pelajaran.index');
     }
     function data(Request $request)
     {
         $search = request('search.value');
-        $data   = Kelas::select('*');
-        return DataTables::of($data)
+        $data   = MataPelajaran::with('kelas')->select('*');
+        return DataTables::eloquent($data)
             ->filter(function ($query) use ($search, $request) {
                 $query->where(function ($query) use ($search) {
-                    $query->orWhere('romawi', 'LIKE', "%$search%");
-                    $query->orWhere('angka', 'LIKE', "%$search%");
-                    $query->orWhere('keterangan', 'LIKE', "%$search%");
+                    $query->orWhere('nama', 'LIKE', "%$search%");
+                    $query->orWhere('kode', 'LIKE', "%$search%");
+                    $query->orWhere('status', 'LIKE', "%$search%");
                 });
+            })
+            ->addColumn('kelas',function($row){
+                return $row->kelas->angka;
             })
             ->addColumn('action', function ($row) {
                 $content = '<div class="dropdown dropdown-action">
@@ -46,12 +52,13 @@ class MataPelajaranController extends Controller
                     </div>';
                 return $content;
             })
-            ->rawColumns(['action', 'name'])
+            ->rawColumns(['action', 'name','kelas'])
             ->toJson();
     }
     function add()
     {
-        return view('admin.mata-pelajaran.add');
+        $kelas = Kelas::all();
+        return view('admin.mata-pelajaran.add',compact('kelas'));
     }
     function store(Request $request)
     {
@@ -61,7 +68,7 @@ class MataPelajaranController extends Controller
             $mataPelajaran->nama = $request->nama;
             $mataPelajaran->kode = $request->kode;
             $mataPelajaran->status = $request->status;
-            $mataPelajaran->kelas_id = $request->kelas_id;
+            $mataPelajaran->kelas_id = $request->kelas;
             $mataPelajaran->save();
             return redirect()->route('admin.mata-pelajaran.index')->with('success', 'Mata Pelajaran berhasil ditambahkan');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -75,19 +82,17 @@ class MataPelajaranController extends Controller
     }
     function edit(MataPelajaran $mataPelajaran)
     {
-        return view('admin.mata-pelajaran.edit',compact('mataPelajaran'));
+        $kelas = Kelas::all();
+        return view('admin.mata-pelajaran.edit',compact('mataPelajaran','kelas'));
     }
     function update(Request $request, MataPelajaran $mataPelajaran)
     {
         try {
-
-            $rules = $this->rules;
-            $rules["id"] = "required";
             $request->validate($this->rules);
-
-                $mataPelajaran->romawi = $request->romawi;
-                $mataPelajaran->angka = $request->angka;
-                $mataPelajaran->keterangan = $request->keterangan;
+                $mataPelajaran->nama   = $request->nama;
+                $mataPelajaran->kode   = $request->kode;
+                $mataPelajaran->status = $request->status;
+                $mataPelajaran->kelas  = $request->kelas;
                 $mataPelajaran->save();
             return redirect()->route('admin.mata-pelajaran.index')->with('success', 'Mata Pelajaran berhasil diupdate');
         } catch (\Illuminate\Validation\ValidationException $e) {

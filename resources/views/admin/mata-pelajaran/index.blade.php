@@ -1,15 +1,14 @@
 @extends('layouts.admin.template')
-@section('title', 'Guru')
+@section('title', 'Mata Pelajaran')
 @section('content')
     <!-- Page Header -->
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.guru.index') }}">Pendaftaran Siswa
-                            Baru </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.mata-pelajaran.index') }}">Mata Pelajaran</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Data Guru</li>
+                    <li class="breadcrumb-item active">Data Mata Pelajaran</li>
                 </ul>
             </div>
         </div>
@@ -19,21 +18,6 @@
     <div class="row">
         <div class="col-sm-12">
 
-            <div class="row">
-                <div class="col-12">
-                    <div class="input-block local-forms">
-                        <select class="form-control select2 filter-dt" id="filter_jenis_kelamin" required>
-                            <option value="">Semua Jenis Kelamin</option>
-                            @foreach ($jenisKelamin as $item)
-                                <option value="{{ $item }}">
-                                    {{ $item }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
             <div class="card card-table show-entire">
                 <div class="card-body">
                     <!-- Table Header -->
@@ -41,23 +25,23 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Data Guru</h3>
+                                    <h3>Data User</h3>
                                     <div class="doctor-search-blk mt-3 mt-md-0">
                                         <div class="top-nav-search table-search-blk">
-                                            <form onsubmit="event.preventDefault(); searchDataTable('#tableGuru');">
+                                            <form onsubmit="event.preventDefault(); searchDataTable('#tableMataPelajaran');">
                                                 <input type="text" class="form-control" id="search-table"
-                                                    oninput="searchDataTable('#tableGuru')" placeholder="Search here">
+                                                    oninput="searchDataTable('#tableMataPelajaran')" placeholder="Search here">
                                                 <a class="btn"><img
                                                         src="{{ asset('template') }}/assets/img/icons/search-normal.svg"
                                                         alt=""></a>
                                             </form>
                                         </div>
                                         <div class="add-group">
-                                            <a href="{{ route('admin.guru.add') }}"
+                                            <a href="{{ route('admin.mata-pelajaran.add') }}"
                                                 class="btn btn-primary add-pluss ms-2"><img
                                                     src="{{ asset('template') }}/assets/img/icons/plus.svg"
                                                     alt=""></a>
-                                            <a href="javascript:void(0);" onclick="searchDataTable('#tableGuru', true)"
+                                            <a href="javascript:void(0);" onclick="searchDataTable('#tableMataPelajaran', true)"
                                                 class="btn btn-primary doctor-refresh ms-2"><img
                                                     src="{{ asset('template') }}/assets/img/icons/re-fresh.svg"
                                                     alt=""></a>
@@ -74,24 +58,25 @@
                                         src="{{ asset('template') }}/assets/img/icons/pdf-icon-03.svg" alt=""></a>
                                 <a href="javascript:;"><img src="{{ asset('template') }}/assets/img/icons/pdf-icon-04.svg"
                                         alt=""></a>
+
                             </div>
                         </div>
                     </div>
                     <!-- /Table Header -->
 
                     <div class="table-responsive">
-                        <table id="tableGuru" class="table border-0 custom-table comman-table datatable mb-0 table-hover">
+                        <table id="tableMataPelajaran" class="table border-0 custom-table comman-table datatable mb-0 table-hover">
                             <thead>
                                 <tr>
                                     <th style="width: 5%">No</th>
                                     <th>Nama</th>
-                                    <th>Jenis Kelamin</th>
+                                    <th>Kode</th>
                                     <th>Status</th>
+                                    <th>kelas</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-
                             </tbody>
                         </table>
                     </div>
@@ -102,29 +87,14 @@
 @endsection
 @push('script')
     <script>
-        var table1 = dataTable('#tableGuru');
+        var table1 = dataTable('#tableMataPelajaran');
         $('#search-table').focus();
 
         var searchTimeout = null;
 
-        $('.filter-dt').change(function(e) {
-            e.preventDefault();
-            table1.ajax.reload();
-        });
-
-        $('#check-all').on('change', function() {
-            $('.check-table').prop('checked', this.checked);
-        });
-
-        $(document).on('change', '.check-table', function() {
-            $('#check-all').prop('checked', $('.check-table:checked').length === $('.check-table').length);
-        });
-
         function searchDataTable(tableId, refresh = false) {
             var time = refresh ? 0 : 700;
-
             clearTimeout(searchTimeout);
-
             searchTimeout = setTimeout(function() {
                 $(tableId).DataTable().search(
                     $('#search-table').val()
@@ -133,7 +103,7 @@
         }
 
         function dataTable(tableId) {
-            var url = "{{ route('admin.guru.data') }}"
+            var url = "{{ route('admin.mata-pelajaran.data') }}"
             var datatable = $(tableId).DataTable({
                 // responsive: true,
                 dom: "rt<'d-flex justify-content-end m-3 align-items-center'l p><'d-flex justify-content-between m-3'iB>",
@@ -141,7 +111,7 @@
                 processing: true,
                 serverSide: true,
                 order: [
-                    [1, "desc"]
+                    [0, "desc"]
                 ],
                 search: {
                     return: true,
@@ -149,7 +119,6 @@
                 ajax: {
                     url: url,
                     data: function(d) {
-                        d.jenis_kelamin = $('#filter_jenis_kelamin').val();
                         // d.search = $('#search-table').val();
                     },
                 },
@@ -166,13 +135,18 @@
                         className: "text-middle"
                     },
                     {
-                        data: 'jenis_kelamin',
-                        name: 'jenis_kelamin',
+                        data: 'kode',
+                        name: 'kode',
                         className: "text-middle"
                     },
                     {
                         data: 'status',
                         name: 'status',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'kelas',
+                        name: 'kelas',
                         className: "text-middle"
                     },
                     {
@@ -190,10 +164,10 @@
         function deleteData(event) {
             event.preventDefault();
             var id = event.target.querySelector('input[name="id"]').value;
-            var nama = event.target.querySelector('input[name="nama"]').value;
+            var name = event.target.querySelector('input[name="name"]').value;
             swal({
                 title: "Apa kamu yakin?",
-                text: "Data yang akan dihapus: " + nama + ". Data tidak dapat dikembalikan!",
+                text: "Data yang akan dihapus: " + name + ". Data tidak dapat dikembalikan!",
                 icon: "warning",
                 buttons: {
                     confirm: {
@@ -208,8 +182,8 @@
                 dangerMode: true,
             }).then((willDelete) => {
                 if (willDelete) {
-                    var url = "{{ route('admin.guru.destroy', ['guru' => '_guru']) }}";
-                    url = url.replace('_guru', id);
+                    var url = "{{ route('admin.mata-pelajaran.destroy', ['mataPelajaran' => '_mataPelajaran']) }}";
+                    url = url.replace('_mataPelajaran', id);
                     var fd = new FormData($(event.target)[0]);
                     $.ajax({
                         type: "post",
@@ -221,44 +195,10 @@
                             toastr.info('Loading...');
                         },
                         success: function(response) {
-                            searchDataTable('#table1', true);
+                            searchDataTable('#tableMataPelajaran', true);
                             showToastr(response.status, response.message);
                         }
                     });
-                }
-            });
-        }
-
-        function changeStatusDaftar(statusDaftar) {
-
-            let siswa_id = [];
-            // Ambil semua checkbox yang diceklis
-            $('.status_daftar_checkbox:checked').each(function() {
-                siswa_id.push($(this).val());
-            });
-
-            if (siswa_id.length === 0) {
-                swal('Peringatan!', 'Pilih setidaknya satu siswa terlebih dahulu.', 'warning');
-                return;
-            }
-
-            $.ajax({
-                type: "PUT",
-                url: "{{ route('admin.guru.update-status-daftar') }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    siswa_id: siswa_id,
-                    status_daftar: statusDaftar
-                },
-                success: function(response) {
-                    showToastr(response.status, response.message);
-                    table1.ajax.reload();
-                },
-                error: function(xhr) {
-                    toastr.error(xhr.responseText);
-                },
-                complete: function() {
-                    $('#check-all').prop('checked', false);
                 }
             });
         }

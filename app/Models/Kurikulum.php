@@ -10,4 +10,11 @@ class Kurikulum extends Model
     use HasFactory;
     protected $table ="kurikulum";
     protected $fillable =["tahun_pelajaran_id","mata_pelajaran_id"];
+
+    function mataPelajaran() {
+        return $this->belongsTo(MataPelajaran::class);
+    }
+    function tahunPelajaran()  {
+        return $this->belongsTo(TahunPelajaran::class);
+    }
 }

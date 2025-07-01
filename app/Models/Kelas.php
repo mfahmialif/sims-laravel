@@ -10,5 +10,10 @@ class Kelas extends Model
     use HasFactory;
     protected $table ="kelas";
     protected $fillable =["romawi","angka","keterangan"];
+
+
+    function mataPelajarans() {
+        return $this->hasMany(MataPelajaran::class);
+    }
     
 }

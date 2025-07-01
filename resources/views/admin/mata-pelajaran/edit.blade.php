@@ -6,9 +6,9 @@
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.kelas.index') }}">User </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.mata-pelajaran.index') }}">Mata Pelajaran</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Edit User</li>
+                    <li class="breadcrumb-item active">Edit Mata Pelajaran</li>
                 </ul>
             </div>
         </div>
@@ -18,7 +18,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.kelas.update', ['kelas' => $kelas]) }}" onsubmit="submitForm(this)"
+                    <form action="{{ route('admin.mata-pelajaran.update', ['mata-pelajaran' => $mataPelajaran]) }}" onsubmit="submitForm(this)"
                         method="POST" enctype="multipart/form-data" id="form_edit">
                         @csrf
                         @method('PUT')
@@ -28,7 +28,7 @@
                                     <h4>Edit Data Kelas</h4>
                                 </div>
                             </div>
-                            @include('admin.kelas.form')
+                            @include('admin.mata-pelajaran.form')
                         </div>
                     </form>
                 </div>
@@ -38,9 +38,10 @@
 @endsection
 @push('script')
     <script>
-        const kelas = @json($kelas);
-        $('#form_edit').find('select[name="romawi"]').val(kelas.romawi).trigger('change');
-        $('#form_edit').find('select[name="angka"]').val(kelas.angka).trigger('change');
-        $('#form_edit').find('textarea[name="keterangan"]').val(kelas.keterangan);
+        const mataPelajaran = @json($mataPelajaran);
+        $('#form_edit').find('select[name="kelas"]').val(mataPelajaran.kelas_id).trigger('change');
+        $('#form_edit').find('input[name="kode"]').val(mataPelajaran.kode);
+        $('#form_edit').find('input[name="nama"]').val(mataPelajaran.nama);
+        $('#form_edit').find('select[name="status"]').val(mataPelajaran.status).trigger('change');
     </script>
 @endpush
