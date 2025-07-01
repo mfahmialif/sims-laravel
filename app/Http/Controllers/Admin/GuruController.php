@@ -1,29 +1,28 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Http\Services\Helper;
 use App\Models\Guru;
 use App\Models\Role;
-use App\Models\User;
-use App\Models\Siswa;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Http\Services\Helper;
 use App\Models\TahunPelajaran;
-use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Yajra\DataTables\DataTables;
 
 class GuruController extends Controller
 {
     protected $rules = [
-        // Foreign Keys
-        'user_id'              => 'required|exists:users,id',
 
         // Data Pribadi & Identitas
         'nama'                 => 'required|string|max:150',
-        'nip'                  => 'required|string|max:20|unique', // Tambahkan $this->guruId untuk handle update
-        'nuptk'                => 'nullable|string|max:20|unique',
-        'nik'                  => 'required|string|digits:16|unique',
+        'nip'                  => 'required|string|max:20|unique:guru,nip', // Tambahkan $this->guruId untuk handle update
+        'nuptk'                => 'nullable|string|max:20|unique:guru,nuptk',
+        'nik'                  => 'required|string|digits:16|unique:guru,nik',
         'no_kk'                => 'nullable|string|max:20',
         'npwp'                 => 'nullable|string|max:25',
         'jenis_kelamin'        => 'required|in:Laki-Laki,Perempuan',
@@ -58,13 +57,13 @@ class GuruController extends Controller
 
         // Kontak & Akun
         'no_hp'                => 'nullable|string|max:20',
-        'email'                => 'nullable|email|unique',                       // Cek unik di tabel guru dan user
+        'email'                => 'nullable|email|unique:guru,email',            // Cek unik di tabel guru dan user
         'foto'                 => 'nullable|image|mimes:jpeg,png,jpg|max:10240', // Validasi untuk file gambar
     ];
 
     public function index()
     {
-        $jenisKelamin   = Helper::getEnumValues('siswa', 'jenis_kelamin');
+        $jenisKelamin = Helper::getEnumValues('siswa', 'jenis_kelamin');
 
         return view('admin.guru.index', compact('jenisKelamin'));
     }
@@ -83,19 +82,18 @@ class GuruController extends Controller
                     $query->orWhere('jenis_kelamin', 'LIKE', "%$search%");
                 });
             })
-            ->editColumn('nama_siswa', function ($row) {
+            ->editColumn('nama', function ($row) {
                 $row->foto = $row->foto ? asset('foto_guru/' . $row->foto) : asset('template/assets/img/user.jpg');
                 return '
                     <div class="d-flex align-items-center">
                         <img src="' . $row->foto . '" alt="Foto Guru" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div>
                             <a href="' . route("admin.guru.edit", $row) . '">' . $row->nama . '</a><br>
+                            <small>NIK: ' . ($row->nik ?? '-') . '</small><br>
+                            <small>NIP: ' . ($row->nip ?? '-') . '</small>
                         </div>
                     </div>
                 ';
-            })
-            ->editColumn('status_daftar', function ($row) {
-                return '<span class="badge bg-' . Helper::getColorStatus($row->status_daftar) . '">' . strtoupper($row->status_daftar) . '</span>';
             })
             ->addColumn('action', function ($row) {
                 $content = '<div class="dropdown dropdown-action">
@@ -114,7 +112,7 @@ class GuruController extends Controller
                     </div>';
                 return $content;
             })
-            ->rawColumns(['action', 'nama_siswa', 'status_daftar'])
+            ->rawColumns(['action', 'nama'])
             ->toJson();
     }
 
@@ -130,118 +128,55 @@ class GuruController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate($this->rules);
+            // 1. Validasi input request berdasarkan rules yang ada
+            $validatedData = $request->validate($this->rules);
 
-            \DB::beginTransaction();
-            $role = Role::where('nama', 'siswa')->first();
+            DB::beginTransaction();
 
-            //random password
-            $password = Str::random(8);
-            $user     = User::create([
-                'username'      => 'sis-' . time(),
-                'name'          => $request->nama_siswa,
-                'email'         => $request->email,
-                'password'      => Hash::make($password),
-                'jenis_kelamin' => $request->jenis_kelamin,
-                'role_id'       => $role->id,
-            ]);
-
-            $umur  = $request->tanggal_lahir ? Helper::hitungUmur($request->tanggal_lahir) : null;
-            $siswa = new Siswa();
-
-            // Mengisi Foreign Keys
-            $siswa->tahun_pelajaran_id = $request->tahun_pelajaran_id;
-            $siswa->user_id            = $user->id;
-
-            // Mengisi Informasi Siswa
-            $siswa->nis                      = $request->nis;
-            $siswa->nisn                     = $request->nisn;
-            $siswa->nama_siswa               = $request->nama_siswa;
-            $siswa->jenis_kelamin            = $request->jenis_kelamin;
-            $siswa->tempat_lahir             = $request->tempat_lahir;
-            $siswa->tanggal_lahir            = $request->tanggal_lahir;
-            $siswa->agama                    = $request->agama;
-            $siswa->nik_anak                 = $request->nik_anak;
-            $siswa->no_registrasi_akta_lahir = $request->no_registrasi_akta_lahir;
-            $siswa->kk                       = $request->kk;
-            $siswa->anak_ke                  = $request->anak_ke;
-            $siswa->jumlah_saudara_kandung   = $request->jumlah_saudara_kandung;
-            $siswa->umur_anak                = $umur;
-            $siswa->masuk_sekolah_sebagai    = $request->masuk_sekolah_sebagai;
-            $siswa->asal_sekolah_tk          = $request->asal_sekolah_tk;
-            $siswa->tinggi_badan             = $request->tinggi_badan;
-            $siswa->berat_badan              = $request->berat_badan;
-            $siswa->lingkar_kepala           = $request->lingkar_kepala;
-            $siswa->jarak_tempuh_ke_sekolah  = $request->jarak_tempuh_ke_sekolah;
-            $siswa->gol_darah                = $request->gol_darah;
-
-            // Mengisi Alamat Siswa
-            $siswa->alamat_anak_sesuai_kk = $request->alamat_anak_sesuai_kk;
-            $siswa->desa_kelurahan_anak   = $request->desa_kelurahan_anak;
-            $siswa->kecamatan_anak        = $request->kecamatan_anak;
-            $siswa->kabupaten_anak        = $request->kabupaten_anak;
-            $siswa->kode_pos_anak         = $request->kode_pos_anak;
-            $siswa->rt_anak               = $request->rt_anak;
-            $siswa->rw_anak               = $request->rw_anak;
-            $siswa->lintang               = $request->lintang;
-            $siswa->bujur                 = $request->bujur;
-
-            // Mengisi Informasi Keluarga (Orang Tua)
-            $siswa->nama_ayah                = $request->nama_ayah;
-            $siswa->nik_ayah                 = $request->nik_ayah;
-            $siswa->tahun_lahir_ayah         = $request->tahun_lahir_ayah;
-            $siswa->pendidikan_ayah          = $request->pendidikan_ayah;
-            $siswa->pekerjaan_ayah           = $request->pekerjaan_ayah;
-            $siswa->penghasilan_bulanan_ayah = $request->penghasilan_bulanan_ayah;
-
-            $siswa->nama_ibu_sesuai_ktp     = $request->nama_ibu_sesuai_ktp;
-            $siswa->nik_ibu                 = $request->nik_ibu;
-            $siswa->tahun_lahir_ibu         = $request->tahun_lahir_ibu;
-            $siswa->pendidikan_ibu          = $request->pendidikan_ibu;
-            $siswa->pekerjaan_ibu           = $request->pekerjaan_ibu;
-            $siswa->penghasilan_bulanan_ibu = $request->penghasilan_bulanan_ibu;
-
-            // Mengisi Alamat Keluarga
-            $siswa->alamat_ortu_sesuai_kk = $request->alamat_ortu_sesuai_kk;
-            $siswa->kelurahan_ortu        = $request->kelurahan_ortu;
-            $siswa->kecamatan_ortu        = $request->kecamatan_ortu;
-            $siswa->kabupaten_ortu        = $request->kabupaten_ortu;
-            $siswa->no_kartu_keluarga     = $request->no_kartu_keluarga;
-
-            $siswa->tinggal_bersama         = $request->tinggal_bersama;
-            $siswa->transportasi_ke_sekolah = $request->transportasi_ke_sekolah;
-            $siswa->nomor_telepon_orang_tua = $request->nomor_telepon_orang_tua;
-
-            // Mengisi Informasi Wali (Jika ada)
-            $siswa->nama_wali                = $request->nama_wali;
-            $siswa->nik_wali                 = $request->nik_wali;
-            $siswa->tahun_lahir_wali         = $request->tahun_lahir_wali;
-            $siswa->pendidikan_wali          = $request->pendidikan_wali;
-            $siswa->pekerjaan_wali           = $request->pekerjaan_wali;
-            $siswa->penghasilan_bulanan_wali = $request->penghasilan_bulanan_wali;
-            $siswa->alamat_wali              = $request->alamat_wali;
-            $siswa->rt_wali                  = $request->rt_wali;
-            $siswa->rw_wali                  = $request->rw_wali;
-            $siswa->desa_kelurahan_wali      = $request->desa_kelurahan_wali;
-            $siswa->kecamatan_wali           = $request->kecamatan_wali;
-            $siswa->kabupaten_wali           = $request->kabupaten_wali;
-            $siswa->kode_pos_wali            = $request->kode_pos_wali;
-            $siswa->nomor_telepon_wali       = $request->nomor_telepon_wali;
-
-                                                                         // Mengisi Status
-            $siswa->status_daftar = $request->status_daftar ?? 'daftar'; // Default 'daftar' jika tidak ada input
-            $siswa->status        = $request->input('status', 'aktif');  // Default 'aktif' jika tidak ada input
-
-            if ($request->hasFile('foto')) {
-                $siswa->foto = Helper::uploadFile($request->file('foto'), $request->nama_siswa, 'foto_guru');
+            // 3. Membuat Akun User untuk Guru
+            $role = Role::where('nama', 'guru')->first();
+            if (! $role) {
+                // Jika role 'guru' tidak ditemukan, batalkan proses dan beri pesan error
+                throw new \Exception('Role "guru" tidak ditemukan. Silakan buat role terlebih dahulu.');
             }
 
+            $password = Str::random(8); // Buat password acak
+            $user     = User::create([
+                'username'      => 'guru-' . time(),
+                'name'          => $request->nama,
+                'email'         => $request->email,
+                'password'      => Hash::make($password),
+                'role_id'       => $role->id,
+                'jenis_kelamin' => $request->jenis_kelamin, // Hapus jika tidak ada di tabel users
+            ]);
 
-            $siswa->save();
+            // 4. Menyiapkan dan Menyimpan Data Guru
+            $guru          = new Guru($validatedData);
+            $guru->user_id = $user->id; // Menghubungkan guru dengan user yang baru dibuat
 
-            \DB::commit();
-            return redirect()->route('admin.guru.index')->with('success', 'Data siswa baru berhasil ditambahkan.');
+            // 5. Menangani File Upload
+            // Menyimpan file foto jika diunggah
+            if ($request->hasFile('foto')) {
+                $guru->foto = Helper::uploadFile($request->file('foto'), $request->nama, 'foto_guru');
+            }
 
+            // Menyimpan file SK CPNS jika diunggah
+            if ($request->hasFile('sk_cpns')) {
+                $guru->sk_cpns = Helper::uploadFile($request->file('sk_cpns'), $request->nama, 'sk_cpns');
+            }
+
+            // Menyimpan file SK Pengangkatan jika diunggah
+            if ($request->hasFile('sk_pengangkatan')) {
+                $guru->sk_pengangkatan = Helper::uploadFile($request->file('sk_pengangkatan'), $request->nama, 'sk_pengangkatan');
+            }
+
+            $guru->save(); // Menyimpan semua data guru ke database
+
+            DB::commit();
+
+            $flashMessage = 'Data guru baru berhasil ditambahkan. Password untuk login: ' . $password;
+
+            return redirect()->route('admin.guru.index')->with('success', $flashMessage);
         } catch (\Illuminate\Validation\ValidationException $e) {
             \DB::rollback();
             return redirect()->route('admin.guru.add')
@@ -256,164 +191,100 @@ class GuruController extends Controller
         }
     }
 
-    public function edit(Siswa $siswa)
+    public function edit(Guru $guru)
     {
         $jenisKelamin   = Helper::getEnumValues('users', 'jenis_kelamin');
-        $agama          = Helper::getEnumValues('siswa', 'agama');
+        $agama          = Helper::getEnumValues('guru', 'agama');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
-        $statusDaftar   = Helper::getEnumValues('siswa', 'status_daftar');
+        $status         = Helper::getEnumValues('guru', 'status');
 
-        $siswa = $siswa->load('user');
-        return view('admin.guru.edit', compact('siswa', 'agama', 'jenisKelamin', 'tahunPelajaran', 'statusDaftar'));
+        $guru = $guru->load('user');
+        return view('admin.guru.edit', compact('guru', 'agama', 'jenisKelamin', 'tahunPelajaran', 'status'));
     }
 
-    public function update(Request $request, Siswa $siswa)
+    public function update(Request $request, Guru $guru)
     {
         try {
             $this->rules = array_merge($this->rules, [
-                'email' => 'nullable|unique:users,email,' . $siswa->user->id,
-                'nis'   => 'nullable|string|max:255|unique:siswa,nis,' . $siswa->id,
-                'nisn'  => 'nullable|string|max:255|unique:siswa,nisn,' . $siswa->id,
+                'email'                 => 'nullable|unique:users,email,' . $guru->user->id,
+                'nip'                   => 'nullable|string|max:255|unique:guru,nip,' . $guru->id,
+                'nuptk'                 => 'nullable|string|max:255|unique:guru,nuptk,' . $guru->id,
+                'nik'                   => 'nullable|string|max:255|unique:guru,nik,' . $guru->id,
+                'password'              => 'nullable|string|min:6|confirmed',
+                'password_confirmation' => 'required_with:password',
             ]);
 
-            $request->validate($this->rules);
+            $requestValidate = $request->validate($this->rules);
 
             \DB::beginTransaction();
 
-            $user                = $siswa->user;
+            $user                = $guru->user;
+            $user->username      = $request->username;
+            $user->name          = $request->nama;
             $user->email         = $request->email;
             $user->jenis_kelamin = $request->jenis_kelamin;
+            if ($request->password) {
+                $user->password = Hash::make($request->password);
+            }
             $user->save();
 
-            $umur = $request->tanggal_lahir ? Helper::hitungUmur($request->tanggal_lahir) : null;
+            $requestValidate = Arr::except($requestValidate, ['username', 'email', 'password', 'password_confirmation']);
 
-            // Mengisi Foreign Keys
-            $siswa->tahun_pelajaran_id = $request->tahun_pelajaran_id;
-
-            // Mengisi Informasi Siswa
-            $siswa->nis                      = $request->nis;
-            $siswa->nisn                     = $request->nisn;
-            $siswa->nama_siswa               = $request->nama_siswa;
-            $siswa->jenis_kelamin            = $request->jenis_kelamin;
-            $siswa->tempat_lahir             = $request->tempat_lahir;
-            $siswa->tanggal_lahir            = $request->tanggal_lahir;
-            $siswa->agama                    = $request->agama;
-            $siswa->nik_anak                 = $request->nik_anak;
-            $siswa->no_registrasi_akta_lahir = $request->no_registrasi_akta_lahir;
-            $siswa->kk                       = $request->kk;
-            $siswa->anak_ke                  = $request->anak_ke;
-            $siswa->jumlah_saudara_kandung   = $request->jumlah_saudara_kandung;
-            $siswa->umur_anak                = $umur;
-            $siswa->masuk_sekolah_sebagai    = $request->masuk_sekolah_sebagai;
-            $siswa->asal_sekolah_tk          = $request->asal_sekolah_tk;
-            $siswa->tinggi_badan             = $request->tinggi_badan;
-            $siswa->berat_badan              = $request->berat_badan;
-            $siswa->lingkar_kepala           = $request->lingkar_kepala;
-            $siswa->jarak_tempuh_ke_sekolah  = $request->jarak_tempuh_ke_sekolah;
-            $siswa->gol_darah                = $request->gol_darah;
-
-            // Mengisi Alamat Siswa
-            $siswa->alamat_anak_sesuai_kk = $request->alamat_anak_sesuai_kk;
-            $siswa->desa_kelurahan_anak   = $request->desa_kelurahan_anak;
-            $siswa->kecamatan_anak        = $request->kecamatan_anak;
-            $siswa->kabupaten_anak        = $request->kabupaten_anak;
-            $siswa->kode_pos_anak         = $request->kode_pos_anak;
-            $siswa->rt_anak               = $request->rt_anak;
-            $siswa->rw_anak               = $request->rw_anak;
-            $siswa->lintang               = $request->lintang;
-            $siswa->bujur                 = $request->bujur;
-
-            // Mengisi Informasi Keluarga (Orang Tua)
-            $siswa->nama_ayah                = $request->nama_ayah;
-            $siswa->nik_ayah                 = $request->nik_ayah;
-            $siswa->tahun_lahir_ayah         = $request->tahun_lahir_ayah;
-            $siswa->pendidikan_ayah          = $request->pendidikan_ayah;
-            $siswa->pekerjaan_ayah           = $request->pekerjaan_ayah;
-            $siswa->penghasilan_bulanan_ayah = $request->penghasilan_bulanan_ayah;
-
-            $siswa->nama_ibu_sesuai_ktp     = $request->nama_ibu_sesuai_ktp;
-            $siswa->nik_ibu                 = $request->nik_ibu;
-            $siswa->tahun_lahir_ibu         = $request->tahun_lahir_ibu;
-            $siswa->pendidikan_ibu          = $request->pendidikan_ibu;
-            $siswa->pekerjaan_ibu           = $request->pekerjaan_ibu;
-            $siswa->penghasilan_bulanan_ibu = $request->penghasilan_bulanan_ibu;
-
-            // Mengisi Alamat Keluarga
-            $siswa->alamat_ortu_sesuai_kk = $request->alamat_ortu_sesuai_kk;
-            $siswa->kelurahan_ortu        = $request->kelurahan_ortu;
-            $siswa->kecamatan_ortu        = $request->kecamatan_ortu;
-            $siswa->kabupaten_ortu        = $request->kabupaten_ortu;
-            $siswa->no_kartu_keluarga     = $request->no_kartu_keluarga;
-
-            $siswa->tinggal_bersama         = $request->tinggal_bersama;
-            $siswa->transportasi_ke_sekolah = $request->transportasi_ke_sekolah;
-            $siswa->nomor_telepon_orang_tua = $request->nomor_telepon_orang_tua;
-
-            // Mengisi Informasi Wali (Jika ada)
-            $siswa->nama_wali                = $request->nama_wali;
-            $siswa->nik_wali                 = $request->nik_wali;
-            $siswa->tahun_lahir_wali         = $request->tahun_lahir_wali;
-            $siswa->pendidikan_wali          = $request->pendidikan_wali;
-            $siswa->pekerjaan_wali           = $request->pekerjaan_wali;
-            $siswa->penghasilan_bulanan_wali = $request->penghasilan_bulanan_wali;
-            $siswa->alamat_wali              = $request->alamat_wali;
-            $siswa->rt_wali                  = $request->rt_wali;
-            $siswa->rw_wali                  = $request->rw_wali;
-            $siswa->desa_kelurahan_wali      = $request->desa_kelurahan_wali;
-            $siswa->kecamatan_wali           = $request->kecamatan_wali;
-            $siswa->kabupaten_wali           = $request->kabupaten_wali;
-            $siswa->kode_pos_wali            = $request->kode_pos_wali;
-            $siswa->nomor_telepon_wali       = $request->nomor_telepon_wali;
-
-                                                                                // Mengisi Status
-            $siswa->status_daftar = $request->input('status_daftar', 'daftar'); // Default 'daftar' jika tidak ada input
-            $siswa->status        = $request->input('status', 'aktif');         // Default 'aktif' jika tidak ada input
+            $guru->update($requestValidate);
 
             if ($request->hasFile('foto')) {
-                if ($siswa->foto) {
-                    Helper::deleteFile($siswa->foto, 'foto_siswa');
+                if ($guru->foto) {
+                    Helper::deleteFile($guru->foto, 'foto_guru');
                 }
-                $siswa->foto = Helper::uploadFile($request->file('foto'), $request->nama_siswa, 'foto_siswa');
+                $guru->foto = Helper::uploadFile($request->file('foto'), $request->nama, 'foto_guru');
+            }
+            if ($request->hasFile('sk_cpns')) {
+                if ($guru->sk_cpns) {
+                    Helper::deleteFile($guru->sk_cpns, 'sk_cpns');
+                }
+                $guru->sk_cpns = Helper::uploadFile($request->file('sk_cpns'), $request->nama, 'sk_cpns');
+            }
+            if ($request->hasFile('sk_pengangkatan')) {
+                if ($guru->sk_pengangkatan) {
+                    Helper::deleteFile($guru->sk_pengangkatan, 'sk_pengangkatan');
+                }
+                $guru->sk_pengangkatan = Helper::uploadFile($request->file('sk_pengangkatan'), $request->nama, 'sk_pengangkatan');
             }
 
-            if ($request->hasFile('akta_lahir_path')) {
-                if ($siswa->akta_lahir_path) {
-                    Helper::deleteFile($siswa->akta_lahir_path, 'akta_lahir_path');
-                }
-                $siswa->akta_lahir_path = Helper::uploadFile($request->file('akta_lahir_path'), $request->nama_siswa, 'akta_lahir_path');
-            }
-
-            $siswa->save();
+            $guru->save();
 
             \DB::commit();
-            return redirect()->route('admin.guru.index')->with('success', 'Siswa berhasil diupdate');
+            return redirect()->route('admin.guru.index')->with('success', 'Guru berhasil diupdate');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->route('admin.guru.edit', ['siswa' => $siswa])
+            return redirect()->route('admin.guru.edit', ['guru' => $guru])
                 ->withErrors($e->validator)
                 ->withInput()
                 ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));
         } catch (\Throwable $th) {
             \DB::rollback();
-            return redirect()->route('admin.guru.edit', ['siswa' => $siswa])->with('error', $th->getMessage())->withInput();
+            return redirect()->route('admin.guru.edit', ['guru' => $guru])->with('error', $th->getMessage())->withInput();
         }
     }
 
-    public function destroy(Siswa $siswa)
+    public function destroy(Guru $guru)
     {
         try {
-            if ($siswa->foto) {
-                Helper::deleteFile($siswa->foto, 'foto');
+            if ($guru->foto) {
+                Helper::deleteFile($guru->foto, 'foto');
             }
-            if ($siswa->akta_lahir_path) {
-                Helper::deleteFile($siswa->akta_lahir_path, 'akta_lahir_path');
+            if ($guru->sk_cpns) {
+                Helper::deleteFile($guru->sk_cpns, 'sk_cpns');
+            }
+            if ($guru->sk_pengangkatan) {
+                Helper::deleteFile($guru->sk_pengangkatan, 'sk_pengangkatan');
             }
 
-            $siswa->delete();
-            $siswa->user()->delete();
+            $guru->delete();
+            $guru->user()->delete();
 
             return response()->json([
                 'status'  => true,
-                'message' => 'Siswa berhasil dihapus',
+                'message' => 'Guru berhasil dihapus',
             ]);
         } catch (\Throwable $th) {
             return response()->json([
@@ -432,7 +303,7 @@ class GuruController extends Controller
                 'status_daftar' => 'required|string',         // tambahkan validasi untuk status
             ]);
 
-            Siswa::whereIn('id', $validated['siswa_id'])
+            Guru::whereIn('id', $validated['siswa_id'])
                 ->update([
                     'status_daftar' => $validated['status_daftar'],
                 ]);

@@ -334,6 +334,7 @@ class PendaftaranSiswaBaruController extends Controller
             \DB::beginTransaction();
 
             $user                = $siswa->user;
+            $user->name         = $request->nama_siswa;
             $user->email         = $request->email;
             $user->jenis_kelamin = $request->jenis_kelamin;
             $user->save();
