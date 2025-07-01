@@ -1,11 +1,12 @@
 <?php
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\SiswaController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Route;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -29,6 +30,16 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{siswa}/edit', [SiswaController::class, 'edit'])->name('admin.siswa.edit');
         Route::put('/{siswa}/update', [SiswaController::class, 'update'])->name('admin.siswa.update');
         Route::delete('/{siswa}/destroy', [SiswaController::class, 'destroy'])->name('admin.siswa.destroy');
+    });
+    Route::prefix('guru')->group(function () {
+        Route::get('/', [GuruController::class, 'index'])->name('admin.guru.index');
+        Route::get('/data', [GuruController::class, 'data'])->name('admin.guru.data');
+        Route::get('/add', [GuruController::class, 'add'])->name('admin.guru.add');
+        Route::post('/', [GuruController::class, 'store'])->name('admin.guru.store');
+        Route::put('/update-status-daftar', [GuruController::class, 'updateStatusDaftar'])->name('admin.guru.update-status-daftar');
+        Route::get('/{guru}/edit', [GuruController::class, 'edit'])->name('admin.guru.edit');
+        Route::put('/{guru}/update', [GuruController::class, 'update'])->name('admin.guru.update');
+        Route::delete('/{guru}/destroy', [GuruController::class, 'destroy'])->name('admin.guru.destroy');
     });
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.user.index');
