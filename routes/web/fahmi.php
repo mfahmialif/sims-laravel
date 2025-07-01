@@ -1,12 +1,13 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\GuruController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\KepalaSekolahController;
 use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SiswaController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -40,6 +41,17 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{guru}/edit', [GuruController::class, 'edit'])->name('admin.guru.edit');
         Route::put('/{guru}/update', [GuruController::class, 'update'])->name('admin.guru.update');
         Route::delete('/{guru}/destroy', [GuruController::class, 'destroy'])->name('admin.guru.destroy');
+    });
+    Route::prefix('kepala-sekolah')->group(function () {
+        Route::get('/', [KepalaSekolahController::class, 'index'])->name('admin.kepala-sekolah.index');
+        Route::get('/data', [KepalaSekolahController::class, 'data'])->name('admin.kepala-sekolah.data');
+        Route::get('/autocomplete/{query}', [KepalaSekolahController::class, 'autocomplete'])->name('admin.kepala-sekolah.autocomplete');
+        Route::get('/add', [KepalaSekolahController::class, 'add'])->name('admin.kepala-sekolah.add');
+        Route::post('/', [KepalaSekolahController::class, 'store'])->name('admin.kepala-sekolah.store');
+        Route::put('/update-status-daftar', [KepalaSekolahController::class, 'updateStatusDaftar'])->name('admin.kepala-sekolah.update-status-daftar');
+        Route::get('/{kepalaSekolah}/edit', [KepalaSekolahController::class, 'edit'])->name('admin.kepala-sekolah.edit');
+        Route::put('/{kepalaSekolah}/update', [KepalaSekolahController::class, 'update'])->name('admin.kepala-sekolah.update');
+        Route::delete('/{kepalaSekolah}/destroy', [KepalaSekolahController::class, 'destroy'])->name('admin.kepala-sekolah.destroy');
     });
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.user.index');

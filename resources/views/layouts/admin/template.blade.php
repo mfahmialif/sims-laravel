@@ -11,6 +11,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('template') }}/assets/css/bootstrap.min.css">
 
+    <!-- Jquery UI CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('template') }}/assets/css/jquery-ui.css">
+
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="{{ asset('template') }}/assets/plugins/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="{{ asset('template') }}/assets/plugins/fontawesome/css/all.min.css">
@@ -278,6 +281,7 @@
 
     <!-- jQuery -->
     <script src="{{ asset('template') }}/assets/js/jquery-3.7.1.min.js"></script>
+    <script src="{{ asset('template') }}/assets/js/jquery-ui.min.js"></script>
 
     <!-- Bootstrap Core JS -->
     <script src="{{ asset('template') }}/assets/js/bootstrap.bundle.min.js"></script>
