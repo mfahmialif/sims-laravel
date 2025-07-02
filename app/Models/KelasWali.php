@@ -4,14 +4,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kelas extends Model
+class KelasWali extends Model
 {
     use HasFactory;
-    protected $table   = "kelas";
+
+    protected $table   = 'kelas_wali';
     protected $guarded = [];
 
     public function sub()
     {
-        return $this->hasMany(KelasSub::class, 'kelas_id');
+        return $this->belongsTo(KelasSub::class);
+    }
+
+    public function guru()
+    {
+        return $this->belongsTo(Guru::class);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\KelasSubController;
 use App\Http\Controllers\Admin\KepalaSekolahController;
 use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
 use App\Http\Controllers\Admin\RoleController;
@@ -52,6 +53,17 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{kepalaSekolah}/edit', [KepalaSekolahController::class, 'edit'])->name('admin.kepala-sekolah.edit');
         Route::put('/{kepalaSekolah}/update', [KepalaSekolahController::class, 'update'])->name('admin.kepala-sekolah.update');
         Route::delete('/{kepalaSekolah}/destroy', [KepalaSekolahController::class, 'destroy'])->name('admin.kepala-sekolah.destroy');
+    });
+    Route::prefix('kelas')->group(function () {
+        Route::prefix('{kelas}/sub')->group(function () {
+            Route::get('/', [KelasSubController::class, 'index'])->name('admin.kelas.sub.index');
+            Route::get('/data', [KelasSubController::class, 'data'])->name('admin.kelas.sub.data');
+            Route::get('/add', [KelasSubController::class, 'add'])->name('admin.kelas.sub.add');
+            Route::post('/', [KelasSubController::class, 'store'])->name('admin.kelas.sub.store');
+            Route::get('/{kelasSub}/edit', [KelasSubController::class, 'edit'])->name('admin.kelas.sub.edit');
+            Route::put('/{kelasSub}/update', [KelasSubController::class, 'update'])->name('admin.kelas.sub.update');
+            Route::delete('/{kelasSub}/destroy', [KelasSubController::class, 'destroy'])->name('admin.kelas.sub.destroy');
+        });
     });
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.user.index');

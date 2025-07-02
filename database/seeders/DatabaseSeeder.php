@@ -50,6 +50,28 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        \DB::table('kelas')->insert([
+            [
+                'romawi' => 'X',
+                'angka' => '10',
+                'keterangan' => 'Kelas 10',
+            ],
+        ]);
+        \DB::table('kelas')->insert([
+            [
+                'romawi' => 'XI',
+                'angka' => '11',
+                'keterangan' => 'Kelas 11',
+            ],
+        ]);
+        \DB::table('kelas')->insert([
+            [
+                'romawi' => 'XII',
+                'angka' => '12',
+                'keterangan' => 'Kelas 12',
+            ],
+        ]);
+
         // $batchSize = 500; // jumlah data per batch insert
         // $data      = [];
 
