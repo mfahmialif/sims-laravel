@@ -25,7 +25,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-heading">
-                                    <h4>Edit Data Kelas</h4>
+                                    <h4>Edit Data Mata Pelajaran</h4>
                                 </div>
                             </div>
                             @include('admin.mata-pelajaran.form')

@@ -8,7 +8,7 @@
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('admin.kurikulum.index') }}">Kurikulum</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Tambah Tahun Pelajaran</li>
+                    <li class="breadcrumb-item active">Tambah Kurikulum</li>
                 </ul>
             </div>
         </div>

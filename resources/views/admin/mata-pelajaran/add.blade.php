@@ -6,9 +6,9 @@
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.mata-pelajaran.index') }}">Kelas</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.mata-pelajaran.index') }}">Mata Pelajaran</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Tambah Kelas</li>
+                    <li class="breadcrumb-item active">Tambah Mata Pelajaran</li>
                 </ul>
             </div>
         </div>
@@ -26,7 +26,7 @@
 
                             <div class="col-12">
                                 <div class="form-heading">
-                                    <h4>Tambah Data Kelas</h4>
+                                    <h4>Tambah Data Mata Pelajaran</h4>
                                 </div>
                             </div>
                             @include('admin.mata-pelajaran.form')

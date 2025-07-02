@@ -38,7 +38,7 @@
 </div>
 <div class="col-12">
     <div class="input-block local-forms">
-        <label>Email</label>
+        <label>Kelas</label>
         <textarea class="form-control  @error('keterangan') is-invalid @enderror"  name="keterangan" id="keterangan" cols="30" rows="10"></textarea>
         @error('keterangan')
             <div class="invalid-feedback">
