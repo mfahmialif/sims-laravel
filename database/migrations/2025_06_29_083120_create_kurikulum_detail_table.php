@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKurikulumTable extends Migration
+class CreateKurikulumDetailTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateKurikulumTable extends Migration
      */
     public function up()
     {
-        Schema::create('kurikulum', function (Blueprint $table) {
+        Schema::create('kurikulum_detail', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->foreignId('tahun_pelajaran_id')->constrained('tahun_pelajaran');
+            $table->foreignId('kurikulum_id')->constrained('kurikulum');
+            $table->foreignId('mata_pelajaran_id')->constrained('mata_pelajaran');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateKurikulumTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kurikulum');
+        Schema::dropIfExists('kurikulum_detail');
     }
 }
