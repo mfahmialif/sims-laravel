@@ -1,6 +1,7 @@
 <?php
 namespace Database\Seeders;
 
+use App\Models\Guru;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -71,6 +72,15 @@ class DatabaseSeeder extends Seeder
                 'keterangan' => 'Kelas 12',
             ],
         ]);
+        \DB::table('kelas_sub')->insert([
+            [
+                'kelas_id' => 1,
+                'sub' => 'A',
+                'keterangan' => 'Kelas 10 A',
+            ],
+        ]);
+
+        Guru::factory()->count(20)->create(); // otomatis buat 20 guru dan user
 
         // $batchSize = 500; // jumlah data per batch insert
         // $data      = [];

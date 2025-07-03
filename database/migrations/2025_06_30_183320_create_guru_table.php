@@ -69,7 +69,7 @@ class CreateGuruTable extends Migration
             $table->string('kodepos', 10)->nullable();
 
             // Kolom kontak dan lain-lain
-            $table->string('no_hp', 20)->nullable();
+            $table->string('no_hp')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('foto')->nullable();
             $table->enum('status', ['Aktif', 'Tidak Aktif'])->default('Aktif');

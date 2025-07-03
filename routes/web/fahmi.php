@@ -1,14 +1,15 @@
 <?php
-use App\Http\Controllers\Admin\DashboardController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\KelasSubController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\KelasWaliController;
 use App\Http\Controllers\Admin\KepalaSekolahController;
 use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\SiswaController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Route;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -63,6 +64,16 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
             Route::get('/{kelasSub}/edit', [KelasSubController::class, 'edit'])->name('admin.kelas.sub.edit');
             Route::put('/{kelasSub}/update', [KelasSubController::class, 'update'])->name('admin.kelas.sub.update');
             Route::delete('/{kelasSub}/destroy', [KelasSubController::class, 'destroy'])->name('admin.kelas.sub.destroy');
+
+            Route::prefix('{kelasSub}/wali')->group(function () {
+                Route::get('/', [KelasWaliController::class, 'index'])->name('admin.kelas.sub.wali.index');
+                Route::get('/data', [KelasWaliController::class, 'data'])->name('admin.kelas.sub.wali.data');
+                Route::get('/add', [KelasWaliController::class, 'add'])->name('admin.kelas.sub.wali.add');
+                Route::post('/', [KelasWaliController::class, 'store'])->name('admin.kelas.sub.wali.store');
+                Route::get('/{kelasWali}/edit', [KelasWaliController::class, 'edit'])->name('admin.kelas.sub.wali.edit');
+                Route::put('/{kelasWali}/update', [KelasWaliController::class, 'update'])->name('admin.kelas.sub.wali.update');
+                Route::delete('/{kelasWali}/destroy', [KelasWaliController::class, 'destroy'])->name('admin.kelas.sub.wali.destroy');
+            });
         });
     });
     Route::prefix('user')->group(function () {

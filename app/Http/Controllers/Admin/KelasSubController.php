@@ -24,6 +24,7 @@ class KelasSubController extends Controller
     {
         $search = request('search.value');
         $data   = KelasSub::join('kelas', 'kelas.id', '=', 'kelas_sub.kelas_id')
+            ->where('kelas_sub.kelas_id', $kelas->id)
             ->select('kelas_sub.*', 'kelas.angka as kelas_angka');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
@@ -35,9 +36,14 @@ class KelasSubController extends Controller
                 });
             })
             ->addColumn('action', function ($row) {
-                $content = '<div class="dropdown dropdown-action">
+                $content = '
+                    <div class="dropdown dropdown-action">
                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="' . route("admin.kelas.sub.wali.index", [
+                                'kelas' => $row->kelas_id,
+                                'kelasSub' => $row->id
+                            ]) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Wali Kelas</a>
                             <a class="dropdown-item" href="' . route("admin.kelas.sub.edit", [
                                 'kelas' => $row->kelas_id,
                                 'kelasSub' => $row->id
