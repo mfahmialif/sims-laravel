@@ -68,9 +68,8 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%">No</th>
-                                    <th>Tahun</th>
-                                    <th>Mata Pelajaran</th>
-                                    <th>Kelas</th>
+                                    <th>Tahun Pelajaran</th>
+                                    <th>Nama</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -128,18 +127,13 @@
                         },
                     },
                     {
-                        data: 'tahun',
-                        name: 'tahun',
+                        data: 'tahun_pelajaran_nama',
+                        name: 'tahun_pelajaran_nama',
                         className: "text-middle"
                     },
                     {
-                        data: 'mata_pelajaran',
-                        name: 'mata_pelajaran',
-                        className: "text-middle"
-                    },
-                    {
-                        data: 'kelas',
-                        name: 'kelas',
+                        data: 'nama',
+                        name: 'nama',
                         className: "text-middle"
                     },
                     {

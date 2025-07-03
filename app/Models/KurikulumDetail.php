@@ -4,12 +4,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kurikulum extends Model
+class KurikulumDetail extends Model
 {
     use HasFactory;
-    protected $table   = "kurikulum";
+    protected $table   = "kurikulum_detail";
     protected $guarded = [];
 
+    public function mataPelajaran()
+    {
+        return $this->belongsTo(MataPelajaran::class);
+    }
     public function tahunPelajaran()
     {
         return $this->belongsTo(TahunPelajaran::class);
