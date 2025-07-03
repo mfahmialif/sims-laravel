@@ -12,7 +12,8 @@
                         </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
                     <li class="breadcrumb-item active"><a
-                            href="{{ route('admin.kelas.sub.wali.index', ['kelas' => $kelas, 'kelasSub' => $kelasSub]) }}">Wali Kelas
+                            href="{{ route('admin.kelas.sub.wali.index', ['kelas' => $kelas, 'kelasSub' => $kelasSub]) }}">Wali
+                            Kelas
                         </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
                     <li class="breadcrumb-item active">Tambah Data Wali Kelas</li>
@@ -23,11 +24,17 @@
     <!-- /Page Header -->
     <div class="row">
         <div class="col-sm-12">
-
+            <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
+                <i class="feather-info"></i>
+                <div>
+                    <strong>Informasi:</strong> Anda sedang menambahkan wali kelas untuk
+                    <strong>Kelas {{ $kelas->angka }} ({{ $kelas->romawi }}) - {{ $kelasSub->sub }}</strong>.
+                </div>
+            </div>
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.kelas.sub.wali.store', ['kelas' => $kelas, 'kelasSub' => $kelasSub]) }}" onsubmit="submitForm(this)"
-                        method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.kelas.sub.wali.store', ['kelas' => $kelas, 'kelasSub' => $kelasSub]) }}"
+                        onsubmit="submitForm(this)" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
 

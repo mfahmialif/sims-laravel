@@ -1,15 +1,17 @@
 @extends('layouts.admin.template')
-@section('title', 'Pendaftaran Siswa Baru')
+@section('title', 'Siswa Kelas')
 @section('content')
     <!-- Page Header -->
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.pendaftaran-siswa-baru.index') }}">Pendaftaran Siswa
-                            Baru </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.kelas.index') }}">Kelas </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Data Pendaftaran Siswa Baru</li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.kelas.sub.index', ['kelas' => $kelas]) }}">Sub Kelas
+                        </a></li>
+                    <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
+                    <li class="breadcrumb-item active">Data Siswa Kelas</li>
                 </ul>
             </div>
         </div>
@@ -18,47 +20,22 @@
 
     <div class="row">
         <div class="col-sm-12">
-
-            <div class="alert alert-info" role="alert">
-                Untuk menambahkan siswa, ganti status menjadi <b>DITERIMA</b>.<br>
-                Gunakan kolom centang dan klik list edit <i class="feather-menu"></i> untuk mengedit status dengan cepat.
-            </div>
-
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <div class="input-block local-forms">
-                        <select class="form-control select2 filter-dt" id="filter_tahun_pelajaran_id" required>
-                            <option value="">Semua Tahun Pelajaran</option>
-                            @foreach ($tahunPelajaran as $item)
-                                <option value="{{ $item->id }}">
-                                    {{ $item->nama }} {{ $item->semester }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="input-block local-forms">
-                        <select class="form-control select2 filter-dt" id="filter_jenis_kelamin" required>
-                            <option value="">Semua Jenis Kelamin</option>
-                            @foreach ($jenisKelamin as $item)
-                                <option value="{{ $item }}">
-                                    {{ $item }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+            <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
+                <i class="feather-info"></i>
+                <div>
+                    <strong>Informasi:</strong> Anda sedang melihat data siswa untuk
+                    <strong>Kelas {{ $kelas->angka }} ({{ $kelas->romawi }}) - {{ $kelasSub->sub }}</strong>.
                 </div>
             </div>
-
             <div class="card card-table show-entire">
                 <div class="card-body">
+
                     <!-- Table Header -->
                     <div class="page-table-header mb-2">
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Data Pendaftaran Siswa Baru</h3>
+                                    <h3>Data Siswa Kelas</h3>
                                     <div class="doctor-search-blk mt-3 mt-md-0">
                                         <div class="top-nav-search table-search-blk">
                                             <form onsubmit="event.preventDefault(); searchDataTable('#table1');">
@@ -70,7 +47,7 @@
                                             </form>
                                         </div>
                                         <div class="add-group">
-                                            <a href="{{ route('admin.pendaftaran-siswa-baru.add') }}"
+                                            <a href="{{ route('admin.kelas.sub.siswa.add', ['kelas' => $kelas, 'kelasSub' => $kelasSub]) }}"
                                                 class="btn btn-primary add-pluss ms-2"><img
                                                     src="{{ asset('template') }}/assets/img/icons/plus.svg"
                                                     alt=""></a>
@@ -78,21 +55,10 @@
                                                 class="btn btn-primary doctor-refresh ms-2"><img
                                                     src="{{ asset('template') }}/assets/img/icons/re-fresh.svg"
                                                     alt=""></a>
-                                            <div class="dropdown ms-2">
-                                                <button class="btn btn-primary dropdown-toggle" type="button"
-                                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <img src="{{ asset('template') }}/assets/img/icons/bar-icon.svg"
-                                                        alt="">
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    @foreach ($statusDaftar as $item)
-                                                        <li><button class="dropdown-item"
-                                                                onclick="changeStatusDaftar('{{ $item }}')">Ganti
-                                                                status:
-                                                                <b>{{ strtoupper($item) }}</b></button></li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
+                                            <a href="javascript:void(0);" onclick="deleteSiswa()"
+                                                class="btn btn-primary doctor-refresh ms-2"><img
+                                                    src="{{ asset('template') }}/assets/img/icons/trash.svg"
+                                                    alt=""></a>
                                         </div>
                                     </div>
                                 </div>
@@ -106,6 +72,7 @@
                                         src="{{ asset('template') }}/assets/img/icons/pdf-icon-03.svg" alt=""></a>
                                 <a href="javascript:;"><img src="{{ asset('template') }}/assets/img/icons/pdf-icon-04.svg"
                                         alt=""></a>
+
                             </div>
                         </div>
                     </div>
@@ -122,10 +89,9 @@
                                         </div>
                                     </th>
                                     <th style="width: 5%">No</th>
-                                    <th>Tahun</th>
-                                    <th>Nama</th>
-                                    <th>Jenis Kelamin</th>
-                                    <th>Status</th>
+                                    <th>Kelas</th>
+                                    <th>Sub Kelas</th>
+                                    <th>Siswa</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -152,7 +118,6 @@
             e.preventDefault();
             table1.ajax.reload();
         });
-
 
         $('#check-all').on('change', function() {
             $('.check-table').prop('checked', this.checked);
@@ -197,7 +162,7 @@
         }
 
         function dataTable(tableId) {
-            var url = "{{ route('admin.pendaftaran-siswa-baru.data') }}"
+            var url = "{{ route('admin.kelas.sub.siswa.data', ['kelas' => $kelas, 'kelasSub' => $kelasSub]) }}"
             var datatable = $(tableId).DataTable({
                 // responsive: true,
                 dom: "rt<'d-flex justify-content-end m-3 align-items-center'l p><'d-flex justify-content-between m-3'iB>",
@@ -213,11 +178,13 @@
                 ajax: {
                     url: url,
                     data: function(d) {
-                        d.tahun_pelajaran_id = $('#filter_tahun_pelajaran_id').val();
-                        d.jenis_kelamin = $('#filter_jenis_kelamin').val();
                         // d.search = $('#search-table').val();
                     },
                 },
+                lengthMenu: [
+                    [10, 20, 50, 100, -1],
+                    [10, 20, 50, 100, 'All']
+                ],
                 deferRender: true,
                 columns: [{
                         data: 'id',
@@ -230,31 +197,25 @@
                         },
                         className: "text-middle",
                         orderable: false,
-                    },
-                    {
+                    }, {
                         data: 'id',
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                     },
                     {
-                        data: 'tahun_pelajaran_kode',
-                        name: 'tahun_pelajaran_kode',
+                        data: 'kelas_angka',
+                        name: 'kelas_angka',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'sub',
+                        name: 'sub',
                         className: "text-middle"
                     },
                     {
                         data: 'nama_siswa',
                         name: 'nama_siswa',
-                        className: "text-middle"
-                    },
-                    {
-                        data: 'jenis_kelamin',
-                        name: 'jenis_kelamin',
-                        className: "text-middle"
-                    },
-                    {
-                        data: 'status_daftar',
-                        name: 'status_daftar',
                         className: "text-middle"
                     },
                     {
@@ -290,8 +251,9 @@
                 dangerMode: true,
             }).then((willDelete) => {
                 if (willDelete) {
-                    var url = "{{ route('admin.pendaftaran-siswa-baru.destroy', ['siswa' => '_siswa']) }}";
-                    url = url.replace('_siswa', id);
+                    var url =
+                        "{{ route('admin.kelas.sub.siswa.destroy', ['kelas' => $kelas, 'kelasSub' => $kelasSub, 'kelasSiswa' => '_kelasSiswa']) }}";
+                    url = url.replace('_kelasSiswa', id);
                     var fd = new FormData($(event.target)[0]);
                     $.ajax({
                         type: "post",
@@ -311,9 +273,8 @@
             });
         }
 
-        function changeStatusDaftar(statusDaftar) {
+        function deleteSiswa() {
 
-            // Ambil semua checkbox yang diceklis
             let siswa_id = Array.from(selectedIds);
 
             if (siswa_id.length === 0) {
@@ -321,24 +282,40 @@
                 return;
             }
 
-            $.ajax({
-                type: "PUT",
-                url: "{{ route('admin.pendaftaran-siswa-baru.update-status-daftar') }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    siswa_id: siswa_id,
-                    status_daftar: statusDaftar
+            swal({
+                title: "Apa kamu yakin?",
+                text: "Data yang akan dihapus tidak akan bisa dikembalikan",
+                icon: "warning",
+                buttons: {
+                    confirm: {
+                        text: "OK",
+                        value: true,
+                        visible: true,
+                        className: "",
+                        closeModal: true
+                    },
+                    cancel: "Batalkan",
                 },
-                success: function(response) {
-                    showToastr(response.status, response.message);
-                    selectedIds.clear();
-                    table1.ajax.reload();
-                },
-                error: function(xhr) {
-                    toastr.error(xhr.responseText);
-                },
-                complete: function() {
-                    $('#check-all').prop('checked', false);
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "{{ route('admin.kelas.sub.siswa.bulk-destroy', ['kelas' => $kelas, 'kelasSub' => $kelasSub]) }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            id: siswa_id,
+                        },
+                        success: function(response) {
+                            showToastr(response.status, response.message);
+                            selectedIds.clear();
+                            table1.ajax.reload();
+                            $('#check-all').prop('checked', false);
+                        },
+                        error: function(xhr) {
+                            toastr.error(xhr.responseText);
+                        },
+                    });
                 }
             });
         }

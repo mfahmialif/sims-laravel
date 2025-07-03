@@ -111,8 +111,9 @@ class SiswaController extends Controller
     {
         $search = request('search.value');
         $data   = Siswa::join('tahun_pelajaran', 'tahun_pelajaran.id', '=', 'siswa.tahun_pelajaran_id')
+            ->join('kelas', 'kelas.id', '=', 'siswa.kelas_id')
             ->where('status_daftar', 'diterima')
-            ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode');
+            ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode', 'kelas.angka as kelas_angka');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
                 $query->when($request->tahun_pelajaran_id, function ($q) use ($request) {
@@ -120,6 +121,9 @@ class SiswaController extends Controller
                 });
                 $query->when($request->jenis_kelamin, function ($q) use ($request) {
                     $q->where('siswa.jenis_kelamin', $request->jenis_kelamin);
+                });
+                $query->when($request->kelas_id, function ($q) use ($request) {
+                    $q->where('siswa.kelas_id', $request->kelas_id);
                 });
                 $query->where(function ($query) use ($search) {
                     $query->orWhere('siswa.nama_siswa', 'LIKE', "%$search%");
@@ -357,7 +361,7 @@ class SiswaController extends Controller
 
             return response()->json([
                 'status'  => true,
-                'message' => 'Berhasil mengupdate status daftar',
+                'message' => 'Berhasil mengupdate status',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([

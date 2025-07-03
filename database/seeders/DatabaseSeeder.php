@@ -2,6 +2,7 @@
 namespace Database\Seeders;
 
 use App\Models\Guru;
+use App\Models\Siswa;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -81,6 +82,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Guru::factory()->count(20)->create(); // otomatis buat 20 guru dan user
+        Siswa::factory()->count(20)->create(); // otomatis buat 20 guru dan user
 
         // $batchSize = 500; // jumlah data per batch insert
         // $data      = [];

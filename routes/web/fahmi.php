@@ -1,15 +1,16 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\GuruController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\SiswaController;
-use App\Http\Controllers\Admin\KelasSubController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\KelasSiswaController;
+use App\Http\Controllers\Admin\KelasSubController;
 use App\Http\Controllers\Admin\KelasWaliController;
 use App\Http\Controllers\Admin\KepalaSekolahController;
 use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SiswaController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -73,6 +74,17 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
                 Route::get('/{kelasWali}/edit', [KelasWaliController::class, 'edit'])->name('admin.kelas.sub.wali.edit');
                 Route::put('/{kelasWali}/update', [KelasWaliController::class, 'update'])->name('admin.kelas.sub.wali.update');
                 Route::delete('/{kelasWali}/destroy', [KelasWaliController::class, 'destroy'])->name('admin.kelas.sub.wali.destroy');
+            });
+            Route::prefix('{kelasSub}/siswa')->group(function () {
+                Route::get('/', [KelasSiswaController::class, 'index'])->name('admin.kelas.sub.siswa.index');
+                Route::get('/data', [KelasSiswaController::class, 'data'])->name('admin.kelas.sub.siswa.data');
+                Route::get('/data-siswa', [KelasSiswaController::class, 'dataSiswa'])->name('admin.kelas.sub.siswa.data-siswa');
+                Route::get('/add', [KelasSiswaController::class, 'add'])->name('admin.kelas.sub.siswa.add');
+                Route::post('/', [KelasSiswaController::class, 'store'])->name('admin.kelas.sub.siswa.store');
+                Route::delete('/bulk-destroy', [KelasSiswaController::class, 'bulkDestroy'])->name('admin.kelas.sub.siswa.bulk-destroy');
+                Route::get('/{kelasSiswa}/edit', [KelasSiswaController::class, 'edit'])->name('admin.kelas.sub.siswa.edit');
+                Route::put('/{kelasSiswa}/update', [KelasSiswaController::class, 'update'])->name('admin.kelas.sub.siswa.update');
+                Route::delete('/{kelasSiswa}/destroy', [KelasSiswaController::class, 'destroy'])->name('admin.kelas.sub.siswa.destroy');
             });
         });
     });

@@ -10,7 +10,6 @@ use Yajra\DataTables\Facades\DataTables;
 class KelasSubController extends Controller
 {
     private $rules = [
-        "kelas_id"   => "required|string",
         "sub"        => "required|string",
         "keterangan" => "nullable|string",
     ];
@@ -40,10 +39,14 @@ class KelasSubController extends Controller
                     <div class="dropdown dropdown-action">
                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="' . route("admin.kelas.sub.siswa.index", [
+                                'kelas' => $row->kelas_id,
+                                'kelasSub' => $row->id
+                            ]) . '"><i class="fa-solid fa-eye m-r-5"></i> Siswa Kelas</a>
                             <a class="dropdown-item" href="' . route("admin.kelas.sub.wali.index", [
                                 'kelas' => $row->kelas_id,
                                 'kelasSub' => $row->id
-                            ]) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Wali Kelas</a>
+                            ]) . '"><i class="fa-solid fa-user m-r-5"></i> Wali Kelas</a>
                             <a class="dropdown-item" href="' . route("admin.kelas.sub.edit", [
                                 'kelas' => $row->kelas_id,
                                 'kelasSub' => $row->id
@@ -81,14 +84,14 @@ class KelasSubController extends Controller
             }
 
             $kelasSub             = new KelasSub();
-            $kelasSub->kelas_id   = $request->kelas_id;
+            $kelasSub->kelas_id   = $kelas->id;
             $kelasSub->sub        = $request->sub;
             $kelasSub->keterangan = $request->keterangan;
             $kelasSub->save();
 
             return redirect()->route('admin.kelas.sub.index', ['kelas' => $kelas])->with('success')->with('success', 'KelasSub Sub berhasil ditambahkan');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->route('admin.kelas.sub.add')
+            return redirect()->route('admin.kelas.sub.add', ['kelas' => $kelas])
                 ->withErrors($e->validator)
                 ->withInput()
                 ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));
@@ -113,7 +116,6 @@ class KelasSubController extends Controller
                 throw new \Exception('KelasSub Sub sudah ada');
             }
 
-            $kelasSub->kelas_id   = $request->kelas_id;
             $kelasSub->sub        = $request->sub;
             $kelasSub->keterangan = $request->keterangan;
 

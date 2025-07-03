@@ -6,7 +6,8 @@
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.kelas.sub.index', ['kelas' => $kelas]) }}">Sub Kelas </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.kelas.sub.index', ['kelas' => $kelas]) }}">Sub Kelas
+                        </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
                     <li class="breadcrumb-item active">Edit Sub Kelas</li>
                 </ul>
@@ -16,7 +17,13 @@
     <!-- /Page Header -->
     <div class="row">
         <div class="col-sm-12">
-
+            <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
+                <i class="feather-info"></i>
+                <div>
+                    <strong>Informasi:</strong> Anda sedang mengedit sub kelas untuk
+                    <strong>Kelas {{ $kelas->angka }} ({{ $kelas->romawi }})</strong>.
+                </div>
+            </div>
             <div class="card">
                 <div class="card-body">
                     <form action="{{ route('admin.kelas.sub.update', ['kelasSub' => $kelasSub, 'kelas' => $kelas]) }}"
@@ -42,7 +49,6 @@
         const kelasSub = @json($kelasSub);
 
         $('#form_edit').find('input[name="sub"]').val(kelasSub.sub);
-        $('#form_edit').find('select[name="kelas_id"]').val(kelasSub.kelas_id).change();
-        $('#form_edit').find('input[name="keterangan"]').val(kelasSub.keterangan);
+        $('#form_edit').find('textarea[name="keterangan"]').val(kelasSub.keterangan);
     </script>
 @endpush
