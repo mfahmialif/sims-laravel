@@ -109,7 +109,6 @@
                         </div>
                     </div>
                     <!-- /Table Header -->
-
                     <div class="table-responsive">
                         <table id="table1" class="table border-0 custom-table comman-table datatable mb-0 table-hover">
                             <thead>
@@ -182,7 +181,7 @@
                     [1, "desc"]
                 ],
                 search: {
-                    return: true,
+                    return: false,
                 },
                 ajax: {
                     url: url,

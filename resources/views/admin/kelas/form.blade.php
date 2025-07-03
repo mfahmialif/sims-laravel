@@ -1,44 +1,26 @@
-<div class="col-12 col-md-12">
+<div class="col-12 col-sm-6">
     <div class="input-block local-forms">
-        <label>Romawi<span class="login-danger">*</span></label>
-        <select class="form-control select2 @error('romawi') is-invalid @enderror" name="romawi" required>
-            <option value="">Pilih Romawi</option>
-            <option value="I">I</option>
-            <option value="II">II</option>
-            <option value="III">III</option>
-            <option value="IV">IV</option>
-            <option value="V">V</option>
-            <option value="VI">VI</option>
-        </select>
+        <label>Romawi</label>
+        <input class="form-control @error('romawi') is-invalid @enderror" name="romawi" type="text"
+            value="{{ old('romawi') }}">
         @error('romawi')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
+            <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
 </div>
-<div class="col-12 col-md-12">
+<div class="col-12 col-sm-6">
     <div class="input-block local-forms">
-        <label>Angka<span class="login-danger">*</span></label>
-        <select class="form-control select2 @error('angka') is-invalid @enderror" name="angka" required>
-            <option value="">Pilih Angka</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-        </select>
+        <label>Angka</label>
+        <input class="form-control @error('angka') is-invalid @enderror" name="angka" type="number"
+            value="{{ old('angka') }}">
         @error('angka')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
+            <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
 </div>
 <div class="col-12">
     <div class="input-block local-forms">
-        <label>Kelas</label>
+        <label>Keterangan</label>
         <textarea class="form-control  @error('keterangan') is-invalid @enderror"  name="keterangan" id="keterangan" cols="30" rows="10"></textarea>
         @error('keterangan')
             <div class="invalid-feedback">

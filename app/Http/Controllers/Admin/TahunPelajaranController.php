@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Helper;
 use App\Models\TahunPelajaran;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -53,7 +54,8 @@ class TahunPelajaranController extends Controller
     }
     function add()
     {
-        return view('admin.tahun-pelajaran.add');
+        $semester = Helper::getEnumValues('tahun_pelajaran','semester');
+        return view('admin.tahun-pelajaran.add',compact('semester'));
     }
     function store(Request $request)
     {

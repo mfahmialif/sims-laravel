@@ -27,9 +27,11 @@
     <div class="input-block local-forms">
         <label>Semester<span class="login-danger">*</span></label>
         <select class="form-control select2 @error('status') is-invalid @enderror" name="semester" required>
-            <option value="">Pilih Status</option>
-            <option value="Ganjil">Semester 1</option>
-            <option value="Genap">Semester 2</option>
+            <option value="">Pilih Semester</option>
+            @foreach ($semester as $item)
+                <option value="{{ $item }}">{{ $item }}</option>
+            @endforeach
+            
         </select>
         @error('semester')
             <div class="invalid-feedback">
