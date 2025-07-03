@@ -70,7 +70,7 @@
                                 <tr>
                                     <th style="width: 5%">No</th>
                                     <th>Romawi</th>
-                                    <th>Angka</th>
+                                    <th class="text-start">Angka</th>
                                     <th>Keterangan</th>
                                     <th>Action</th>
                                 </tr>
@@ -138,7 +138,7 @@
                     {
                         data: 'angka',
                         name: 'angka',
-                        className: "text-middle"
+                        className: "text-start"
                     },
                     {
                         data: 'keterangan',
