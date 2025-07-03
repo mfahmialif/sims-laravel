@@ -17,6 +17,13 @@
 
     <div class="row">
         <div class="col-sm-12">
+            <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
+                <i class="feather-info"></i>
+                <div>
+                    <strong>Informasi:</strong> Anda sedang melihat data siswa untuk
+                    <strong>Kelas {{ $kelas->angka }} ({{ $kelas->romawi }})</strong>.
+                </div>
+            </div>
 
             <div class="card card-table show-entire">
                 <div class="card-body">
@@ -180,7 +187,8 @@
                 dangerMode: true,
             }).then((willDelete) => {
                 if (willDelete) {
-                    var url = "{{ route('admin.kelas.sub.destroy', ['kelasSub' => '_kelasSub', 'kelas' => $kelas]) }}";
+                    var url =
+                        "{{ route('admin.kelas.sub.destroy', ['kelasSub' => '_kelasSub', 'kelas' => $kelas]) }}";
                     url = url.replace('_kelasSub', id);
                     var fd = new FormData($(event.target)[0]);
                     $.ajax({
