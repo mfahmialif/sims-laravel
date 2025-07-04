@@ -14,7 +14,11 @@ class JadwalDetailController extends Controller
     protected $tahunPelajaran;
 
     private $rules = [
-        // 'nama' => 'required|unique:jadwal,nama|string|max:50',
+        'kelas_sub_id' => 'required|exists:kelas_sub,id',
+        'guru_id'      => 'required|exists:guru,id',
+        'hari'         => 'required',
+        'jam_mulai'    => 'required',
+        'jam_selesai'  => 'required',
     ];
 
     public function __construct(Request $request)

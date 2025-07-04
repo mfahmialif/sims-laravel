@@ -99,9 +99,9 @@ class KurikulumController extends Controller
     }
     public function edit(Kurikulum $kurikulum)
     {
-        $tahun         = TahunPelajaran::all();
+        $tahunPelajaran         = TahunPelajaran::all();
         $mataPelajaran = MataPelajaran::all();
-        return view('admin.kurikulum.edit', compact('kurikulum', 'tahun', 'mataPelajaran'));
+        return view('admin.kurikulum.edit', compact('kurikulum', 'tahunPelajaran', 'mataPelajaran'));
     }
     public function update(Request $request, Kurikulum $kurikulum)
     {
