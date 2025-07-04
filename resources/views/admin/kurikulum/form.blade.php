@@ -23,7 +23,8 @@
                         required>
                         <option value="">Pilih Tahun Pelajaran</option>
                         @foreach ($tahunPelajaran as $item)
-                            <option value="{{ $item->id }}" {{ old('tahun_pelajaran_id') == $item->id ? 'selected' : '' }}>
+                            <option value="{{ $item->id }}"
+                                {{ old('tahun_pelajaran_id') == $item->id ? 'selected' : '' }}>
                                 {{ $item->nama }} {{ $item->semester }}
                             </option>
                         @endforeach
@@ -95,7 +96,7 @@
     <script>
         //  var table1 = dataTable('#tableAdd');
         $('#check-all').on('change', function() {
-            $('.check-table').prop('checked', this.checked);
+            $('.check-table').not(':disabled').prop('checked', this.checked);
         });
 
         $(document).on('change', '.check-table', function() {
