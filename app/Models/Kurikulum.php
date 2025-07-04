@@ -14,4 +14,8 @@ class Kurikulum extends Model
     {
         return $this->belongsTo(TahunPelajaran::class);
     }
+
+    public function detail(){
+        return $this->hasMany(KurikulumDetail::class);
+    }
 }

@@ -51,11 +51,7 @@ class KelasSiswaController extends Controller
                     <div class="d-flex align-items-center">
                         <img src="' . $row->foto . '" alt="Foto Guru" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div>
-                            <a href="' . route("admin.kelas.sub.siswa.edit", [
-                    'kelas'      => $row->kelas_id,
-                    'kelasSub'   => $row->kelas_sub_id,
-                    'kelasSiswa' => $row->id,
-                ]) . '">' . $row->nama_siswa . '</a><br>
+                            ' . $row->nama_siswa . '<br>
                             <small>NIK: ' . ($row->nis ?? '-') . '</small><br>
                             <small>NIP: ' . ($row->nisn ?? '-') . '</small>
                         </div>
@@ -115,8 +111,7 @@ class KelasSiswaController extends Controller
                 return '
                     <div class="d-flex align-items-center">
                         <img src="' . $row->foto . '" alt="Foto Siswa" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
-                        <div>
-                            <a href="' . route("admin.siswa.edit", $row) . '">' . $row->nama_siswa . '</a><br>
+                        <div>' . $row->nama_siswa . '<br>
                             <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
                             <small>NISN: ' . ($row->nisn ?? '-') . '</small>
                         </div>

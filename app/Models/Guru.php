@@ -8,7 +8,7 @@ class Guru extends Model
 {
     use HasFactory;
 
-    protected $table  = 'guru';
+    protected $table   = 'guru';
     protected $guarded = [];
 
     public function user()
@@ -25,4 +25,10 @@ class Guru extends Model
     {
         return $this->hasMany(KelasWali::class, 'guru_id');
     }
+
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class, 'jadwal_id');
+    }
+
 }

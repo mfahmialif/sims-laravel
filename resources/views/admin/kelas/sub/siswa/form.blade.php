@@ -41,7 +41,6 @@
                         <th>Jenis Kelamin</th>
                         <th>Kelas</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -190,14 +189,7 @@
                         data: 'status',
                         name: 'status',
                         className: "text-middle"
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        className: "text-end",
-                        searchable: false,
-                        orderable: false
-                    },
+                    }
                 ],
             })
             return datatable;

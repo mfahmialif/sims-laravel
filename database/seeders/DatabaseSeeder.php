@@ -45,6 +45,12 @@ class DatabaseSeeder extends Seeder
 
         \DB::table('tahun_pelajaran')->insert([
             [
+                'kode' => '20242',
+                'nama' => '2024/2026',
+                'semester' => 'Genap',
+                'status' => 'tidak aktif',
+            ],
+            [
                 'kode' => '20251',
                 'nama' => '2025/2026',
                 'semester' => 'Ganjil',
@@ -80,6 +86,53 @@ class DatabaseSeeder extends Seeder
                 'keterangan' => 'Kelas 10 A',
             ],
         ]);
+        \DB::table('mata_pelajaran')->insert([
+            [
+                'nama' => 'Ilmu Pengetahuan Alam',
+                'kode' => 'IPA',
+                'status' => 'aktif',
+                'kelas_id' => 1
+            ],
+            [
+                'nama' => 'Bahasa Indonesia',
+                'kode' => 'BINDO',
+                'status' => 'aktif',
+                'kelas_id' => 1
+            ],
+            [
+                'nama' => 'Bahasa Inggris',
+                'kode' => 'BINGGRIS',
+                'status' => 'aktif',
+                'kelas_id' => 1
+            ],
+        ]);
+        \DB::table('kurikulum')->insert([
+            [
+                'nama' => 'Kurikulum Lama',
+                'tahun_pelajaran_id' => 1,
+            ],
+        ]);
+        \DB::table('kurikulum')->insert([
+            [
+                'nama' => 'Kurikulum Merdeka',
+                'tahun_pelajaran_id' => 2,
+            ],
+        ]);
+        \DB::table('kurikulum_detail')->insert([
+            [
+                'kurikulum_id' => 1,
+                'mata_pelajaran_id' => 1,
+            ],
+            [
+                'kurikulum_id' => 2,
+                'mata_pelajaran_id' => 2,
+            ],
+            [
+                'kurikulum_id' => 2,
+                'mata_pelajaran_id' => 3,
+            ],
+        ]);
+
 
         Guru::factory()->count(20)->create(); // otomatis buat 20 guru dan user
         Siswa::factory()->count(20)->create(); // otomatis buat 20 guru dan user

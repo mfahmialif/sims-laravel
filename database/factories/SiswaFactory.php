@@ -1,10 +1,11 @@
 <?php
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Models\Kurikulum;
 use App\Models\TahunPelajaran;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SiswaFactory extends Factory
@@ -16,7 +17,8 @@ class SiswaFactory extends Factory
         return [
             'kelas_id'                 => Kelas::inRandomOrder()->value('id') ?? 1,
             'tahun_pelajaran_id'       => TahunPelajaran::inRandomOrder()->value('id') ?? 1,
-            'user_id'                  => User::factory()->siswa(), // ini akan otomatis membuat user baru
+            'user_id'                  => User::factory()->siswa(),
+            'kurikulum_id'             => Kurikulum::inRandomOrder()->value('id') ?? 1,
 
             'nis'                      => $this->faker->unique()->numerify('##########'),
             'nisn'                     => $this->faker->unique()->numerify('##########'),

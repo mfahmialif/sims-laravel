@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\KelasSiswaController;
 use App\Http\Controllers\Admin\KelasSubController;
 use App\Http\Controllers\Admin\KelasWaliController;
@@ -87,6 +88,16 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
                 Route::delete('/{kelasSiswa}/destroy', [KelasSiswaController::class, 'destroy'])->name('admin.kelas.sub.siswa.destroy');
             });
         });
+    });
+    Route::prefix('jadwal')->group(function () {
+        Route::get('/', [JadwalController::class, 'index'])->name('admin.jadwal.index');
+        Route::get('/data', [JadwalController::class, 'data'])->name('admin.jadwal.data');
+        Route::get('/detail/{kurikulumDetail}/{tahunPelajaran}', [JadwalController::class, 'detail'])->name('admin.jadwal.detail');
+        Route::get('/add', [JadwalController::class, 'add'])->name('admin.jadwal.add');
+        Route::post('/', [JadwalController::class, 'store'])->name('admin.jadwal.store');
+        Route::get('/{jadwal}/edit', [JadwalController::class, 'edit'])->name('admin.jadwal.edit');
+        Route::put('/{jadwal}/update', [JadwalController::class, 'update'])->name('admin.jadwal.update');
+        Route::delete('/{jadwal}/destroy', [JadwalController::class, 'destroy'])->name('admin.jadwal.destroy');
     });
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.user.index');
