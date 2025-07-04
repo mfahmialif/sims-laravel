@@ -151,7 +151,7 @@
         function deleteData(event) {
             event.preventDefault();
             var id = event.target.querySelector('input[name="id"]').value;
-            var name = event.target.querySelector('input[name="name"]').value;
+            var name = event.target.querySelector('input[name="nama"]').value;
             swal({
                 title: "Apa kamu yakin?",
                 text: "Data yang akan dihapus: " + name + ". Data tidak dapat dikembalikan!",

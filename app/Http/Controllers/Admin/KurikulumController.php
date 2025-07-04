@@ -145,13 +145,13 @@ class KurikulumController extends Controller
                 ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));
         } catch (\Throwable $th) {
             \DB::rollback();
-            dd("asdaaa");
             return redirect()->route('admin.kurikulum.edit', ['kurikulum' => $kurikulum])->with('error', $th->getMessage())->withInput();
         }
     }
     public function destroy(Kurikulum $kurikulum)
     {
         try {
+            KurikulumDetail::where('kurikulum_id', $kurikulum->id)->delete();
             $kurikulum->delete();
             return response()->json([
                 'status'  => true,
@@ -162,7 +162,7 @@ class KurikulumController extends Controller
             if ($e->getCode() == '23000') {
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Mata Pelajaran tidak dapat dihapus karena masih digunakan oleh user.',
+                    'message' => 'Mata Pelajaran tidak dapat dihapus karena masih ada jadwal yang masih aktif.',
                 ]);
             }
 
