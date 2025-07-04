@@ -17,37 +17,3 @@
             class="btn btn-primary cancel-form">Batalkan</button>
     </div>
 </div>
-
-@push('script')
-    <script>
-        const previewImg = document.getElementById("preview");
-        const fileInfo = document.getElementById("file-info");
-        const uploadLabel = document.getElementById("upload-label");
-
-        const defaultPreview = ""; // atau set URL default preview gambar di sini jika ada
-
-        function handleFileUpload(input) {
-            const file = input.files[0];
-
-            if (file) {
-                const isImage = file.type.startsWith("image/");
-                if (!isImage) {
-                    previewImg.style.display = "none";
-                    fileInfo.innerText = "Belum ada file";
-                    uploadLabel.innerText = "Pilih File";
-                    return;
-                }
-
-                previewImg.src = URL.createObjectURL(file);
-                previewImg.style.display = "block";
-                fileInfo.innerText = file.name;
-                uploadLabel.innerText = "Ganti File";
-            } else {
-                previewImg.src = defaultPreview;
-                previewImg.style.display = defaultPreview ? "block" : "none";
-                fileInfo.innerText = "Belum ada file";
-                uploadLabel.innerText = "Pilih File";
-            }
-        }
-    </script>
-@endpush

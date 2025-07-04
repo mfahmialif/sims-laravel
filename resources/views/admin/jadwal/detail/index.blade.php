@@ -1,14 +1,15 @@
 @extends('layouts.admin.template')
-@section('title', 'Jadwal')
+@section('title', 'Detail Jadwal')
 @section('content')
     <!-- Page Header -->
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.role.index') }}">Jadwal </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.jadwal.index') }}">Jadwal
+                        </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Detail Jadwal</li>
+                    <li class="breadcrumb-item active">Data Detail Jadwal</li>
                 </ul>
             </div>
         </div>
@@ -17,6 +18,18 @@
 
     <div class="row">
         <div class="col-sm-12">
+
+            <div class="alert alert-info d-flex align-items-start gap-3" role="alert">
+                <i class="feather-info mt-1"></i>
+                <div>
+                    <strong>Informasi:</strong><br>
+                    Anda sedang melihat data jadwal untuk mata pelajaran: <br>
+                    <strong>{{ $kurikulumDetail->mataPelajaran->kode }} /
+                        {{ $kurikulumDetail->mataPelajaran->nama }}</strong><br>
+                    Kelas: <strong>{{ $kurikulumDetail->mataPelajaran->kelas->angka ?? '-' }}</strong>
+                </div>
+            </div>
+
 
             <div class="card card-table show-entire">
                 <div class="card-body">
@@ -38,7 +51,7 @@
                                             </form>
                                         </div>
                                         <div class="add-group">
-                                            <a href="{{ route('admin.role.add') }}"
+                                            <a href="{{ route('admin.jadwal.detail.add', ['kurikulumDetail' => $kurikulumDetail, 'tahunPelajaran' => $tahunPelajaran]) }}"
                                                 class="btn btn-primary add-pluss ms-2"><img
                                                     src="{{ asset('template') }}/assets/img/icons/plus.svg"
                                                     alt=""></a>
@@ -70,7 +83,11 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%">No</th>
-                                    <th>Jadwal</th>
+                                    <th>Kelas</th>
+                                    <th>Hari</th>
+                                    <th>Jam Mulai</th>
+                                    <th>Jam Selesai</th>
+                                    <th>Guru</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -104,7 +121,8 @@
         }
 
         function dataTable(tableId) {
-            var url = "{{ route('admin.role.data') }}"
+            var url =
+                "{{ route('admin.jadwal.detail.data', ['kurikulumDetail' => $kurikulumDetail, 'tahunPelajaran' => $tahunPelajaran]) }}";
             var datatable = $(tableId).DataTable({
                 // responsive: true,
                 dom: "rt<'d-flex justify-content-end m-3 align-items-center'l p><'d-flex justify-content-between m-3'iB>",
@@ -112,7 +130,7 @@
                 processing: true,
                 serverSide: true,
                 order: [
-                    [0, "desc"]
+                    [1, "desc"]
                 ],
                 search: {
                     return: true,
@@ -129,6 +147,26 @@
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
+                    },
+                    {
+                        data: 'sub',
+                        name: 'sub',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'hari',
+                        name: 'hari',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'jam_mulai',
+                        name: 'jam_mulai',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'jam_selesai',
+                        name: 'jam_selesai',
+                        className: "text-middle"
                     },
                     {
                         data: 'nama',
@@ -168,8 +206,9 @@
                 dangerMode: true,
             }).then((willDelete) => {
                 if (willDelete) {
-                    var url = "{{ route('admin.role.destroy', ['role' => '_user']) }}";
-                    url = url.replace('_user', id);
+                    var url =
+                        "{{ route('admin.jadwal.detail.destroy', ['kurikulumDetail' => $kurikulumDetail, 'tahunPelajaran' => $tahunPelajaran, 'jadwal' => '_jadwal']) }}";
+                    url = url.replace('_jadwal', id);
                     var fd = new FormData($(event.target)[0]);
                     $.ajax({
                         type: "post",

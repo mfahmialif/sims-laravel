@@ -17,7 +17,7 @@ class CreateJadwalTable extends Migration
             $table->id();
             $table->foreignId('tahun_pelajaran_id')->constrained('tahun_pelajaran');
             $table->foreignId('kurikulum_detail_id')->constrained('kurikulum_detail');
-            $table->foreignId('kelas_id')->constrained('kelas');
+            $table->foreignId('kelas_sub_id')->constrained('kelas_sub');
             $table->foreignId('guru_id')->constrained('guru');
             $table->enum('hari', ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'])->nullable();
             $table->time('jam_mulai');

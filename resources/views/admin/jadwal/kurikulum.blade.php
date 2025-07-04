@@ -13,7 +13,7 @@
         <div id="accordion-{{ $k->id }}" class="collapse" data-bs-parent="#custom-accordion-one">
             <div class="list-group list-group-flush px-2 pt-2">
                 @foreach ($k->detail as $detail)
-                    <a href="{{ route('admin.jadwal.detail', ['kurikulumDetail' => $detail, 'tahunPelajaran' => $tahunPelajaran]) }}"
+                    <a href="{{ route('admin.jadwal.detail.index', ['kurikulumDetail' => $detail->id, 'tahunPelajaran' => $tahunPelajaran]) }}"
                         class="list-group-item list-group-item-action border rounded mb-2 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
