@@ -1,4 +1,6 @@
 <?php
+use App\Http\Controllers\Admin\AbsensiController;
+use App\Http\Controllers\Admin\AbsensiRekapController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GuruController;
 use App\Http\Controllers\Admin\JadwalController;
@@ -37,6 +39,22 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{siswa}/update', [SiswaController::class, 'update'])->name('admin.siswa.update');
         Route::delete('/{siswa}/destroy', [SiswaController::class, 'destroy'])->name('admin.siswa.destroy');
     });
+    Route::prefix('absensi')->group(function () {
+        Route::get('/', [AbsensiController::class, 'index'])->name('admin.absensi.index');
+        Route::get('/data', [AbsensiController::class, 'data'])->name('admin.absensi.data');
+
+        Route::prefix('{jadwal}/rekap')->group(function () {
+            Route::get('/', [AbsensiRekapController::class, 'index'])->name('admin.absensi.rekap.index');
+            Route::get('/data', [AbsensiRekapController::class, 'data'])->name('admin.absensi.rekap.data');
+            Route::get('/data-form', [AbsensiRekapController::class, 'dataForm'])->name('admin.absensi.rekap.data-form');
+            Route::get('/add', [AbsensiRekapController::class, 'add'])->name('admin.absensi.rekap.add');
+            Route::post('/', [AbsensiRekapController::class, 'store'])->name('admin.absensi.rekap.store');
+            Route::get('/{absensi}/edit', [AbsensiRekapController::class, 'edit'])->name('admin.absensi.rekap.edit');
+            Route::put('/{absensi}/update', [AbsensiRekapController::class, 'update'])->name('admin.absensi.rekap.update');
+            Route::delete('/{absensi}/destroy', [AbsensiRekapController::class, 'destroy'])->name('admin.absensi.rekap.destroy');
+        });
+    });
+
     Route::prefix('guru')->group(function () {
         Route::get('/', [GuruController::class, 'index'])->name('admin.guru.index');
         Route::get('/data', [GuruController::class, 'data'])->name('admin.guru.data');
