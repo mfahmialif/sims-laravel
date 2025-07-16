@@ -50,6 +50,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
             Route::get('/add', [AbsensiRekapController::class, 'add'])->name('admin.absensi.rekap.add');
             Route::post('/', [AbsensiRekapController::class, 'store'])->name('admin.absensi.rekap.store');
             Route::get('/{absensi}/edit', [AbsensiRekapController::class, 'edit'])->name('admin.absensi.rekap.edit');
+            Route::get('/{absensi}/data-form', [AbsensiRekapController::class, 'dataFormEdit'])->name('admin.absensi.rekap.data-form-edit');
             Route::put('/{absensi}/update', [AbsensiRekapController::class, 'update'])->name('admin.absensi.rekap.update');
             Route::delete('/{absensi}/destroy', [AbsensiRekapController::class, 'destroy'])->name('admin.absensi.rekap.destroy');
         });

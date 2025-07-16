@@ -31,7 +31,9 @@
                                     <h4>Tambah Data Absensi</h4>
                                 </div>
                             </div>
-                            @include('admin.absensi.rekap.form')
+                            @include('admin.absensi.rekap.form', [
+                                'url' => route('admin.absensi.rekap.data-form', ['jadwal' => $jadwal]),
+                            ])
 
                         </div>
                     </form>

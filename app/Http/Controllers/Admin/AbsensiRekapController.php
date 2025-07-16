@@ -24,7 +24,7 @@ class AbsensiRekapController extends Controller
         return view('admin.absensi.rekap.index', compact('jadwal'));
     }
 
-    public function data(Request $request)
+    public function data(Jadwal $jadwal, Request $request)
     {
         $search = request('search.value');
         $data   = Absensi::select('*');
@@ -35,11 +35,11 @@ class AbsensiRekapController extends Controller
                     $query->orWhere('tanggal', 'LIKE', "%$search%");
                 });
             })
-            ->addColumn('action', function ($row) {
+            ->addColumn('action', function ($row) use ($jadwal) {
                 $content = '<div class="dropdown dropdown-action">
                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="' . route("admin.role.edit", $row) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
+                            <a class="dropdown-item" href="' . route("admin.absensi.rekap.edit", ['jadwal' => $jadwal, 'absensi' => $row]) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
                             <form action="" onsubmit="deleteData(event)" method="POST">
                             ' . method_field('delete') . csrf_field() . '
                                 <input type="hidden" name="id" value="' . $row->id . '">
@@ -55,13 +55,15 @@ class AbsensiRekapController extends Controller
             ->rawColumns(['action', 'name'])
             ->toJson();
     }
-    public function dataForm(Jadwal $jadwal, Request $request)
+    public function dataForm(Request $request)
     {
+        $jadwal = Jadwal::findOrFail(request()->route('jadwal'));
         $search = request('search.value');
         $data   = Siswa::join('tahun_pelajaran', 'tahun_pelajaran.id', '=', 'siswa.tahun_pelajaran_id')
             ->join('kelas', 'kelas.id', '=', 'siswa.kelas_id')
             ->join('kelas_sub', 'kelas_sub.kelas_id', '=', 'kelas.id')
             ->where('status_daftar', 'diterima')
+            ->where('kelas_sub.id', $jadwal->kelas_sub_id)
             ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode', 'kelas.angka as kelas_angka', 'kelas_sub.sub as kelas_sub');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
@@ -100,6 +102,58 @@ class AbsensiRekapController extends Controller
                 return '<span class="badge bg-' . Helper::getColorStatus($row->status) . '">' . strtoupper($row->status) . '</span>';
             })
             ->rawColumns(['nama_siswa', 'status'])
+            ->escapeColumns()
+            ->toJson();
+    }
+
+    public function dataFormEdit(Request $request)
+    {
+        $jadwal = Jadwal::findOrFail(request()->route('jadwal'));
+        $absensi = Absensi::findOrFail(request()->route('absensi'));
+
+        $search = request('search.value');
+        $data   = Siswa::join('tahun_pelajaran', 'tahun_pelajaran.id', '=', 'siswa.tahun_pelajaran_id')
+            ->join('kelas', 'kelas.id', '=', 'siswa.kelas_id')
+            ->join('kelas_sub', 'kelas_sub.kelas_id', '=', 'kelas.id')
+            ->leftJoin('absensi_detail', 'absensi_detail.siswa_id', '=', 'siswa.id')
+            ->where('status_daftar', 'diterima')
+            ->where('kelas_sub.id', $jadwal->kelas_sub_id)
+            ->where('absensi_detail.absensi_id', $absensi->id)
+            ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode', 'kelas.angka as kelas_angka', 'kelas_sub.sub as kelas_sub', 'absensi_detail.status as absensi_detail_status');
+        return DataTables::of($data)
+            ->filter(function ($query) use ($search, $request) {
+                $query->when($request->tahun_pelajaran_id, function ($q) use ($request) {
+                    $q->where('siswa.tahun_pelajaran_id', $request->tahun_pelajaran_id);
+                });
+                $query->when($request->jenis_kelamin, function ($q) use ($request) {
+                    $q->where('siswa.jenis_kelamin', $request->jenis_kelamin);
+                });
+                $query->when($request->kelas_id, function ($q) use ($request) {
+                    $q->where('siswa.kelas_id', $request->kelas_id);
+                });
+                $query->where(function ($query) use ($search) {
+                    $query->orWhere('siswa.nama_siswa', 'LIKE', "%$search%");
+                    $query->orWhere('siswa.jenis_kelamin', 'LIKE', "%$search%");
+                    $query->orWhere('siswa.nis', 'LIKE', "%$search%");
+                    $query->orWhere('siswa.nisn', 'LIKE', "%$search%");
+                    $query->orWhere('siswa.nik_anak', 'LIKE', "%$search%");
+                });
+            })
+            ->editColumn('nama_siswa', function ($row) {
+                $row->foto = $row->foto ? asset('foto_siswa/' . $row->foto) : asset('template/assets/img/user.jpg');
+                return '
+                    <div class="d-flex align-items-center">
+                        <img src="' . $row->foto . '" alt="Foto Siswa" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
+                        <div>
+                            <a href="' . route("admin.siswa.edit", $row) . '">' . $row->nama_siswa . '</a><br>
+                            <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
+                            <small>Kelas: ' . ($row->kelas_angka ?? '-') . ' ' . ($row->kelas_sub ?? '-') . '</small><br>
+                            <small>' . ($row->jenis_kelamin ?? '-') . '</small>
+                        </div>
+                    </div>
+                ';
+            })
+            ->rawColumns(['nama_siswa'])
             ->escapeColumns()
             ->toJson();
     }
@@ -154,38 +208,60 @@ class AbsensiRekapController extends Controller
         return view('admin.absensi.rekap.edit', compact('absensi', 'jadwal'));
     }
 
-    public function update(Jadwal $jadwal, Absensi $role, Request $request)
+    public function update(Jadwal $jadwal, Absensi $absensi, Request $request)
     {
         try {
-            $this->rules = array_merge($this->rules, [
-                'nama' => 'required|unique:role,nama,' . $role->id,
-            ]);
-            $request->validate($this->rules);
+            $request->validate($this->rules,
+                [
+                    'data.required' => 'Absensi mahasiswa harus dipilih.',
+                ]);
 
-            $role->nama = $request->nama;
+            \DB::beginTransaction();
 
-            $role->save();
-            return redirect()->route('admin.absensi.rekap.index')->with('success', 'Absensi berhasil diupdate');
+            $absensi->keterangan = $request->keterangan;
+            $absensi->tanggal    = $request->tanggal;
+            $absensi->save();
+
+            $detail = [];
+            foreach ($request->data as $siswaId => $status) {
+                AbsensiDetail::where('absensi_id', $absensi->id)->where('siswa_id', $siswaId)->delete();
+                $detail[] = [
+                    'absensi_id' => $absensi->id,
+                    'siswa_id'   => $siswaId,
+                    'status'     => $status,
+                ];
+            }
+
+            AbsensiDetail::insert($detail);
+            \DB::commit();
+            return redirect()->route('admin.absensi.rekap.index', ['jadwal' => $jadwal])->with('success', 'Absensi berhasil diupdate');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->route('admin.absensi.rekap.edit')
+            return redirect()->route('admin.absensi.rekap.edit', ['jadwal' => $jadwal, 'absensi' => $absensi])
                 ->withErrors($e->validator)
                 ->withInput()
                 ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));
         } catch (\Throwable $th) {
-            return redirect()->route('admin.absensi.rekap.edit', ['role' => $role])->with('error', $th->getMessage())->withInput();
+            \DB::rollback();
+            return redirect()->route('admin.absensi.rekap.edit', ['jadwal' => $jadwal, 'absensi' => $absensi])->with('error', $th->getMessage())->withInput();
         }
+
     }
 
-    public function destroy(Jadwal $jadwal, Absensi $role)
+    public function destroy(Jadwal $jadwal, Absensi $absensi)
     {
         try {
-            $role->delete();
+            \DB::beginTransaction();
 
+            AbsensiDetail::where('absensi_id', $absensi->id)->delete();
+            $absensi->delete();
+
+            \DB::commit();
             return response()->json([
                 'status'  => true,
                 'message' => 'Absensi berhasil dihapus',
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
+            \DB::rollback();
             if ($e->getCode() == '23000') {
                 return response()->json([
                     'status'  => false,
@@ -198,6 +274,7 @@ class AbsensiRekapController extends Controller
                 'message' => 'Terjadi kesalahan pada database: ' . $e->getMessage(),
             ]);
         } catch (\Throwable $th) {
+            \DB::rollback();
             return response()->json([
                 'status'  => false,
                 'message' => $th->getMessage(),

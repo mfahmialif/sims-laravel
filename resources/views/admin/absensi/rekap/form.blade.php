@@ -188,7 +188,7 @@
         }
 
         function dataTable(tableId) {
-            var url = "{{ route('admin.absensi.rekap.data-form', ['jadwal' => $jadwal]) }}"
+            var url = "{{ $url }}"
             var datatable = $(tableId).DataTable({
                 // responsive: true,
                 dom: "rt<'d-flex justify-content-end m-3 align-items-center'l p><'d-flex justify-content-between m-3'iB>",
@@ -226,13 +226,16 @@
                     {
                         data: 'id',
                         render: function(data, type, row, meta) {
+                            console.log(row);
                             return `
                                 <div class="form-check check-tables">
                                     <input class="form-check-input check-table-hadir"
                                         type="radio"
                                         name="status[${data}]"
                                         value="hadir"
-                                        data-id="${data}">
+                                        data-id="${data}"
+                                        ${row.absensi_detail_status === 'hadir' ? 'checked' : ''}
+                                    >
                                 </div>
                             `;
                         },
@@ -248,7 +251,9 @@
                                         type="radio"
                                         name="status[${data}]"
                                         value="sakit"
-                                        data-id="${data}">
+                                        data-id="${data}"
+                                        ${row.absensi_detail_status === 'sakit' ? 'checked' : ''}
+                                    >
                                 </div>
                             `;
                         },
@@ -264,7 +269,9 @@
                                         type="radio"
                                         name="status[${data}]"
                                         value="izin"
-                                        data-id="${data}">
+                                        data-id="${data}"
+                                        ${row.absensi_detail_status === 'izin' ? 'checked' : ''}
+                                    >
                                 </div>
                             `;
                         },
@@ -280,7 +287,9 @@
                                         type="radio"
                                         name="status[${data}]"
                                         value="alpha"
-                                        data-id="${data}">
+                                        data-id="${data}"
+                                        ${row.absensi_detail_status === 'alpha' ? 'checked' : ''}
+                                    >
                                 </div>
                             `;
                         },
