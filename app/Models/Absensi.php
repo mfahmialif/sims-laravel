@@ -16,7 +16,6 @@ class Absensi extends Model
         return $this->belongsTo(Jadwal::class);
     }
 
-
     public function detail(){
         return $this->hasMany(AbsensiDetail::class, 'absensi_id');
     }

@@ -35,4 +35,14 @@ class Siswa extends Model
     {
         return $this->hasMany(AbsensiDetail::class, 'siswa_id');
     }
+
+    public function nilaiDetail()
+    {
+        return $this->hasMany(NilaiDetail::class, 'siswa_id');
+    }
+
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class, 'siswa_id');
+    }
 }
