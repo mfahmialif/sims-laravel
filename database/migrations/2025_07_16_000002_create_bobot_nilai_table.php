@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('bobot_nilai', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mata_pelajaran_id')->constrained('mata_pelajaran');
+            $table->foreignId('jadwal_id')->constrained('jadwal');
             $table->foreignId('komponen_nilai_id')->constrained('komponen_nilai');
             $table->float('bobot');
             $table->timestamps();

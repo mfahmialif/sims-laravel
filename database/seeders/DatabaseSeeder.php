@@ -4,6 +4,7 @@ namespace Database\Seeders;
 use App\Models\Guru;
 use App\Models\Siswa;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -133,10 +134,73 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-
         Guru::factory()->count(20)->create(); // otomatis buat 20 guru dan user
         Siswa::factory()->count(20)->create(); // otomatis buat 20 guru dan user
 
+        \DB::table('jadwal')->insert([
+            [
+                'tahun_pelajaran_id' => 1,
+                'kurikulum_detail_id' => 1,
+                'kelas_sub_id' => 1,
+                'guru_id' => 1,
+                'hari' => 'Senin',
+                'jam_mulai' => '08:00',
+                'jam_selesai' => '09:00',
+            ],
+        ]);
+
+
+        $jadwalId = 1; // ID mapel yang akan diisi
+
+        // Daftar komponen
+        $komponenMap = [
+            'pengetahuan' => ['Ulangan Harian', 'Tugas', 'UTS', 'UAS'],
+            'keterampilan' => ['Praktik', 'Proyek'],
+            'sikap' => ['Sikap Spiritual', 'Sikap Sosial'],
+        ];
+
+        $insertedKomponen = [];
+
+        foreach ($komponenMap as $jenis => $komponens) {
+            foreach ($komponens as $nama) {
+                $insertedKomponen[] = [
+                    'jadwal_id' => $jadwalId,
+                    'nama' => $nama,
+                    'jenis' => $jenis,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+
+        // Insert ke komponen_nilai
+        DB::table('komponen_nilai')->insert($insertedKomponen);
+
+        // Ambil kembali data komponen berdasarkan mapel dan jenis
+        $komponenAll = DB::table('komponen_nilai')
+            ->where('jadwal_id', $jadwalId)
+            ->get()
+            ->groupBy('jenis');
+
+        $bobotData = [];
+
+        foreach ($komponenAll as $jenis => $komponens) {
+            $jumlah = $komponens->count();
+            $bobot = round(1 / $jumlah, 2); // contoh: 1/4 = 0.25, 1/3 ≈ 0.33
+
+            foreach ($komponens as $komponen) {
+                $bobotData[] = [
+                    'jadwal_id' => $jadwalId,
+                    'komponen_nilai_id' => $komponen->id,
+                    'bobot' => $bobot,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+
+        // Insert ke bobot_nilai
+        DB::table('bobot_nilai')->insert($bobotData);
         // $batchSize = 500; // jumlah data per batch insert
         // $data      = [];
 
