@@ -164,7 +164,6 @@ class DatabaseSeeder extends Seeder
         foreach ($komponenMap as $jenis => $komponens) {
             foreach ($komponens as $nama) {
                 $insertedKomponen[] = [
-                    'jadwal_id' => $jadwalId,
                     'nama' => $nama,
                     'jenis' => $jenis,
                     'created_at' => now(),
@@ -178,7 +177,6 @@ class DatabaseSeeder extends Seeder
 
         // Ambil kembali data komponen berdasarkan mapel dan jenis
         $komponenAll = DB::table('komponen_nilai')
-            ->where('jadwal_id', $jadwalId)
             ->get()
             ->groupBy('jenis');
 

@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('komponen_nilai', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('jadwal_id')->constrained('jadwal');
             $table->string('nama');
             $table->enum('jenis', ['pengetahuan', 'keterampilan', 'sikap']);
             $table->timestamps();

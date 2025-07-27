@@ -17,8 +17,8 @@ class Nilai extends Model
         return $this->belongsTo(Siswa::class, 'siswa_id');
     }
 
-    public function mataPelajaran()
+    public function jadwal()
     {
-        return $this->belongsTo(MataPelajaran::class, 'mata_pelajaran_id');
+        return $this->belongsTo(Jadwal::class, 'jadwal_id');
     }
 }

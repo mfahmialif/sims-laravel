@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +8,7 @@ class NilaiDetail extends Model
 {
     use HasFactory;
 
-    protected $table = 'nilai_detail';
+    protected $table   = 'nilai_detail';
     protected $guarded = [];
 
     public function siswa()
@@ -17,13 +16,13 @@ class NilaiDetail extends Model
         return $this->belongsTo(Siswa::class, 'siswa_id');
     }
 
-    public function mapel()
+    public function jadwal()
     {
-        return $this->belongsTo(MataPelajaran::class, 'mapel_id');
+        return $this->belongsTo(Jadwal::class, 'jadwal_id');
     }
 
     public function komponenNilai()
     {
-        return $this->belongsTo(KomponenNilai::class, 'komponen_id');
+        return $this->belongsTo(KomponenNilai::class, 'komponen_nilai_id');
     }
 }

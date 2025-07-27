@@ -1,20 +1,23 @@
 <?php
-use App\Http\Controllers\Admin\AbsensiController;
-use App\Http\Controllers\Admin\AbsensiRekapController;
-use App\Http\Controllers\Admin\DashboardController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\NilaiController;
+use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\JadwalController;
-use App\Http\Controllers\Admin\JadwalDetailController;
-use App\Http\Controllers\Admin\KelasSiswaController;
+use App\Http\Controllers\Admin\AbsensiController;
 use App\Http\Controllers\Admin\KelasSubController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KelasWaliController;
+use App\Http\Controllers\Admin\KelasSiswaController;
+use App\Http\Controllers\Admin\NilaiBobotController;
+use App\Http\Controllers\Admin\NilaiInputController;
+use App\Http\Controllers\Admin\AbsensiRekapController;
+use App\Http\Controllers\Admin\JadwalDetailController;
 use App\Http\Controllers\Admin\KepalaSekolahController;
 use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\SiswaController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Route;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -53,6 +56,23 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
             Route::get('/{absensi}/data-form', [AbsensiRekapController::class, 'dataFormEdit'])->name('admin.absensi.rekap.data-form-edit');
             Route::put('/{absensi}/update', [AbsensiRekapController::class, 'update'])->name('admin.absensi.rekap.update');
             Route::delete('/{absensi}/destroy', [AbsensiRekapController::class, 'destroy'])->name('admin.absensi.rekap.destroy');
+        });
+    });
+    Route::prefix('nilai')->group(function () {
+        Route::get('/', [NilaiController::class, 'index'])->name('admin.nilai.index');
+        Route::get('/data', [NilaiController::class, 'data'])->name('admin.nilai.data');
+
+        Route::prefix('{jadwal}')->group(function () {
+            Route::prefix('bobot-nilai')->group(function () {
+                Route::get('/', [NilaiBobotController::class, 'index'])->name('admin.nilai.bobot-nilai.index');
+                Route::post('/', [NilaiBobotController::class, 'store'])->name('admin.nilai.bobot-nilai.store');
+            });
+
+            Route::prefix('input')->group(function () {
+                Route::get('/', [NilaiInputController::class, 'index'])->name('admin.nilai.input.index');
+                Route::post('/', [NilaiInputController::class, 'store'])->name('admin.nilai.input.store');
+                Route::get('/data-form', [NilaiInputController::class, 'dataForm'])->name('admin.nilai.input.data-form');
+            });
         });
     });
 

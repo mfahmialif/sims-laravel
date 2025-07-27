@@ -12,9 +12,9 @@ class BobotNilai extends Model
     protected $table = 'bobot_nilai';
     protected $guarded = [];
 
-    public function mapel()
+    public function jadwal()
     {
-        return $this->belongsTo(MataPelajaran::class, 'mapel_id');
+        return $this->belongsTo(jadwal::class, 'jadwal_id');
     }
 
     public function komponenNilai()

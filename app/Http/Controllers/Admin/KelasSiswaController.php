@@ -46,14 +46,14 @@ class KelasSiswaController extends Controller
                 });
             })
             ->editColumn('nama_siswa', function ($row) {
-                $row->foto = $row->foto ? asset('foto_guru/' . $row->foto) : asset('template/assets/img/user.jpg');
+                $row->foto = $row->foto ? asset('foto_siswa/' . $row->foto) : asset('template/assets/img/user.jpg');
                 return '
                     <div class="d-flex align-items-center">
-                        <img src="' . $row->foto . '" alt="Foto Guru" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
+                        <img src="' . $row->foto . '" alt="Foto Siswa" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div>
                             ' . $row->nama_siswa . '<br>
-                            <small>NIK: ' . ($row->nis ?? '-') . '</small><br>
-                            <small>NIP: ' . ($row->nisn ?? '-') . '</small>
+                            <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
+                            <small>NISN: ' . ($row->nisn ?? '-') . '</small>
                         </div>
                     </div>
                 ';

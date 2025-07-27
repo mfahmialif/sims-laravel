@@ -20,24 +20,4 @@ class MataPelajaran extends Model
         return $this->hasMany(KurikulumDetail::class);
     }
 
-    public function komponenNilai()
-    {
-        return $this->hasMany(KomponenNilai::class);
-    }
-
-    public function bobotNilai()
-    {
-        return $this->hasMany(BobotNilai::class);
-    }
-
-    public function nilai()
-    {
-        return $this->hasMany(Nilai::class);
-    }
-
-    public function nilaiDetail()
-    {
-        return $this->hasMany(NilaiDetail::class);
-    }
-
 }

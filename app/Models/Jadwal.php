@@ -24,4 +24,19 @@ class Jadwal extends Model
     public function guru(){
         return $this->belongsTo(Guru::class);
     }
+
+    public function bobotNilai()
+    {
+        return $this->hasMany(BobotNilai::class);
+    }
+
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class);
+    }
+
+    public function nilaiDetail()
+    {
+        return $this->hasMany(NilaiDetail::class);
+    }
 }

@@ -12,11 +12,6 @@ class KomponenNilai extends Model
     protected $table = 'komponen_nilai';
     protected $guarded = [];
 
-    public function mapel()
-    {
-        return $this->belongsTo(MataPelajaran::class, 'mapel_id');
-    }
-
     public function bobotNilai()
     {
         return $this->hasMany(BobotNilai::class, 'komponen_id');
