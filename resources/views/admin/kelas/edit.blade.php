@@ -39,8 +39,8 @@
 @push('script')
     <script>
         const kelas = @json($kelas);
-        $('#form_edit').find('select[name="romawi"]').val(kelas.romawi).trigger('change');
-        $('#form_edit').find('select[name="angka"]').val(kelas.angka).trigger('change');
+        $('#form_edit').find('input[name="romawi"]').val(kelas.romawi).trigger('change');
+        $('#form_edit').find('input[name="angka"]').val(kelas.angka).trigger('change');
         $('#form_edit').find('textarea[name="keterangan"]').val(kelas.keterangan);
     </script>
 @endpush

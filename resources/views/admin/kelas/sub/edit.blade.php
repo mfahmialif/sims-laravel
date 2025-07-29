@@ -47,8 +47,8 @@
 @push('script')
     <script>
         const kelasSub = @json($kelasSub);
-
         $('#form_edit').find('input[name="sub"]').val(kelasSub.sub);
         $('#form_edit').find('textarea[name="keterangan"]').val(kelasSub.keterangan);
+        $('#form_edit').find('select[name="tahun_pelajaran_id"]').val(kelasSub.tahun_pelajaran_id).change();
     </script>
 @endpush

@@ -82,6 +82,7 @@ class DatabaseSeeder extends Seeder
         ]);
         \DB::table('kelas_sub')->insert([
             [
+                'tahun_pelajaran_id' => 1,
                 'kelas_id' => 1,
                 'sub' => 'A',
                 'keterangan' => 'Kelas 10 A',

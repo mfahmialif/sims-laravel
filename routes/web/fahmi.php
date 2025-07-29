@@ -1,27 +1,32 @@
 <?php
-use App\Http\Controllers\Admin\AbsensiController;
-use App\Http\Controllers\Admin\AbsensiRekapController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\GuruController;
-use App\Http\Controllers\Admin\JadwalController;
-use App\Http\Controllers\Admin\JadwalDetailController;
-use App\Http\Controllers\Admin\KelasSiswaController;
-use App\Http\Controllers\Admin\KelasSubController;
-use App\Http\Controllers\Admin\KelasWaliController;
-use App\Http\Controllers\Admin\KepalaSekolahController;
-use App\Http\Controllers\Admin\NilaiBobotController;
-use App\Http\Controllers\Admin\NilaiController;
-use App\Http\Controllers\Admin\NilaiInputController;
-use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\SiswaController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
-use App\Http\Controllers\Guru\ProfileController as GuruProfileController;
-use App\Http\Controllers\Guru\SiswaController as GuruSiswaController;
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\NilaiController;
+use App\Http\Controllers\Admin\SiswaController;
+use App\Http\Controllers\Admin\JadwalController;
+use App\Http\Controllers\Admin\AbsensiController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\KelasSubController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\KelasWaliController;
+use App\Http\Controllers\Admin\KelasSiswaController;
+use App\Http\Controllers\Admin\NilaiBobotController;
+use App\Http\Controllers\Admin\NilaiInputController;
+use App\Http\Controllers\Admin\AbsensiRekapController;
+use App\Http\Controllers\Admin\JadwalDetailController;
+use App\Http\Controllers\Admin\KepalaSekolahController;
+use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
+use App\Http\Controllers\Guru\NilaiController as GuruNilaiController;
+use App\Http\Controllers\Guru\SiswaController as GuruSiswaController;
+use App\Http\Controllers\Guru\AbsensiController as GuruAbsensiController;
+use App\Http\Controllers\Guru\ProfileController as GuruProfileController;
+use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
+use App\Http\Controllers\Guru\NilaiBobotController as GuruNilaiBobotController;
+use App\Http\Controllers\Guru\NilaiInputController as GuruNilaiInputController;
+use App\Http\Controllers\Guru\AbsensiRekapController as GuruAbsensiRekapController;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -187,6 +192,41 @@ Route::prefix('guru')->middleware(['auth', 'role:guru'])->group(function () {
         Route::get('/data', [GuruSiswaController::class, 'data'])->name('guru.siswa.data');
         Route::get('/{jadwal}/show', [GuruSiswaController::class, 'show'])->name('guru.siswa.show');
         Route::get('/{jadwal}/dataShow', [GuruSiswaController::class, 'dataShow'])->name('guru.siswa.dataShow');
+    });
+
+    Route::prefix('absensi')->group(function () {
+        Route::get('/', [GuruAbsensiController::class, 'index'])->name('guru.absensi.index');
+        Route::get('/data', [GuruAbsensiController::class, 'data'])->name('guru.absensi.data');
+
+        Route::prefix('{jadwal}/rekap')->group(function () {
+            Route::get('/', [GuruAbsensiRekapController::class, 'index'])->name('guru.absensi.rekap.index');
+            Route::get('/data', [GuruAbsensiRekapController::class, 'data'])->name('guru.absensi.rekap.data');
+            Route::get('/data-form', [GuruAbsensiRekapController::class, 'dataForm'])->name('guru.absensi.rekap.data-form');
+            Route::get('/add', [GuruAbsensiRekapController::class, 'add'])->name('guru.absensi.rekap.add');
+            Route::post('/', [GuruAbsensiRekapController::class, 'store'])->name('guru.absensi.rekap.store');
+            Route::get('/{absensi}/edit', [GuruAbsensiRekapController::class, 'edit'])->name('guru.absensi.rekap.edit');
+            Route::get('/{absensi}/data-form', [GuruAbsensiRekapController::class, 'dataFormEdit'])->name('guru.absensi.rekap.data-form-edit');
+            Route::put('/{absensi}/update', [GuruAbsensiRekapController::class, 'update'])->name('guru.absensi.rekap.update');
+            Route::delete('/{absensi}/destroy', [GuruAbsensiRekapController::class, 'destroy'])->name('guru.absensi.rekap.destroy');
+        });
+    });
+
+    Route::prefix('nilai')->group(function () {
+        Route::get('/', [GuruNilaiController::class, 'index'])->name('guru.nilai.index');
+        Route::get('/data', [GuruNilaiController::class, 'data'])->name('guru.nilai.data');
+
+        Route::prefix('{jadwal}')->group(function () {
+            Route::prefix('bobot-nilai')->group(function () {
+                Route::get('/', [GuruNilaiBobotController::class, 'index'])->name('guru.nilai.bobot-nilai.index');
+                Route::post('/', [GuruNilaiBobotController::class, 'store'])->name('guru.nilai.bobot-nilai.store');
+            });
+
+            Route::prefix('input')->group(function () {
+                Route::get('/', [GuruNilaiInputController::class, 'index'])->name('guru.nilai.input.index');
+                Route::post('/', [GuruNilaiInputController::class, 'store'])->name('guru.nilai.input.store');
+                Route::get('/data-form', [GuruNilaiInputController::class, 'dataForm'])->name('guru.nilai.input.data-form');
+            });
+        });
     });
 
     Route::prefix('profile')->group(function () {

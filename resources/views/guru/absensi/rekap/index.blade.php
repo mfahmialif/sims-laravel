@@ -1,14 +1,14 @@
 @extends('layouts.admin.template')
-@section('title', 'User')
+@section('title', 'Rekap')
 @section('content')
     <!-- Page Header -->
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">User </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('guru.absensi.index') }}">Absensi </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Data User</li>
+                    <li class="breadcrumb-item active">Data Rekap</li>
                 </ul>
             </div>
         </div>
@@ -26,7 +26,7 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Data User</h3>
+                                    <h3>Data Rekap</h3>
                                     <div class="doctor-search-blk mt-3 mt-md-0">
                                         <div class="top-nav-search table-search-blk">
                                             <form onsubmit="event.preventDefault(); searchDataTable('#table1');">
@@ -38,7 +38,7 @@
                                             </form>
                                         </div>
                                         <div class="add-group">
-                                            <a href="{{ route('admin.user.add') }}"
+                                            <a href="{{ route('guru.absensi.rekap.add', ['jadwal' => $jadwal]) }}"
                                                 class="btn btn-primary add-pluss ms-2"><img
                                                     src="{{ asset('template') }}/assets/img/icons/plus.svg"
                                                     alt=""></a>
@@ -70,10 +70,8 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%">No</th>
-                                    <th>Name</th>
-                                    <th>Username</th>
-                                    <th>Role</th>
-                                    <th>Email</th>
+                                    <th>Tanggal</th>
+                                    <th>Keterangan</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -107,7 +105,7 @@
         }
 
         function dataTable(tableId) {
-            var url = "{{ route('admin.user.data') }}"
+            var url = "{{ route('guru.absensi.rekap.data', ['jadwal' => $jadwal]) }}"
             var datatable = $(tableId).DataTable({
                 // responsive: true,
                 dom: "rt<'d-flex justify-content-end m-3 align-items-center'l p><'d-flex justify-content-between m-3'iB>",
@@ -134,23 +132,13 @@
                         },
                     },
                     {
-                        data: 'name',
-                        name: 'name',
-                        className: "text-middle"
+                        data: 'tanggal',
+                        name: 'tanggal',
+                        className: "text-start"
                     },
                     {
-                        data: 'username',
-                        name: 'username',
-                        className: "text-middle"
-                    },
-                    {
-                        data: 'role_nama',
-                        name: 'role_nama',
-                        className: "text-middle"
-                    },
-                    {
-                        data: 'email',
-                        name: 'email',
+                        data: 'keterangan',
+                        name: 'keterangan',
                         className: "text-middle"
                     },
                     {
@@ -168,10 +156,10 @@
         function deleteData(event) {
             event.preventDefault();
             var id = event.target.querySelector('input[name="id"]').value;
-            var name = event.target.querySelector('input[name="name"]').value;
+            var nama = event.target.querySelector('input[name="nama"]').value;
             swal({
                 title: "Apa kamu yakin?",
-                text: "Data yang akan dihapus: " + name + ". Data tidak dapat dikembalikan!",
+                text: "Data yang akan dihapus: " + nama + ". Data tidak dapat dikembalikan!",
                 icon: "warning",
                 buttons: {
                     confirm: {
@@ -186,8 +174,8 @@
                 dangerMode: true,
             }).then((willDelete) => {
                 if (willDelete) {
-                    var url = "{{ route('admin.user.destroy', ['user' => '_user']) }}";
-                    url = url.replace('_user', id);
+                    var url = "{{ route('guru.absensi.rekap.destroy', ['jadwal' => $jadwal, 'absensi' => '_absensi']) }}";
+                    url = url.replace('_absensi', id);
                     var fd = new FormData($(event.target)[0]);
                     $.ajax({
                         type: "post",

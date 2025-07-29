@@ -25,6 +25,19 @@
                 </div>
             </div>
 
+            <div class="col-12 col-md-12">
+                <div class="input-block local-forms">
+                    <select class="form-control select2 filter-dt" id="filter_tahun_pelajaran_id" required>
+                        <option value="">Semua Tahun Pelajaran</option>
+                        @foreach ($tahunPelajaran as $item)
+                            <option value="{{ $item->id }}">
+                                {{ $item->nama }} {{ $item->semester }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
             <div class="card card-table show-entire">
                 <div class="card-body">
 
@@ -77,6 +90,7 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%">No</th>
+                                    <th>Tahun</th>
                                     <th>Kelas</th>
                                     <th>Sub Kelas</th>
                                     <th>Keterangan</th>
@@ -97,6 +111,11 @@
     <script>
         var table1 = dataTable('#table1');
         $('#search-table').focus();
+
+        $('.filter-dt').change(function(e) {
+            e.preventDefault();
+            table1.ajax.reload();
+        });
 
         var searchTimeout = null;
 
@@ -129,7 +148,7 @@
                 ajax: {
                     url: url,
                     data: function(d) {
-                        // d.search = $('#search-table').val();
+                        d.tahun_pelajaran_id = $('#filter_tahun_pelajaran_id').val();
                     },
                 },
                 deferRender: true,
@@ -138,6 +157,11 @@
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
+                    },
+                    {
+                        data: 'tahun_pelajaran_kode',
+                        name: 'tahun_pelajaran_kode',
+                        className: "text-middle"
                     },
                     {
                         data: 'kelas_angka',

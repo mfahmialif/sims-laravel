@@ -56,7 +56,7 @@
 <div class="col-12 pb-4">
     <div class="doctor-submit text-end">
         <button type="submit" id="btn-submit" class="btn btn-primary submit-form me-2">Simpan</button>
-        <a href="{{ route('admin.nilai.index') }}" class="btn btn-secondary cancel-form">Batalkan</a>
+        <a href="{{ route('guru.nilai.index') }}" class="btn btn-secondary cancel-form">Batalkan</a>
     </div>
 </div>
 
