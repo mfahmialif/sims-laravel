@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
+use App\Models\Jadwal;
 
 class GuruController extends Controller
 {
@@ -88,7 +89,7 @@ class GuruController extends Controller
                     <div class="d-flex align-items-center">
                         <img src="' . $row->foto . '" alt="Foto Guru" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div>
-                            <a href="' . route("admin.guru.edit", $row) . '">' . $row->nama . '</a><br>
+                            <a href="' . route("admin.guru.show", $row) . '">' . $row->nama . '</a><br>
                             <small>NIK: ' . ($row->nik ?? '-') . '</small><br>
                             <small>NIP: ' . ($row->nip ?? '-') . '</small>
                         </div>
@@ -99,6 +100,7 @@ class GuruController extends Controller
                 $content = '<div class="dropdown dropdown-action">
                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="' . route("admin.guru.show", $row) . '"><i class="fa-solid fa-eye m-r-5"></i> Tampilkan</a>
                             <a class="dropdown-item" href="' . route("admin.guru.edit", $row) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
                             <form action="" onsubmit="deleteData(event)" method="POST">
                             ' . method_field('delete') . csrf_field() . '
@@ -326,5 +328,11 @@ class GuruController extends Controller
                 'request' => $request->all(),
             ], 500);
         }
+    }
+
+    public function show(Guru $guru)
+    {
+        $jadwal = $guru->jadwal;
+        return view('admin.guru.show', compact('guru', 'jadwal'));
     }
 }

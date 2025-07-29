@@ -21,4 +21,7 @@ class KurikulumDetail extends Model
     public function jadwal(){
         return $this->hasMany(Jadwal::class, 'kurikulum_detail_id');
     }
+    public function kurikulum(){
+        return $this->belongsTo(Kurikulum::class);
+    }
 }

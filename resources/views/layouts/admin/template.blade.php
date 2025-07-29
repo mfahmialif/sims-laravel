@@ -46,7 +46,11 @@
 <body>
     <div class="main-wrapper">
         @include('layouts.admin.navbar')
-        @include('layouts.admin.sidebar')
+        @if (\Auth::user()->role->nama == 'guru')
+            @include('layouts.admin.sidebar-guru')
+        @else
+            @include('layouts.admin.sidebar')
+        @endif
 
         <div class="page-wrapper">
             <div class="content">

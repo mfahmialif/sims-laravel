@@ -13,9 +13,7 @@
                 @include('layouts.admin.sidebar.sistem')
 
             </ul>
-            <ul>
-                @include('layouts.admin.sidebar.profil')
-            </ul>
+            @include('layouts.admin.sidebar.profil')
             @include('layouts.admin.sidebar.logout')
         </div>
     </div>

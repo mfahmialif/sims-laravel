@@ -1,14 +1,14 @@
 @extends('layouts.admin.template')
-@section('title', 'User')
+@section('title', 'Siswa')
 @section('content')
     <!-- Page Header -->
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">User </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('guru.siswa.index') }}">Siswa </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Data User</li>
+                    <li class="breadcrumb-item active">Data Siswa</li>
                 </ul>
             </div>
         </div>
@@ -18,6 +18,33 @@
     <div class="row">
         <div class="col-sm-12">
 
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="input-block local-forms">
+                        <select class="form-control select2 filter-dt" id="filter_tahun_pelajaran_id" required>
+                            <option value="">Semua Tahun Pelajaran</option>
+                            @foreach ($tahunPelajaran as $item)
+                                <option value="{{ $item->id }}">
+                                    {{ $item->nama }} {{ $item->semester }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="input-block local-forms">
+                        <select class="form-control select2 filter-dt" id="filter_kelas_id" required>
+                            <option value="">Semua Kelas</option>
+                            @foreach ($kelas as $item)
+                                <option value="{{ $item->id }}">
+                                    {{ $item->angka }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="card card-table show-entire">
                 <div class="card-body">
 
@@ -26,7 +53,7 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Data User</h3>
+                                    <h3>Data Siswa</h3>
                                     <div class="doctor-search-blk mt-3 mt-md-0">
                                         <div class="top-nav-search table-search-blk">
                                             <form onsubmit="event.preventDefault(); searchDataTable('#table1');">
@@ -38,10 +65,6 @@
                                             </form>
                                         </div>
                                         <div class="add-group">
-                                            <a href="{{ route('admin.user.add') }}"
-                                                class="btn btn-primary add-pluss ms-2"><img
-                                                    src="{{ asset('template') }}/assets/img/icons/plus.svg"
-                                                    alt=""></a>
                                             <a href="javascript:void(0);" onclick="searchDataTable('#table1', true)"
                                                 class="btn btn-primary doctor-refresh ms-2"><img
                                                     src="{{ asset('template') }}/assets/img/icons/re-fresh.svg"
@@ -70,9 +93,11 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%">No</th>
-                                    <th>Name</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
+                                    <th>Tahun</th>
+                                    <th>Mata Pelajaran</th>
+                                    <th>Kelas</th>
+                                    <th>Guru</th>
+                                    <th>Jadwal</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -93,6 +118,12 @@
 
         var searchTimeout = null;
 
+        $('.filter-dt').change(function(e) {
+            e.preventDefault();
+            table1.ajax.reload();
+        });
+
+
         function searchDataTable(tableId, refresh = false) {
             var time = refresh ? 0 : 700;
 
@@ -106,7 +137,7 @@
         }
 
         function dataTable(tableId) {
-            var url = "{{ route('admin.user.data') }}"
+            var url = "{{ route('guru.siswa.data') }}"
             var datatable = $(tableId).DataTable({
                 // responsive: true,
                 dom: "rt<'d-flex justify-content-end m-3 align-items-center'l p><'d-flex justify-content-between m-3'iB>",
@@ -122,6 +153,8 @@
                 ajax: {
                     url: url,
                     data: function(d) {
+                        d.tahun_pelajaran_id = $('#filter_tahun_pelajaran_id').val();
+                        d.kelas_id = $('#filter_kelas_id').val();
                         // d.search = $('#search-table').val();
                     },
                 },
@@ -133,18 +166,28 @@
                         },
                     },
                     {
-                        data: 'name',
-                        name: 'name',
+                        data: 'tahun_pelajaran_kode',
+                        name: 'tahun_pelajaran_kode',
                         className: "text-middle"
                     },
                     {
-                        data: 'username',
-                        name: 'username',
+                        data: 'mata_pelajaran_nama',
+                        name: 'mata_pelajaran_nama',
                         className: "text-middle"
                     },
                     {
-                        data: 'email',
-                        name: 'email',
+                        data: 'kelas_angka',
+                        name: 'kelas_angka',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'guru_nama',
+                        name: 'guru_nama',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'hari',
+                        name: 'hari',
                         className: "text-middle"
                     },
                     {
@@ -157,48 +200,6 @@
                 ],
             })
             return datatable;
-        }
-
-        function deleteData(event) {
-            event.preventDefault();
-            var id = event.target.querySelector('input[name="id"]').value;
-            var name = event.target.querySelector('input[name="name"]').value;
-            swal({
-                title: "Apa kamu yakin?",
-                text: "Data yang akan dihapus: " + name + ". Data tidak dapat dikembalikan!",
-                icon: "warning",
-                buttons: {
-                    confirm: {
-                        text: "OK",
-                        value: true,
-                        visible: true,
-                        className: "",
-                        closeModal: true
-                    },
-                    cancel: "Batalkan",
-                },
-                dangerMode: true,
-            }).then((willDelete) => {
-                if (willDelete) {
-                    var url = "{{ route('admin.user.destroy', ['user' => '_user']) }}";
-                    url = url.replace('_user', id);
-                    var fd = new FormData($(event.target)[0]);
-                    $.ajax({
-                        type: "post",
-                        url: url,
-                        data: fd,
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function() {
-                            toastr.info('Loading...');
-                        },
-                        success: function(response) {
-                            searchDataTable('#table1', true);
-                            showToastr(response.status, response.message);
-                        }
-                    });
-                }
-            });
         }
     </script>
 @endpush

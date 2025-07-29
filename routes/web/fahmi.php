@@ -1,23 +1,27 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\GuruController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\NilaiController;
-use App\Http\Controllers\Admin\SiswaController;
-use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\AbsensiController;
-use App\Http\Controllers\Admin\KelasSubController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\KelasWaliController;
-use App\Http\Controllers\Admin\KelasSiswaController;
-use App\Http\Controllers\Admin\NilaiBobotController;
-use App\Http\Controllers\Admin\NilaiInputController;
 use App\Http\Controllers\Admin\AbsensiRekapController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\JadwalDetailController;
+use App\Http\Controllers\Admin\KelasSiswaController;
+use App\Http\Controllers\Admin\KelasSubController;
+use App\Http\Controllers\Admin\KelasWaliController;
 use App\Http\Controllers\Admin\KepalaSekolahController;
+use App\Http\Controllers\Admin\NilaiBobotController;
+use App\Http\Controllers\Admin\NilaiController;
+use App\Http\Controllers\Admin\NilaiInputController;
 use App\Http\Controllers\Admin\PendaftaranSiswaBaruController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SiswaController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
+use App\Http\Controllers\Guru\ProfileController as GuruProfileController;
+use App\Http\Controllers\Guru\SiswaController as GuruSiswaController;
+use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -85,7 +89,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{guru}/edit', [GuruController::class, 'edit'])->name('admin.guru.edit');
         Route::put('/{guru}/update', [GuruController::class, 'update'])->name('admin.guru.update');
         Route::delete('/{guru}/destroy', [GuruController::class, 'destroy'])->name('admin.guru.destroy');
+        Route::get('/{guru}/show', [GuruController::class, 'show'])->name('admin.guru.show');
     });
+
     Route::prefix('kepala-sekolah')->group(function () {
         Route::get('/', [KepalaSekolahController::class, 'index'])->name('admin.kepala-sekolah.index');
         Route::get('/data', [KepalaSekolahController::class, 'data'])->name('admin.kepala-sekolah.data');
@@ -161,5 +167,30 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('admin.role.edit');
         Route::put('/{role}/update', [RoleController::class, 'update'])->name('admin.role.update');
         Route::delete('/{role}/destroy', [RoleController::class, 'destroy'])->name('admin.role.destroy');
+    });
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('admin.profile.index');
+        Route::put('/', [ProfileController::class, 'update'])->name('admin.profile.update');
+    });
+
+});
+
+Route::prefix('guru')->middleware(['auth', 'role:guru'])->group(function () {
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', [GuruDashboardController::class, 'index'])->name('guru.dashboard.index');
+        Route::get('/edit', [GuruDashboardController::class, 'edit'])->name('guru.dashboard.edit');
+        Route::put('/update', [GuruDashboardController::class, 'update'])->name('guru.dashboard.update');
+    });
+
+    Route::prefix('siswa')->group(function () {
+        Route::get('/', [GuruSiswaController::class, 'index'])->name('guru.siswa.index');
+        Route::get('/data', [GuruSiswaController::class, 'data'])->name('guru.siswa.data');
+        Route::get('/{jadwal}/show', [GuruSiswaController::class, 'show'])->name('guru.siswa.show');
+        Route::get('/{jadwal}/dataShow', [GuruSiswaController::class, 'dataShow'])->name('guru.siswa.dataShow');
+    });
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [GuruProfileController::class, 'index'])->name('guru.profile.index');
+        Route::put('/', [GuruProfileController::class, 'update'])->name('guru.profile.update');
     });
 });

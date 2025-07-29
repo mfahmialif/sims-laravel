@@ -28,6 +28,9 @@ class HomeController extends Controller
         if ($user->role->nama == 'admin') {
             return redirect()->route('admin.dashboard.index');
         }
+        if ($user->role->nama == 'guru') {
+            return redirect()->route('guru.dashboard.index');
+        }
         return view('home');
     }
 }

@@ -1,14 +1,14 @@
 @extends('layouts.admin.template')
-@section('title', 'User')
+@section('title', 'Siswa Kelas')
 @section('content')
     <!-- Page Header -->
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">User </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('guru.siswa.index') }}">Siswa </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Data User</li>
+                    <li class="breadcrumb-item active">Data Siswa Kelas</li>
                 </ul>
             </div>
         </div>
@@ -17,7 +17,13 @@
 
     <div class="row">
         <div class="col-sm-12">
-
+            <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
+                <i class="feather-info"></i>
+                <div>
+                    <strong>Informasi:</strong> Anda sedang melihat data siswa untuk
+                    <strong>Kelas {{ $kelas->angka }} ({{ $kelas->romawi }}) - {{ $kelasSub->sub }}</strong>.
+                </div>
+            </div>
             <div class="card card-table show-entire">
                 <div class="card-body">
 
@@ -26,7 +32,7 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Data User</h3>
+                                    <h3>Data Siswa Kelas</h3>
                                     <div class="doctor-search-blk mt-3 mt-md-0">
                                         <div class="top-nav-search table-search-blk">
                                             <form onsubmit="event.preventDefault(); searchDataTable('#table1');">
@@ -38,10 +44,6 @@
                                             </form>
                                         </div>
                                         <div class="add-group">
-                                            <a href="{{ route('admin.user.add') }}"
-                                                class="btn btn-primary add-pluss ms-2"><img
-                                                    src="{{ asset('template') }}/assets/img/icons/plus.svg"
-                                                    alt=""></a>
                                             <a href="javascript:void(0);" onclick="searchDataTable('#table1', true)"
                                                 class="btn btn-primary doctor-refresh ms-2"><img
                                                     src="{{ asset('template') }}/assets/img/icons/re-fresh.svg"
@@ -70,10 +72,9 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%">No</th>
-                                    <th>Name</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Action</th>
+                                    <th>Kelas</th>
+                                    <th>Sub Kelas</th>
+                                    <th>Siswa</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,10 +89,47 @@
 @endsection
 @push('script')
     <script>
+        let selectedIds = new Set();
+
         var table1 = dataTable('#table1');
         $('#search-table').focus();
 
         var searchTimeout = null;
+
+        $('.filter-dt').change(function(e) {
+            e.preventDefault();
+            table1.ajax.reload();
+        });
+
+        $('#check-all').on('change', function() {
+            $('.check-table').prop('checked', this.checked);
+            $('.check-table').each(function() {
+                saveSelectedId(this);
+            });
+        });
+
+        $(document).on('change', '.check-table', function() {
+            $('#check-all').prop('checked', $('.check-table:checked').length === $('.check-table').length);
+            saveSelectedId(this);
+        });
+
+        $('#table1').on('draw.dt', function() {
+            $('.check-table').each(function() {
+                if (selectedIds.has($(this).val())) {
+                    $(this).prop('checked', true);
+                }
+            });
+            $('#check-all').prop('checked', false);
+        });
+
+        function saveSelectedId(element) {
+            let id = $(element).val();
+            if (element.checked) {
+                selectedIds.add(id);
+            } else {
+                selectedIds.delete(id);
+            }
+        }
 
         function searchDataTable(tableId, refresh = false) {
             var time = refresh ? 0 : 700;
@@ -106,7 +144,7 @@
         }
 
         function dataTable(tableId) {
-            var url = "{{ route('admin.user.data') }}"
+            var url = "{{ route('guru.siswa.dataShow', ['jadwal' => $jadwal]) }}"
             var datatable = $(tableId).DataTable({
                 // responsive: true,
                 dom: "rt<'d-flex justify-content-end m-3 align-items-center'l p><'d-flex justify-content-between m-3'iB>",
@@ -114,7 +152,7 @@
                 processing: true,
                 serverSide: true,
                 order: [
-                    [0, "desc"]
+                    [1, "desc"]
                 ],
                 search: {
                     return: true,
@@ -125,6 +163,10 @@
                         // d.search = $('#search-table').val();
                     },
                 },
+                lengthMenu: [
+                    [10, 20, 50, 100, -1],
+                    [10, 20, 50, 100, 'All']
+                ],
                 deferRender: true,
                 columns: [{
                         data: 'id',
@@ -133,72 +175,23 @@
                         },
                     },
                     {
-                        data: 'name',
-                        name: 'name',
+                        data: 'kelas_angka',
+                        name: 'kelas_angka',
                         className: "text-middle"
                     },
                     {
-                        data: 'username',
-                        name: 'username',
+                        data: 'sub',
+                        name: 'sub',
                         className: "text-middle"
                     },
                     {
-                        data: 'email',
-                        name: 'email',
+                        data: 'nama_siswa',
+                        name: 'nama_siswa',
                         className: "text-middle"
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        className: "text-end",
-                        searchable: false,
-                        orderable: false
                     },
                 ],
             })
             return datatable;
-        }
-
-        function deleteData(event) {
-            event.preventDefault();
-            var id = event.target.querySelector('input[name="id"]').value;
-            var name = event.target.querySelector('input[name="name"]').value;
-            swal({
-                title: "Apa kamu yakin?",
-                text: "Data yang akan dihapus: " + name + ". Data tidak dapat dikembalikan!",
-                icon: "warning",
-                buttons: {
-                    confirm: {
-                        text: "OK",
-                        value: true,
-                        visible: true,
-                        className: "",
-                        closeModal: true
-                    },
-                    cancel: "Batalkan",
-                },
-                dangerMode: true,
-            }).then((willDelete) => {
-                if (willDelete) {
-                    var url = "{{ route('admin.user.destroy', ['user' => '_user']) }}";
-                    url = url.replace('_user', id);
-                    var fd = new FormData($(event.target)[0]);
-                    $.ajax({
-                        type: "post",
-                        url: url,
-                        data: fd,
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function() {
-                            toastr.info('Loading...');
-                        },
-                        success: function(response) {
-                            searchDataTable('#table1', true);
-                            showToastr(response.status, response.message);
-                        }
-                    });
-                }
-            });
         }
     </script>
 @endpush
