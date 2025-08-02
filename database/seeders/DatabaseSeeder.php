@@ -42,6 +42,14 @@ class DatabaseSeeder extends Seeder
                 'jenis_kelamin' => 'Laki-Laki',
                 'role_id'       => 1, // tambahkan jika kolom ini wajib
             ],
+            [
+                'username'      => 'kepalasekolah',
+                'name'          => 'Kepala Sekolah',
+                'password'      => bcrypt('password'),
+                'email'         => 'ks@admin.com',
+                'jenis_kelamin' => 'Laki-Laki',
+                'role_id'       => 3, // tambahkan jika kolom ini wajib
+            ],
         ]);
 
         \DB::table('tahun_pelajaran')->insert([

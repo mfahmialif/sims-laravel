@@ -35,7 +35,8 @@ class KelasSiswaController extends Controller
                 'siswa.nama_siswa',
                 'siswa.foto',
                 'siswa.nis',
-                'siswa.nisn'
+                'siswa.nisn',
+                'siswa.jenis_kelamin'
             );
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
@@ -51,9 +52,9 @@ class KelasSiswaController extends Controller
                     <div class="d-flex align-items-center">
                         <img src="' . $row->foto . '" alt="Foto Siswa" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div>
-                            ' . $row->nama_siswa . '<br>
+                            <a href="' . route("admin.siswa.show", ['siswa' => $row->siswa_id]) . '">' . $row->nama_siswa . '</a><br>
                             <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
-                            <small>NISN: ' . ($row->nisn ?? '-') . '</small>
+                            <small>' . ($row->jenis_kelamin ?? '-') . '</small>
                         </div>
                     </div>
                 ';
@@ -78,14 +79,21 @@ class KelasSiswaController extends Controller
             ->toJson();
     }
 
+    // ->whereNull('kelas_siswa.id')
     public function dataSiswa(Kelas $kelas, KelasSub $kelasSub, Request $request)
     {
+        $enrolledSiswa = KelasSiswa::join('kelas_sub', 'kelas_sub.id', '=', 'kelas_siswa.kelas_sub_id')
+            ->join('kelas', 'kelas.id', '=', 'kelas_sub.kelas_id')
+            ->where('kelas.id', $kelas->id)
+            ->select('kelas_siswa.*')
+            ->get()
+            ->pluck('siswa_id');
+
         $search = request('search.value');
         $data   = Siswa::join('tahun_pelajaran', 'tahun_pelajaran.id', '=', 'siswa.tahun_pelajaran_id')
             ->join('kelas', 'kelas.id', '=', 'siswa.kelas_id')
-            ->leftJoin('kelas_siswa', 'kelas_siswa.siswa_id', '=', 'siswa.id')
             ->where('status_daftar', 'diterima')
-            ->whereNull('kelas_siswa.id')
+            ->whereNotIn('siswa.id', $enrolledSiswa)
             ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode', 'kelas.angka as kelas_angka');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
@@ -111,9 +119,11 @@ class KelasSiswaController extends Controller
                 return '
                     <div class="d-flex align-items-center">
                         <img src="' . $row->foto . '" alt="Foto Siswa" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
-                        <div>' . $row->nama_siswa . '<br>
+                        <div>
+                            <a href="' . route("admin.siswa.show", $row) . '">' . $row->nama_siswa . '</a><br>
                             <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
-                            <small>NISN: ' . ($row->nisn ?? '-') . '</small>
+                            <small>Kelas: ' . ($row->kelas_angka ?? '-') . ' ' . ($row->kelas_sub ?? '-') . '</small><br>
+                            <small>' . ($row->jenis_kelamin ?? '-') . '</small>
                         </div>
                     </div>
                 ';

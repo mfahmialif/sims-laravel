@@ -27,7 +27,7 @@
                             </div>
                             <div>
                                 @php
-                                    $count = $detail->jadwal->count();
+                                    $count = $detail->jadwal->where('tahun_pelajaran_id', $tahunPelajaran->id)->count();
                                 @endphp
                                 <span
                                     class="badge bg-{{ $count == 0 ? 'danger' : 'success' }}">{{ $count }}</span>

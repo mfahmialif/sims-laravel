@@ -15,10 +15,12 @@ class ExcelExport extends DefaultValueBinder implements FromCollection, ShouldAu
 {
 
     private $data;
+    private $stringColumn;
 
-    public function __construct($data)
+    public function __construct($data, $stringColumn = [])
     {
         $this->data = $data;
+        $this->stringColumn = $stringColumn;
     }
     /**
      * @return \Illuminate\Support\Collection
@@ -56,7 +58,7 @@ class ExcelExport extends DefaultValueBinder implements FromCollection, ShouldAu
 
     public function bindValue(Cell $cell, $value)
     {
-        $stringColumn = ["E", "F", "I"];
+        $stringColumn = $this->stringColumn;
         if (in_array($cell->getColumn(), $stringColumn)) {
             $cell->setValueExplicit($value, DataType::TYPE_STRING);
             return true;

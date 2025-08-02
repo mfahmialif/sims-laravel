@@ -1,15 +1,15 @@
 <?php
 namespace App\Http\Controllers\Guru;
 
-use App\Models\Siswa;
-use App\Models\Jadwal;
-use App\Models\Absensi;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Http\Services\Helper;
-use App\Models\AbsensiDetail;
-use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Http\Services\Helper;
+use App\Models\Absensi;
+use App\Models\AbsensiDetail;
+use App\Models\Jadwal;
+use App\Models\Siswa;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Yajra\DataTables\DataTables;
 
 class AbsensiRekapController extends Controller
 {
@@ -24,10 +24,11 @@ class AbsensiRekapController extends Controller
         return view('guru.absensi.rekap.index', compact('jadwal'));
     }
 
-    public function data(Jadwal $jadwal, Request $request)
+    public function data(Request $request)
     {
+        $jadwal = Jadwal::findOrFail(request()->route('jadwal'));
         $search = request('search.value');
-        $data   = Absensi::select('*');
+        $data   = Absensi::where('jadwal_id', $jadwal->id);
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
                 $query->where(function ($query) use ($search) {
@@ -62,8 +63,10 @@ class AbsensiRekapController extends Controller
         $data   = Siswa::join('tahun_pelajaran', 'tahun_pelajaran.id', '=', 'siswa.tahun_pelajaran_id')
             ->join('kelas', 'kelas.id', '=', 'siswa.kelas_id')
             ->join('kelas_sub', 'kelas_sub.kelas_id', '=', 'kelas.id')
+            ->join('kelas_siswa', 'kelas_siswa.siswa_id', '=', 'siswa.id')
             ->where('status_daftar', 'diterima')
-            ->where('kelas_sub.id', $jadwal->kelas_sub_id)
+            ->where('kelas_siswa.kelas_sub_id', $jadwal->kelas_sub_id)
+            ->where('siswa.kurikulum_id', $jadwal->kurikulumDetail->kurikulum_id)
             ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode', 'kelas.angka as kelas_angka', 'kelas_sub.sub as kelas_sub');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
@@ -93,7 +96,8 @@ class AbsensiRekapController extends Controller
                             <span>' . $row->nama_siswa . '</span><br>
                             <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
                             <small>Kelas: ' . ($row->kelas_angka ?? '-') . ' ' . ($row->kelas_sub ?? '-') . '</small><br>
-                            <small>' . ($row->jenis_kelamin ?? '-') . '</small>
+                            <small>' . ($row->jenis_kelamin ?? '-') . '</small><br>
+                            <small>' . ($row->kurikulum->nama ?? '-') . '</small>
                         </div>
                     </div>
                 ';
@@ -108,7 +112,7 @@ class AbsensiRekapController extends Controller
 
     public function dataFormEdit(Request $request)
     {
-        $jadwal = Jadwal::findOrFail(request()->route('jadwal'));
+        $jadwal  = Jadwal::findOrFail(request()->route('jadwal'));
         $absensi = Absensi::findOrFail(request()->route('absensi'));
 
         $search = request('search.value');
@@ -116,8 +120,10 @@ class AbsensiRekapController extends Controller
             ->join('kelas', 'kelas.id', '=', 'siswa.kelas_id')
             ->join('kelas_sub', 'kelas_sub.kelas_id', '=', 'kelas.id')
             ->leftJoin('absensi_detail', 'absensi_detail.siswa_id', '=', 'siswa.id')
+            ->join('kelas_siswa', 'kelas_siswa.siswa_id', '=', 'siswa.id')
             ->where('status_daftar', 'diterima')
-            ->where('kelas_sub.id', $jadwal->kelas_sub_id)
+            ->where('kelas_siswa.kelas_sub_id', $jadwal->kelas_sub_id)
+            ->where('siswa.kurikulum_id', $jadwal->kurikulumDetail->kurikulum_id)
             ->where('absensi_detail.absensi_id', $absensi->id)
             ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode', 'kelas.angka as kelas_angka', 'kelas_sub.sub as kelas_sub', 'absensi_detail.status as absensi_detail_status');
         return DataTables::of($data)
@@ -148,7 +154,8 @@ class AbsensiRekapController extends Controller
                             <span>' . $row->nama_siswa . '</span><br>
                             <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
                             <small>Kelas: ' . ($row->kelas_angka ?? '-') . ' ' . ($row->kelas_sub ?? '-') . '</small><br>
-                            <small>' . ($row->jenis_kelamin ?? '-') . '</small>
+                            <small>' . ($row->jenis_kelamin ?? '-') . '</small><br>
+                            <small>' . ($row->kurikulum->nama ?? '-') . '</small>
                         </div>
                     </div>
                 ';
@@ -185,6 +192,8 @@ class AbsensiRekapController extends Controller
                     'absensi_id' => $absensi->id,
                     'siswa_id'   => $siswaId,
                     'status'     => $status,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ];
             }
 
@@ -211,10 +220,10 @@ class AbsensiRekapController extends Controller
     public function update(Jadwal $jadwal, Absensi $absensi, Request $request)
     {
         try {
-            $request->validate($this->rules,
-                [
-                    'data.required' => 'Absensi mahasiswa harus dipilih.',
-                ]);
+            $rules         = $this->rules;
+            $rules['data'] = 'nullable|array';
+
+            $request->validate($rules);
 
             \DB::beginTransaction();
 
@@ -222,17 +231,12 @@ class AbsensiRekapController extends Controller
             $absensi->tanggal    = $request->tanggal;
             $absensi->save();
 
-            $detail = [];
-            foreach ($request->data as $siswaId => $status) {
-                AbsensiDetail::where('absensi_id', $absensi->id)->where('siswa_id', $siswaId)->delete();
-                $detail[] = [
-                    'absensi_id' => $absensi->id,
-                    'siswa_id'   => $siswaId,
-                    'status'     => $status,
-                ];
+            if ($request->data) {
+                foreach ($request->data as $siswaId => $status) {
+                    AbsensiDetail::where('absensi_id', $absensi->id)->where('siswa_id', $siswaId)->update(['status' => $status]);
+                }
             }
 
-            AbsensiDetail::insert($detail);
             \DB::commit();
             return redirect()->route('guru.absensi.rekap.index', ['jadwal' => $jadwal])->with('success', 'Absensi berhasil diupdate');
         } catch (\Illuminate\Validation\ValidationException $e) {

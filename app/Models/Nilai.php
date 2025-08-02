@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +8,7 @@ class Nilai extends Model
 {
     use HasFactory;
 
-    protected $table = 'nilai';
+    protected $table   = 'nilai';
     protected $guarded = [];
 
     public function siswa()
@@ -21,4 +20,5 @@ class Nilai extends Model
     {
         return $this->belongsTo(Jadwal::class, 'jadwal_id');
     }
+
 }

@@ -1,15 +1,14 @@
 @extends('layouts.admin.template')
-@section('title', 'Edit Pendataran Siswa Baru')
+@section('title', 'Edit Siswa')
 @section('content')
     <!-- Page Header -->
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.siswa.index') }}">Pendaftaran Siswa
-                            Baru </a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.siswa.index') }}">Siswa </a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Edit Pendaftaran Siswa Baru</li>
+                    <li class="breadcrumb-item active">Edit Siswa</li>
                 </ul>
             </div>
         </div>
@@ -27,7 +26,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-heading">
-                                    <h4>Edit Pendataran Siswa Baru</h4>
+                                    <h4>Edit Siswa</h4>
                                 </div>
                             </div>
                             @include('admin.siswa.form')
@@ -155,6 +154,8 @@
             // MENGISI SELECT / DROPDOWN
             // -------------------------------------------------------------------
             // .change() penting untuk memicu update pada library seperti Select2
+            form.find('select[name="kurikulum_id"]').val(getValue('kurikulum_id')).change();
+            form.find('select[name="kelas_id"]').val(getValue('kelas_id')).change();
             form.find('select[name="tahun_pelajaran_id"]').val(getValue('tahun_pelajaran_id')).change();
             form.find('select[name="jenis_kelamin"]').val(getValue('jenis_kelamin')).change();
             form.find('select[name="agama"]').val(getValue('agama')).change();

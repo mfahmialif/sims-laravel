@@ -26,7 +26,7 @@
             <table id="table1" class="table border-0 custom-table comman-table datatable mb-0 table-hover">
                 <thead>
                     <tr>
-                        <th rowspan="2" style="width: 5%">No</th>
+                        <th rowspan="2">No</th>
                         <th rowspan="2">Siswa</th>
 
                         @foreach ($kelompokKomponen as $jenis => $komponenList)
@@ -38,7 +38,7 @@
                     <tr>
                         @foreach ($kelompokKomponen as $jenis => $komponenList)
                             @foreach ($komponenList as $komponen)
-                                <th class="text-center" style="width: 5%">
+                                <th class="text-center">
                                     {!! implode('<br>', explode(' ', $komponen['nama'])) !!}
                                 </th>
                             @endforeach
@@ -134,6 +134,7 @@
                             name: `nilai.${komponen.id}`,
                             className: 'text-center',
                             render: (data, type, row) => {
+                                console.log(row);
                                 const inputType = jenis === 'sikap' ? 'text' : 'number';
                                 const disabled = komponen.nama === 'Nilai' ? 'disabled' : '';
                                 const nilaiDetail = row.nilai_detail.find(item => item

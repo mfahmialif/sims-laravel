@@ -48,8 +48,12 @@
         @include('layouts.admin.navbar')
         @if (\Auth::user()->role->nama == 'guru')
             @include('layouts.admin.sidebar-guru')
-        @else
+        @elseif (\Auth::user()->role->nama == 'admin')
             @include('layouts.admin.sidebar')
+        @elseif (\Auth::user()->role->nama == 'kepala sekolah')
+            @include('layouts.admin.sidebar-kepala')
+        @else
+            @include('layouts.admin.sidebar-siswa')
         @endif
 
         <div class="page-wrapper">

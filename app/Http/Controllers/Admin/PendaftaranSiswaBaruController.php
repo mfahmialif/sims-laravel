@@ -3,6 +3,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\Helper;
+use App\Models\Kelas;
+use App\Models\Kurikulum;
 use App\Models\Role;
 use App\Models\Siswa;
 use App\Models\TahunPelajaran;
@@ -16,11 +18,13 @@ class PendaftaranSiswaBaruController extends Controller
 {
     protected $rules = [
         // Foreign Keys
+        'kurikulum_id'             => 'required|exists:kurikulum,id',
+        'kelas_id'                 => 'required|exists:kelas,id',
         'tahun_pelajaran_id'       => 'required|exists:tahun_pelajaran,id',
         'email'                    => 'nullable|email|unique:users,email',
 
         // Informasi Siswa
-        'nis'                      => 'nullable|string|max:255|unique:siswa,nis',
+        'nis'                      => 'required|string|max:255|unique:siswa,nis',
         'nisn'                     => 'nullable|string|max:255|unique:siswa,nisn',
         'nama_siswa'               => 'required|string|max:255',
         'jenis_kelamin'            => 'required|in:Laki-Laki,Perempuan',
@@ -174,7 +178,10 @@ class PendaftaranSiswaBaruController extends Controller
         $agama          = Helper::getEnumValues('siswa', 'agama');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
         $statusDaftar   = Helper::getEnumValues('siswa', 'status_daftar');
-        return view('admin.pendaftaran-siswa-baru.add', compact('jenisKelamin', 'agama', 'tahunPelajaran', 'statusDaftar'));
+        $kelas          = Kelas::orderBy('angka')->get();
+        $kurikulum      = Kurikulum::all();
+        return view('admin.pendaftaran-siswa-baru.add', compact('jenisKelamin',
+            'agama', 'tahunPelajaran', 'statusDaftar', 'kelas', 'kurikulum'));
     }
 
     public function store(Request $request)
@@ -186,9 +193,9 @@ class PendaftaranSiswaBaruController extends Controller
             $role = Role::where('nama', 'siswa')->first();
 
             //random password
-            $password = Str::random(8);
+            $password = 'password';
             $user     = User::create([
-                'username'      => 'sis-' . time(),
+                'username'      => $request->nis,
                 'name'          => $request->nama_siswa,
                 'email'         => $request->email,
                 'password'      => Hash::make($password),
@@ -200,6 +207,8 @@ class PendaftaranSiswaBaruController extends Controller
             $siswa = new Siswa();
 
             // Mengisi Foreign Keys
+            $siswa->kurikulum_id       = $request->kurikulum_id;
+            $siswa->kelas_id           = $request->kelas_id;
             $siswa->tahun_pelajaran_id = $request->tahun_pelajaran_id;
             $siswa->user_id            = $user->id;
 
@@ -315,9 +324,12 @@ class PendaftaranSiswaBaruController extends Controller
         $agama          = Helper::getEnumValues('siswa', 'agama');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
         $statusDaftar   = Helper::getEnumValues('siswa', 'status_daftar');
+        $kelas          = Kelas::orderBy('angka')->get();
+        $kurikulum      = Kurikulum::all();
 
         $siswa = $siswa->load('user');
-        return view('admin.pendaftaran-siswa-baru.edit', compact('siswa', 'agama', 'jenisKelamin', 'tahunPelajaran', 'statusDaftar'));
+        return view('admin.pendaftaran-siswa-baru.edit', compact('siswa', 'agama', 'jenisKelamin',
+            'tahunPelajaran', 'statusDaftar', 'kelas', 'kurikulum'));
     }
 
     public function update(Request $request, Siswa $siswa)
@@ -334,7 +346,7 @@ class PendaftaranSiswaBaruController extends Controller
             \DB::beginTransaction();
 
             $user                = $siswa->user;
-            $user->name         = $request->nama_siswa;
+            $user->name          = $request->nama_siswa;
             $user->email         = $request->email;
             $user->jenis_kelamin = $request->jenis_kelamin;
             $user->save();
@@ -342,6 +354,8 @@ class PendaftaranSiswaBaruController extends Controller
             $umur = $request->tanggal_lahir ? Helper::hitungUmur($request->tanggal_lahir) : null;
 
             // Mengisi Foreign Keys
+            $siswa->kelas_id           = $request->kelas_id;
+            $siswa->kurikulum_id       = $request->kurikulum_id;
             $siswa->tahun_pelajaran_id = $request->tahun_pelajaran_id;
 
             // Mengisi Informasi Siswa

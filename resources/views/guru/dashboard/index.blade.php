@@ -256,6 +256,9 @@
                                             <li>
                                                 <h4>Status Akun</h4><span>{{ $guru->status }}</span>
                                             </li>
+                                            <li>
+                                                <h4>Username</h4><span>{{ $guru->user->username }}</span>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -314,18 +317,18 @@
                                                                         class="fa fa-ellipsis-v"></i></a>
                                                                 <div class="dropdown-menu dropdown-menu-end">
                                                                     <a class="dropdown-item"
-                                                                        href="{{ route('admin.kelas.sub.siswa.index', ['kelas' => $jadwal[$i]->kelasSub->kelas, 'kelasSub' => $jadwal[$i]->kelasSub]) }}"><i
+                                                                        href="{{ route('guru.siswa.show', ['jadwal' => $jadwal[$i]]) }}"><i
                                                                             class="fa-solid fa-user m-r-5"></i> Siswa</a>
                                                                     <a class="dropdown-item"
-                                                                        href="{{ route('admin.absensi.rekap.index', ['jadwal' => $jadwal[$i]]) }}"><i
+                                                                        href="{{ route('guru.absensi.rekap.index', ['jadwal' => $jadwal[$i]]) }}"><i
                                                                             class="fa-solid fa-clock m-r-5"></i>
                                                                         Absensi</a>
                                                                     <a class="dropdown-item"
-                                                                        href="{{ route('admin.nilai.bobot-nilai.index', ['jadwal' => $jadwal[$i]]) }}"><i
+                                                                        href="{{ route('guru.nilai.bobot-nilai.index', ['jadwal' => $jadwal[$i]]) }}"><i
                                                                             class="fa-solid fa-chart-line m-r-5"></i>
                                                                         Bobot Nilai</a>
                                                                     <a class="dropdown-item"
-                                                                        href="{{ route('admin.nilai.input.index', ['jadwal' => $jadwal[$i]]) }}"><i
+                                                                        href="{{ route('guru.nilai.input.index', ['jadwal' => $jadwal[$i]]) }}"><i
                                                                             class="fa-solid fa-chart-line m-r-5"></i>
                                                                         Input Nilai</a>
                                                                 </div>

@@ -43,6 +43,8 @@ class JadwalDetailController extends Controller
         $data   = Jadwal::join('guru', 'guru.id', '=', 'jadwal.guru_id')
             ->join('kelas_sub', 'kelas_sub.id', '=', 'jadwal.kelas_sub_id')
             ->join('kelas', 'kelas.id', '=', 'kelas_sub.kelas_id')
+            ->where('jadwal.tahun_pelajaran_id', $tahunPelajaran->id)
+            ->where('jadwal.kurikulum_detail_id', $kurikulumDetail->id)
             ->select('jadwal.*', 'guru.nama', 'guru.foto', 'guru.nip', 'guru.nik', 'kelas_sub.sub', 'kelas.angka', 'kelas.romawi');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {

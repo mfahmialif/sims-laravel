@@ -16,7 +16,7 @@ class KelasSiswa extends Model
         return $this->belongsTo(KelasSiswa::class);
     }
 
-    public function sub()
+    public function kelasSub()
     {
         return $this->belongsTo(KelasSub::class);
     }

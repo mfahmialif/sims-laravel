@@ -14,16 +14,34 @@ class SiswaFactory extends Factory
 
     public function definition(): array
     {
+        // Buat username angka 10 digit
+        $username = $this->faker->unique()->numerify('##########');
+
+        // Buat jenis kelamin secara acak
+        $gender = $this->faker->randomElement(['Laki-Laki', 'Perempuan']);
+
+        // Buat nama sesuai jenis kelamin
+        $name = $gender === 'Laki-Laki'
+            ? $this->faker->name('male')
+            : $this->faker->name('female');
+
+        // Buat user baru
+        $user = User::factory()->siswa()->create([
+            'username'      => $username,
+            'name'          => $name,
+            'jenis_kelamin' => $gender,
+        ]);
+
         return [
             'kelas_id'                 => Kelas::inRandomOrder()->value('id') ?? 1,
             'tahun_pelajaran_id'       => TahunPelajaran::inRandomOrder()->value('id') ?? 1,
-            'user_id'                  => User::factory()->siswa(),
+            'user_id'                  => $user->id,
             'kurikulum_id'             => Kurikulum::inRandomOrder()->value('id') ?? 1,
 
-            'nis'                      => $this->faker->unique()->numerify('##########'),
+            'nis'                      => $user->username,
             'nisn'                     => $this->faker->unique()->numerify('##########'),
-            'nama_siswa'               => $this->faker->name,
-            'jenis_kelamin'            => $this->faker->randomElement(['Laki-Laki', 'Perempuan']),
+            'nama_siswa'               => $user->name,
+            'jenis_kelamin'            => $user->jenis_kelamin,
             'tempat_lahir'             => $this->faker->city,
             'tanggal_lahir'            => $this->faker->date('Y-m-d', '2015-01-01'),
             'agama'                    => 'Islam',

@@ -12,6 +12,10 @@ class Jadwal extends Model
     protected $table = 'jadwal';
     protected $guarded = [];
 
+    public function tahunPelajaran(){
+        return $this->belongsTo(TahunPelajaran::class);
+    }
+
     public function kelasSub()
     {
         return $this->belongsTo(KelasSub::class);
@@ -38,5 +42,9 @@ class Jadwal extends Model
     public function nilaiDetail()
     {
         return $this->hasMany(NilaiDetail::class);
+    }
+
+    public function absensi(){
+        return $this->hasMany(Absensi::class);
     }
 }

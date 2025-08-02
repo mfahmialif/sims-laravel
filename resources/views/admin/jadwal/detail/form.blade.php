@@ -3,7 +3,7 @@
         <label>Kelas <span class="login-danger">*</span></label>
         <select class="form-control select2 @error('kelas_sub_id') is-invalid @enderror" id="kelas_sub_id" name="kelas_sub_id" required tabindex="1">
             <option value="">Pilih Kelas</option>
-            @foreach ($kurikulumDetail->mataPelajaran->kelas->sub as $item)
+            @foreach ($kurikulumDetail->mataPelajaran->kelas->sub->where('tahun_pelajaran_id', $tahunPelajaran->id) as $item)
                 <option value="{{ $item->id }}" {{ old('kelas_sub_id') == $item->id ? 'selected' : '' }}>
                     {{ $item->kelas->angka }} {{ $item->sub }}
                 </option>

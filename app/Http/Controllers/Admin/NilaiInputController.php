@@ -54,9 +54,18 @@ class NilaiInputController extends Controller
         $data   = Siswa::join('tahun_pelajaran', 'tahun_pelajaran.id', '=', 'siswa.tahun_pelajaran_id')
             ->join('kelas', 'kelas.id', '=', 'siswa.kelas_id')
             ->join('kelas_sub', 'kelas_sub.kelas_id', '=', 'kelas.id')
+            ->join('kelas_siswa', 'kelas_siswa.siswa_id', '=', 'siswa.id')
             ->where('status_daftar', 'diterima')
-            ->where('kelas_sub.id', $jadwal->kelas_sub_id)
-            ->with('nilai', 'nilaiDetail')
+            ->where('kelas_siswa.kelas_sub_id', $jadwal->kelas_sub_id)
+            ->where('siswa.kurikulum_id', $jadwal->kurikulumDetail->kurikulum_id)
+            ->with([
+                'nilai'       => function ($query) use ($jadwal) {
+                    $query->where('jadwal_id', $jadwal->id);
+                },
+                'nilaiDetail' => function ($query) use ($jadwal) {
+                    $query->where('jadwal_id', $jadwal->id);
+                },
+            ])
             ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode', 'kelas.angka as kelas_angka', 'kelas_sub.sub as kelas_sub');
 
         return DataTables::of($data)
@@ -84,7 +93,7 @@ class NilaiInputController extends Controller
                     <div class="d-flex align-items-center">
                         <img src="' . $row->foto . '" alt="Foto Siswa" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div>
-                            <a href="' . route("admin.siswa.edit", $row) . '">' . $row->nama_siswa . '</a><br>
+                            <a href="' . route("admin.siswa.show", $row) . '">' . $row->nama_siswa . '</a><br>
                             <small>NIS: ' . ($row->nis ?? '-') . '</small><br>
                             <small>Kelas: ' . ($row->kelas_angka ?? '-') . ' ' . ($row->kelas_sub ?? '-') . '</small><br>
                             <small>' . ($row->jenis_kelamin ?? '-') . '</small>

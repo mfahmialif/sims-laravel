@@ -24,7 +24,8 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('admin.user.index');
+        $role = Role::all();
+        return view('admin.user.index', compact('role'));
     }
 
     public function data(Request $request)
@@ -39,6 +40,10 @@ class UserController extends Controller
                     $query->orWhere('users.name', 'LIKE', "%$search%");
                     $query->orWhere('users.email', 'LIKE', "%$search%");
                     $query->orWhere('role.nama', 'LIKE', "%$search%");
+                });
+
+                $query->when($request->role_id, function ($q) use ($request) {
+                    $q->where('users.role_id', $request->role_id);
                 });
             })
             ->addColumn('action', function ($row) {

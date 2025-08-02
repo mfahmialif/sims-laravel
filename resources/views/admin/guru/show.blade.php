@@ -256,6 +256,9 @@
                                             <li>
                                                 <h4>Status Akun</h4><span>{{ $guru->status }}</span>
                                             </li>
+                                            <li>
+                                                <h4>Username</h4><span>{{ $guru->user->username }}</span>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
