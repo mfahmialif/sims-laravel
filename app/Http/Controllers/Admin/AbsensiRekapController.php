@@ -192,6 +192,8 @@ class AbsensiRekapController extends Controller
                     'absensi_id' => $absensi->id,
                     'siswa_id'   => $siswaId,
                     'status'     => $status,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ];
             }
 
