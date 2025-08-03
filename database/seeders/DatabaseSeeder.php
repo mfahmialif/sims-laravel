@@ -69,23 +69,38 @@ class DatabaseSeeder extends Seeder
 
         \DB::table('kelas')->insert([
             [
-                'romawi' => 'X',
-                'angka' => '10',
-                'keterangan' => 'Kelas 10',
+                'romawi' => 'I',
+                'angka' => '1',
+                'keterangan' => 'Kelas 1',
             ],
         ]);
         \DB::table('kelas')->insert([
             [
-                'romawi' => 'XI',
-                'angka' => '11',
-                'keterangan' => 'Kelas 11',
+                'romawi' => 'II',
+                'angka' => '2',
+                'keterangan' => 'Kelas 2',
             ],
         ]);
         \DB::table('kelas')->insert([
             [
-                'romawi' => 'XII',
-                'angka' => '12',
-                'keterangan' => 'Kelas 12',
+                'romawi' => 'III',
+                'angka' => '3',
+                'keterangan' => 'Kelas 3',
+            ],
+            [
+                'romawi' => 'IV',
+                'angka' => '4',
+                'keterangan' => 'Kelas 4',
+            ],
+            [
+                'romawi' => 'V',
+                'angka' => '5',
+                'keterangan' => 'Kelas 5',
+            ],
+            [
+                'romawi' => 'VI',
+                'angka' => '6',
+                'keterangan' => 'Kelas 6',
             ],
         ]);
         \DB::table('kelas_sub')->insert([
