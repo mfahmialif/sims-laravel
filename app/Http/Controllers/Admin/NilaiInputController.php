@@ -56,6 +56,7 @@ class NilaiInputController extends Controller
             ->join('kelas_sub', 'kelas_sub.kelas_id', '=', 'kelas.id')
             ->join('kelas_siswa', 'kelas_siswa.siswa_id', '=', 'siswa.id')
             ->where('status_daftar', 'diterima')
+            ->where('kelas_sub.id', $jadwal->kelas_sub_id)
             ->where('kelas_siswa.kelas_sub_id', $jadwal->kelas_sub_id)
             ->where('siswa.kurikulum_id', $jadwal->kurikulumDetail->kurikulum_id)
             ->with([
@@ -175,7 +176,6 @@ class NilaiInputController extends Controller
             \DB::commit();
             return redirect()->route('admin.nilai.index')->with('success', 'Absensi berhasil ditambahkan');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            dd(implode(' ', collect($e->errors())->flatten()->toArray()));
             return redirect()->route('admin.nilai.input.index', ['jadwal' => $jadwal])
                 ->withErrors($e->validator)
                 ->withInput()

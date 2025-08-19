@@ -45,7 +45,7 @@ class NilaiBobotController extends Controller
                         'komponen_nilai_id' => $komponenNilaiId,
                     ],
                     [
-                        'bobot' => $bobot,
+                        'bobot' => $bobot ?? 0,
                     ]
                 );
             }
@@ -57,7 +57,6 @@ class NilaiBobotController extends Controller
                 ->withInput()
                 ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));
         } catch (\Throwable $th) {
-            dd('asd');
             return redirect()->route('admin.nilai.bobot-nilai.index', ['jadwal' => $jadwal])->with('error', $th->getMessage())->withInput();
         }
     }

@@ -65,6 +65,7 @@ class AbsensiRekapController extends Controller
             ->join('kelas_sub', 'kelas_sub.kelas_id', '=', 'kelas.id')
             ->join('kelas_siswa', 'kelas_siswa.siswa_id', '=', 'siswa.id')
             ->where('status_daftar', 'diterima')
+            ->where('kelas_sub.id', $jadwal->kelas_sub_id)
             ->where('kelas_siswa.kelas_sub_id', $jadwal->kelas_sub_id)
             ->where('siswa.kurikulum_id', $jadwal->kurikulumDetail->kurikulum_id)
             ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode', 'kelas.angka as kelas_angka', 'kelas_sub.sub as kelas_sub');
@@ -122,6 +123,7 @@ class AbsensiRekapController extends Controller
             ->leftJoin('absensi_detail', 'absensi_detail.siswa_id', '=', 'siswa.id')
             ->join('kelas_siswa', 'kelas_siswa.siswa_id', '=', 'siswa.id')
             ->where('status_daftar', 'diterima')
+            ->where('kelas_sub.id', $jadwal->kelas_sub_id)
             ->where('kelas_siswa.kelas_sub_id', $jadwal->kelas_sub_id)
             ->where('siswa.kurikulum_id', $jadwal->kurikulumDetail->kurikulum_id)
             ->where('absensi_detail.absensi_id', $absensi->id)
