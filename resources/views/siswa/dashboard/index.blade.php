@@ -22,8 +22,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="about-info">
-                                <h4>Dashboard <span><a href="javascript:;"><i
-                                                class="feather-more-vertical"></i></a></span></h4>
+                                <h4>Dashboard <span><a href="javascript:;"><i class="feather-more-vertical"></i></a></span>
+                                </h4>
 
                             </div>
                             <div class="doctor-profile-head">
@@ -392,7 +392,7 @@
                                                                         class="fa fa-ellipsis-v"></i></a>
                                                                 <div class="dropdown-menu dropdown-menu-end">
                                                                     <a class="dropdown-item"
-                                                                        href="{{ route('admin.kelas.sub.siswa.index', ['kelas' => $kelasSiswa[$i]->kelasSub->kelas, 'kelasSub' => $kelasSiswa[$i]->kelasSub]) }}"><i
+                                                                        href="{{ route('siswa.kelas.index', ['kelasSub' => $kelasSiswa[$i]->kelasSub]) }}"><i
                                                                             class="fa-solid fa-user m-r-5"></i> Kelas</a>
                                                                 </div>
                                                             </div>
@@ -454,8 +454,9 @@
                                                                             {{ $jadwal[$j]->hari }}
                                                                         </div>
                                                                         <small
-                                                                            class="text-muted">{{ date('H:i', strtotime($jadwal[$j]->jam_mulai)) }}  -
-                                                                            {{ date ('H:i', strtotime($jadwal[$j]->jam_selesai)) }}</small>
+                                                                            class="text-muted">{{ date('H:i', strtotime($jadwal[$j]->jam_mulai)) }}
+                                                                            -
+                                                                            {{ date('H:i', strtotime($jadwal[$j]->jam_selesai)) }}</small>
                                                                     </td>
                                                                     <td>
                                                                         <div class="dropdown dropdown-action">
@@ -466,10 +467,10 @@
                                                                                     class="fa fa-ellipsis-v"></i></a>
                                                                             <div class="dropdown-menu dropdown-menu-end">
                                                                                 <a class="dropdown-item"
-                                                                                    href="{{ route('admin.siswa.absensi', ['siswa' => $siswa, 'jadwal' => $jadwal[$j]]) }}"><i
+                                                                                    href="{{ route('siswa.absensi.show', ['kelasSub' => $kelasSiswa[$i]->kelas_sub_id, 'jadwal' => $jadwal[$j]]) }}"><i
                                                                                         class="fa-solid fa-clock m-r-5"></i>Absensi</a>
                                                                                 <a class="dropdown-item"
-                                                                                    href="{{ route('admin.siswa.nilai', ['siswa' => $siswa, 'jadwal' => $jadwal[$j]]) }}"><i
+                                                                                    href="{{ route('siswa.nilai.show', ['kelasSub' => $kelasSiswa[$i]->kelas_sub_id, 'jadwal' => $jadwal[$j]]) }}"><i
                                                                                         class="fa-solid fa-chart-line m-r-5"></i>Nilai</a>
                                                                             </div>
                                                                         </div>
