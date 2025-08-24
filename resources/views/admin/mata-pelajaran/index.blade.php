@@ -72,7 +72,7 @@
                                     <th>Nama</th>
                                     <th>Kode</th>
                                     <th>Status</th>
-                                    <th>kelas</th>
+                                    <th>Kelas</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

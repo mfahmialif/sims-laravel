@@ -18,4 +18,10 @@ class KurikulumDetail extends Model
     {
         return $this->belongsTo(TahunPelajaran::class);
     }
+    public function jadwal(){
+        return $this->hasMany(Jadwal::class, 'kurikulum_detail_id');
+    }
+    public function kurikulum(){
+        return $this->belongsTo(Kurikulum::class);
+    }
 }

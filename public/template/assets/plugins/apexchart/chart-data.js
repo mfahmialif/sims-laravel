@@ -16,7 +16,7 @@ $(document).ready(function() {
 		}
 		return series;
 	}
-	
+
 	// Simple Market Area
 	if ($('#market-area').length > 0) {
 	var options = {
@@ -47,9 +47,9 @@ $(document).ready(function() {
 	);
 	chart.render();
 	}
-	
+
 	// Simple Column
-	
+
 	if ($('#transaction-wallet').length > 0) {
 		var sCol = {
 			chart: {
@@ -63,7 +63,7 @@ $(document).ready(function() {
 				bar: {
 					horizontal: false,
 					columnWidth: '20%',
-					endingShape: 'rounded'  
+					endingShape: 'rounded'
 				},
 			},
 			// colors: ['#888ea8', '#4361ee'],
@@ -112,10 +112,10 @@ $(document).ready(function() {
 
 		chart.render();
 	}
-	
+
 
 	// Column chart
-	
+
 	if ($('#sales_chart').length > 0) {
 	var columnCtx = document.getElementById("sales_chart"),
 	columnConfig = {
@@ -179,7 +179,7 @@ $(document).ready(function() {
 	}
 
 	//Pie Chart
-	
+
 	if ($('#invoice_chart').length > 0) {
 	var pieCtx = document.getElementById("invoice_chart"),
 	pieConfig = {
@@ -207,7 +207,7 @@ $(document).ready(function() {
 	var pieChart = new ApexCharts(pieCtx, pieConfig);
 	pieChart.render();
 	}
-	
+
 	// Simple Line
 if ($('#s-line').length > 0) {
 var sline = {
@@ -283,7 +283,7 @@ var sLineArea = {
 
     xaxis: {
         type: 'datetime',
-        categories: ["2018-09-19T00:00:00", "2018-09-19T01:30:00", "2018-09-19T02:30:00", "2018-09-19T03:30:00", "2018-09-19T04:30:00", "2018-09-19T05:30:00", "2018-09-19T06:30:00"],                
+        categories: ["2018-09-19T00:00:00", "2018-09-19T01:30:00", "2018-09-19T02:30:00", "2018-09-19T03:30:00", "2018-09-19T04:30:00", "2018-09-19T05:30:00", "2018-09-19T06:30:00"],
     },
     tooltip: {
         x: {
@@ -315,7 +315,7 @@ var sCol = {
         bar: {
             horizontal: false,
             columnWidth: '55%',
-            endingShape: 'rounded'  
+            endingShape: 'rounded'
         },
     },
     // colors: ['#888ea8', '#4361ee'],
@@ -378,7 +378,7 @@ var sCol = {
         bar: {
             horizontal: false,
             columnWidth: '30%',
-            endingShape: 'rounded'  
+            endingShape: 'rounded'
         },
     },
     dataLabels: {
@@ -518,7 +518,7 @@ if ($('#patient-chart').length > 0) {
 		xaxis: {
 			categories: ['Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 		},
-		
+
 	}
 
 	var chart = new ApexCharts(
@@ -555,7 +555,7 @@ var sColStacked = {
     plotOptions: {
         bar: {
             horizontal: false,
-            columnWidth: '90%', 
+            columnWidth: '90%',
         },
     },
 	dataLabels: {
@@ -578,7 +578,7 @@ var sColStacked = {
     xaxis: {
         categories: ['1','10', '20', '30', '40', '50', '60'],
     },
-	
+
 }
 
 var chart = new ApexCharts(
@@ -605,7 +605,7 @@ var sCol = {
         bar: {
             horizontal: false,
             columnWidth: '30%',
-            endingShape: 'rounded'  
+            endingShape: 'rounded'
         },
     },
     dataLabels: {
@@ -621,7 +621,7 @@ var sCol = {
         data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
     },
 	{
-		name: 'Low',	
+		name: 'Low',
 		color: 'rgba(46, 55, 164, 0.05)',
         data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
     }],
@@ -668,7 +668,7 @@ var sColStacked = {
     plotOptions: {
         bar: {
             horizontal: false,
-            columnWidth: '55%', 
+            columnWidth: '55%',
         },
     },
 	dataLabels: {
@@ -691,7 +691,7 @@ var sColStacked = {
     xaxis: {
         categories: ['Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     },
-	
+
 }
 
 var chart = new ApexCharts(
@@ -901,7 +901,7 @@ var donutChart = {
 	dataLabels: {
         enabled: false
     },
-	
+
     series: [44, 55],
 	labels: [
         'Male',
@@ -1086,7 +1086,7 @@ var radialChart = {
         }
     },
     series: [44, 55, 67, 83],
-    labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],    
+    labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
 }
 
 var chart = new ApexCharts(
@@ -1096,7 +1096,7 @@ var chart = new ApexCharts(
 
 chart.render();
 }
-	
-	
-  
+
+
+
 });

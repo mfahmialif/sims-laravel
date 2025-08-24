@@ -15,6 +15,7 @@ class CreateKelasSubTable extends Migration
     {
         Schema::create('kelas_sub', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tahun_pelajaran_id')->constrained('tahun_pelajaran');
             $table->foreignId('kelas_id')->constrained('kelas');
             $table->string('sub');
             $table->string('keterangan')->nullable();

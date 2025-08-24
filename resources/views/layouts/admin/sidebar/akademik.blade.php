@@ -7,5 +7,6 @@
          <li><a class="{{ request()->RouteIs('admin.kurikulum.*') ? 'active' : '' }}" href="{{ route('admin.kurikulum.index') }}">Kurikulum</a></li>
          <li><a class="{{ request()->RouteIs('admin.tahun-pelajaran.*') ? 'active' : '' }}" href="{{ route('admin.tahun-pelajaran.index') }}">Tahun Pelajaran</a></li>
          <li><a class="{{ request()->RouteIs('admin.kelas.*') ? 'active' : '' }}" href="{{ route('admin.kelas.index') }}">Kelas</a></li>
+         <li><a class="{{ request()->RouteIs('admin.jadwal.*') ? 'active' : '' }}" href="{{ route('admin.jadwal.index') }}">Jadwal</a></li>
      </ul>
  </li>

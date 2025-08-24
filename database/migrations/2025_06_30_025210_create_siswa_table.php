@@ -15,8 +15,10 @@ class CreateSiswaTable extends Migration
     {
         Schema::create('siswa', function (Blueprint $table) {
             $table->id(); // Primary key
+            $table->foreignId('kelas_id')->constrained('kelas');
             $table->foreignId('tahun_pelajaran_id')->constrained('tahun_pelajaran');
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('kurikulum_id')->constrained('kurikulum');
 
             // Student Information
             $table->string('nis')->unique()->nullable();

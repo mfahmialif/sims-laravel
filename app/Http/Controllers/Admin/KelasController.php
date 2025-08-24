@@ -34,6 +34,7 @@ class KelasController extends Controller
                 $content = '<div class="dropdown dropdown-action">
                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="' . route("admin.kelas.sub.index", $row) . '"><i class="fa-solid fa-eye  m-r-5"></i> Sub Kelas</a>
                             <a class="dropdown-item" href="' . route("admin.kelas.edit", $row) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
                             <form action="" onsubmit="deleteData(event)" method="POST">
                             ' . method_field('delete') . csrf_field() . '
@@ -114,7 +115,7 @@ class KelasController extends Controller
                     'message' => 'Kelas tidak dapat dihapus karena masih digunakan oleh user.',
                 ]);
             }
-            
+
             return response()->json([
                 'status'  => false,
                 'message' => 'Terjadi kesalahan pada database: ' . $e->getMessage(),

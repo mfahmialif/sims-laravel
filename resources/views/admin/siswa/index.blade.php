@@ -139,6 +139,8 @@
 @endsection
 @push('script')
     <script>
+        let selectedIds = new Set();
+
         var table1 = dataTable('#table1');
         $('#search-table').focus();
 
@@ -151,11 +153,33 @@
 
         $('#check-all').on('change', function() {
             $('.check-table').prop('checked', this.checked);
+            $('.check-table').each(function() {
+                saveSelectedId(this);
+            });
         });
 
         $(document).on('change', '.check-table', function() {
             $('#check-all').prop('checked', $('.check-table:checked').length === $('.check-table').length);
+            saveSelectedId(this);
         });
+
+        $('#table1').on('draw.dt', function() {
+            $('.check-table').each(function() {
+                if (selectedIds.has($(this).val())) {
+                    $(this).prop('checked', true);
+                }
+            });
+            $('#check-all').prop('checked', false);
+        });
+
+        function saveSelectedId(element) {
+            let id = $(element).val();
+            if (element.checked) {
+                selectedIds.add(id);
+            } else {
+                selectedIds.delete(id);
+            }
+        }
 
         function searchDataTable(tableId, refresh = false) {
             var time = refresh ? 0 : 700;
@@ -286,11 +310,7 @@
 
         function changeStatusDaftar(status) {
 
-            let siswa_id = [];
-            // Ambil semua checkbox yang diceklis
-            $('.status_daftar_checkbox:checked').each(function() {
-                siswa_id.push($(this).val());
-            });
+            let siswa_id = Array.from(selectedIds);
 
             if (siswa_id.length === 0) {
                 swal('Peringatan!', 'Pilih setidaknya satu siswa terlebih dahulu.', 'warning');
@@ -307,6 +327,7 @@
                 },
                 success: function(response) {
                     showToastr(response.status, response.message);
+                    selectedIds.clear();
                     table1.ajax.reload();
                 },
                 error: function(xhr) {

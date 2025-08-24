@@ -1,18 +1,26 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Services\Helper;
-use App\Models\Siswa;
-use App\Models\TahunPelajaran;
 use App\Models\User;
+use App\Models\Kelas;
+use App\Models\Nilai;
+use App\Models\Siswa;
+use App\Models\Jadwal;
+use App\Models\Kurikulum;
+use App\Models\NilaiDetail;
 use Illuminate\Http\Request;
+use App\Http\Services\Helper;
+use App\Models\KomponenNilai;
+use App\Models\TahunPelajaran;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 
 class SiswaController extends Controller
 {
     protected $rules = [
         // Foreign Keys
+        'kurikulum_id'             => 'required|exists:kurikulum,id',
+        'kelas_id'                 => 'required|exists:kelas,id',
         'tahun_pelajaran_id'       => 'required|exists:tahun_pelajaran,id',
         'email'                    => 'nullable|email|unique:users,email',
 
@@ -111,8 +119,9 @@ class SiswaController extends Controller
     {
         $search = request('search.value');
         $data   = Siswa::join('tahun_pelajaran', 'tahun_pelajaran.id', '=', 'siswa.tahun_pelajaran_id')
+            ->join('kelas', 'kelas.id', '=', 'siswa.kelas_id')
             ->where('status_daftar', 'diterima')
-            ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode');
+            ->select('siswa.*', 'tahun_pelajaran.kode as tahun_pelajaran_kode', 'kelas.angka as kelas_angka');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
                 $query->when($request->tahun_pelajaran_id, function ($q) use ($request) {
@@ -120,6 +129,9 @@ class SiswaController extends Controller
                 });
                 $query->when($request->jenis_kelamin, function ($q) use ($request) {
                     $q->where('siswa.jenis_kelamin', $request->jenis_kelamin);
+                });
+                $query->when($request->kelas_id, function ($q) use ($request) {
+                    $q->where('siswa.kelas_id', $request->kelas_id);
                 });
                 $query->where(function ($query) use ($search) {
                     $query->orWhere('siswa.nama_siswa', 'LIKE', "%$search%");
@@ -149,6 +161,7 @@ class SiswaController extends Controller
                 $content = '<div class="dropdown dropdown-action">
                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="' . route("admin.siswa.show", $row) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Tampilkan</a>
                             <a class="dropdown-item" href="' . route("admin.siswa.edit", $row) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
                             <form action="" onsubmit="deleteData(event)" method="POST">
                             ' . method_field('delete') . csrf_field() . '
@@ -181,9 +194,11 @@ class SiswaController extends Controller
         $agama          = Helper::getEnumValues('siswa', 'agama');
         $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
         $status         = Helper::getEnumValues('siswa', 'status');
+        $kelas          = Kelas::orderBy('angka')->get();
+        $kurikulum      = Kurikulum::all();
 
         $siswa = $siswa->load('user');
-        return view('admin.siswa.edit', compact('siswa', 'agama', 'jenisKelamin', 'tahunPelajaran', 'status'));
+        return view('admin.siswa.edit', compact('siswa', 'agama', 'jenisKelamin', 'tahunPelajaran', 'status', 'kelas', 'kurikulum'));
     }
 
     public function update(Request $request, Siswa $siswa)
@@ -199,15 +214,17 @@ class SiswaController extends Controller
 
             \DB::beginTransaction();
 
-            $user        = $siswa->user;
-            $user->name = $request->nama_siswa;
-            $user->email = $request->email;
+            $user                = $siswa->user;
+            $user->name          = $request->nama_siswa;
+            $user->email         = $request->email;
             $user->jenis_kelamin = $request->jenis_kelamin;
             $user->save();
 
             $umur = $request->tanggal_lahir ? Helper::hitungUmur($request->tanggal_lahir) : null;
 
             // Mengisi Foreign Keys
+            $siswa->kurikulum_id       = $request->kurikulum_id;
+            $siswa->kelas_id           = $request->kelas_id;
             $siswa->tahun_pelajaran_id = $request->tahun_pelajaran_id;
 
             // Mengisi Informasi Siswa
@@ -357,7 +374,7 @@ class SiswaController extends Controller
 
             return response()->json([
                 'status'  => true,
-                'message' => 'Berhasil mengupdate status daftar',
+                'message' => 'Berhasil mengupdate status',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -373,5 +390,55 @@ class SiswaController extends Controller
                 'request' => $request->all(),
             ], 500);
         }
+    }
+
+    public function show(Siswa $siswa)
+    {
+        $kelasSiswa = $siswa->kelasSiswa;
+        return view('admin.siswa.show', compact('siswa', 'kelasSiswa'));
+    }
+
+    public function absensi(Siswa $siswa, Jadwal $jadwal)
+    {
+        $absensi = $jadwal->absensi;
+        $color   = [
+            'hadir'       => 'success',
+            'izin'        => 'warning',
+            'sakit'       => 'info',
+            'alpha'       => 'danger',
+            'Belum Absen' => 'secondary',
+        ];
+        return view('admin.siswa.absensi', compact('siswa', 'jadwal', 'absensi', 'color'));
+    }
+
+    public function nilai(Siswa $siswa, Jadwal $jadwal)
+    {
+        $jenis         = Helper::getEnumValues('komponen_nilai', 'jenis');
+        $komponenNilai = KomponenNilai::orderBy('jenis', 'asc')->get();
+        $nilai         = Nilai::where('siswa_id', $siswa->id)->where('jadwal_id', $jadwal->id)->get()->keyBy('jenis');
+        $nilaiDetail   = NilaiDetail::join('komponen_nilai', 'komponen_nilai.id', '=', 'nilai_detail.komponen_nilai_id', )
+            ->where('nilai_detail.siswa_id', $siswa->id)
+            ->where('nilai_detail.jadwal_id', $jadwal->id)
+            ->select('nilai_detail.*', 'komponen_nilai.nama as komponen_nilai_nama', 'komponen_nilai.jenis as komponen_nilai_jenis')
+            ->get();
+
+        $dataNilaiDetail = [];
+        foreach ($nilaiDetail as $key => $value) {
+            $dataNilaiDetail[$value->komponen_nilai_jenis][$value->komponen_nilai_id] = $value;
+        }
+
+        $dataNilai = [];
+        foreach ($jenis as $value) {
+            if ($value !== "sikap") {
+                $dataNilai[$value]["nilai_akhir"] = $nilai[$value]->nilai_akhir ?? 0;
+            }
+            $dataNilai[$value]["nilai_detail"] = $komponenNilai->where('jenis', $value)->map(function ($item) use ($dataNilaiDetail, $value) {
+                return [
+                    'komponen_nilai_nama' => $item->nama,
+                    'nilai'               => $dataNilaiDetail[$value][$item->id]->nilai ?? 0,
+                ];
+            });
+        }
+        return view('admin.siswa.nilai', compact('siswa', 'jadwal', 'nilai', 'jenis', 'dataNilai'));
     }
 }

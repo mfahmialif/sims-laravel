@@ -4,28 +4,31 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Kelas;
 use App\Models\KelasSub;
+use App\Models\TahunPelajaran;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class KelasSubController extends Controller
 {
     private $rules = [
-        "kelas_id"   => "required|string",
-        "sub"        => "required|string",
-        "keterangan" => "nullable|string",
+        "sub"                => "required|string",
+        "keterangan"         => "nullable|string",
+        "tahun_pelajaran_id" => "required|exists:tahun_pelajaran,id",
     ];
 
     public function index(Kelas $kelas)
     {
-        return view('admin.kelas.sub.index', compact('kelas'));
+        $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
+        return view('admin.kelas.sub.index', compact('kelas', 'tahunPelajaran'));
     }
 
     public function data(Kelas $kelas, Request $request)
     {
         $search = request('search.value');
         $data   = KelasSub::join('kelas', 'kelas.id', '=', 'kelas_sub.kelas_id')
+            ->join('tahun_pelajaran', 'tahun_pelajaran.id', '=', 'kelas_sub.tahun_pelajaran_id')
             ->where('kelas_sub.kelas_id', $kelas->id)
-            ->select('kelas_sub.*', 'kelas.angka as kelas_angka');
+            ->select('kelas_sub.*', 'kelas.angka as kelas_angka', 'tahun_pelajaran.kode as tahun_pelajaran_kode');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
                 $query->where(function ($query) use ($search) {
@@ -34,20 +37,28 @@ class KelasSubController extends Controller
                     $query->orWhere('kelas.angka', 'LIKE', "%$search%");
                     $query->orWhere('kelas_sub.sub', 'LIKE', "%$search%");
                 });
+
+                $query->when($request->tahun_pelajaran_id, function ($q) use ($request) {
+                    $q->where('kelas_sub.tahun_pelajaran_id', $request->tahun_pelajaran_id);
+                });
             })
             ->addColumn('action', function ($row) {
                 $content = '
                     <div class="dropdown dropdown-action">
                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="' . route("admin.kelas.sub.siswa.index", [
+                    'kelas'    => $row->kelas_id,
+                    'kelasSub' => $row->id,
+                ]) . '"><i class="fa-solid fa-eye m-r-5"></i> Siswa Kelas</a>
                             <a class="dropdown-item" href="' . route("admin.kelas.sub.wali.index", [
-                                'kelas' => $row->kelas_id,
-                                'kelasSub' => $row->id
-                            ]) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Wali Kelas</a>
+                    'kelas'    => $row->kelas_id,
+                    'kelasSub' => $row->id,
+                ]) . '"><i class="fa-solid fa-user m-r-5"></i> Wali Kelas</a>
                             <a class="dropdown-item" href="' . route("admin.kelas.sub.edit", [
-                                'kelas' => $row->kelas_id,
-                                'kelasSub' => $row->id
-                            ]) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
+                    'kelas'    => $row->kelas_id,
+                    'kelasSub' => $row->id,
+                ]) . '"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
                             <form action="" onsubmit="deleteData(event)" method="POST">
                             ' . method_field('delete') . csrf_field() . '
                                 <input type="hidden" name="id" value="' . $row->id . '">
@@ -66,8 +77,9 @@ class KelasSubController extends Controller
 
     public function add(Kelas $kelas)
     {
-        $dataKelas = Kelas::orderBy('angka', 'asc')->get();
-        return view('admin.kelas.sub.add', compact('dataKelas', 'kelas'));
+        $dataKelas      = Kelas::orderBy('angka', 'asc')->get();
+        $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
+        return view('admin.kelas.sub.add', compact('dataKelas', 'kelas', 'tahunPelajaran'));
     }
 
     public function store(Kelas $kelas, Request $request)
@@ -80,15 +92,16 @@ class KelasSubController extends Controller
                 throw new \Exception('KelasSub Sub sudah ada');
             }
 
-            $kelasSub             = new KelasSub();
-            $kelasSub->kelas_id   = $request->kelas_id;
-            $kelasSub->sub        = $request->sub;
-            $kelasSub->keterangan = $request->keterangan;
+            $kelasSub                     = new KelasSub();
+            $kelasSub->tahun_pelajaran_id = $request->tahun_pelajaran_id;
+            $kelasSub->kelas_id           = $kelas->id;
+            $kelasSub->sub                = $request->sub;
+            $kelasSub->keterangan         = $request->keterangan;
             $kelasSub->save();
 
             return redirect()->route('admin.kelas.sub.index', ['kelas' => $kelas])->with('success')->with('success', 'KelasSub Sub berhasil ditambahkan');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->route('admin.kelas.sub.add')
+            return redirect()->route('admin.kelas.sub.add', ['kelas' => $kelas])
                 ->withErrors($e->validator)
                 ->withInput()
                 ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));
@@ -99,8 +112,9 @@ class KelasSubController extends Controller
 
     public function edit(Kelas $kelas, KelasSub $kelasSub)
     {
-        $dataKelas = Kelas::orderBy('angka', 'asc')->get();
-        return view('admin.kelas.sub.edit', compact('kelas', 'dataKelas', 'kelasSub'));
+        $dataKelas      = Kelas::orderBy('angka', 'asc')->get();
+        $tahunPelajaran = TahunPelajaran::orderBy('kode', 'desc')->get();
+        return view('admin.kelas.sub.edit', compact('kelas', 'dataKelas', 'kelasSub', 'tahunPelajaran'));
     }
 
     public function update(Kelas $kelas, Request $request, KelasSub $kelasSub)
@@ -113,15 +127,16 @@ class KelasSubController extends Controller
                 throw new \Exception('KelasSub Sub sudah ada');
             }
 
-            $kelasSub->kelas_id   = $request->kelas_id;
-            $kelasSub->sub        = $request->sub;
-            $kelasSub->keterangan = $request->keterangan;
+
+            $kelasSub->tahun_pelajaran_id = $request->tahun_pelajaran_id;
+            $kelasSub->sub                = $request->sub;
+            $kelasSub->keterangan         = $request->keterangan;
 
             $kelasSub->save();
 
             return redirect()->route('admin.kelas.sub.index', ['kelas' => $kelas])->with('success', 'KelasSub berhasil diupdate');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->route('admin.kelas.sub.edit')
+            return redirect()->route('admin.kelas.sub.edit', ['kelasSub' => $kelasSub], ['kelas' => $kelas])
                 ->withErrors($e->validator)
                 ->withInput()
                 ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));

@@ -158,6 +158,8 @@
             // MENGISI SELECT / DROPDOWN
             // -------------------------------------------------------------------
             // .change() penting untuk memicu update pada library seperti Select2
+            form.find('select[name="kurikulum_id"]').val(getValue('kurikulum_id')).change();
+            form.find('select[name="kelas_id"]').val(getValue('kelas_id')).change();
             form.find('select[name="tahun_pelajaran_id"]').val(getValue('tahun_pelajaran_id')).change();
             form.find('select[name="jenis_kelamin"]').val(getValue('jenis_kelamin')).change();
             form.find('select[name="agama"]').val(getValue('agama')).change();

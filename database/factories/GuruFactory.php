@@ -11,15 +11,26 @@ class GuruFactory extends Factory
 
     public function definition()
     {
+        $nip  = $this->faker->unique()->numerify('1970##########');
+        $nama = $this->faker->name;
+        $jenisKelamin = $this->faker->randomElement(['Laki-Laki', 'Perempuan']);
+
         return [
-            'user_id'              => User::factory(),
-            'nip'                  => $this->faker->unique()->numerify('1970##########'),
-            'nama'                 => $this->faker->name,
+            'user_id' => User::factory()->state(function () use ($nip, $nama, $jenisKelamin) {
+                return [
+                    'username'       => $nip,
+                    'name'           => $nama,
+                    'jenis_kelamin'  => $jenisKelamin,
+                ];
+            }),
+
+            'nip'                  => $nip,
+            'nama'                 => $nama,
             'nuptk'                => $this->faker->optional()->numerify('12345678####'),
             'npwp'                 => $this->faker->optional()->numerify('###########'),
-            'jenis_kelamin'        => $this->faker->randomElement(['Laki-Laki', 'Perempuan']),
+            'jenis_kelamin'        => $jenisKelamin,
             'tempat_lahir'         => $this->faker->city,
-            'tanggal_lahir'        => $this->faker->date('Y-m-d', '-25 years'),
+            'tanggal_lahir'        => $this->faker->dateTimeBetween('-60 years', '-25 years')->format('Y-m-d'),
             'nik'                  => $this->faker->unique()->numerify('3################'),
             'no_kk'                => $this->faker->optional()->numerify('3################'),
             'agama'                => $this->faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu']),
@@ -39,7 +50,7 @@ class GuruFactory extends Factory
             'sk_pengangkatan'      => $this->faker->optional()->url,
             'tmt_pengangkatan'     => $this->faker->date(),
             'lembaga_pengangkatan' => $this->faker->company,
-            'pangkat_golongan'     => $this->faker->optional()->regexify('^[IV]{1,3}/[a-d]{1}$'),
+            'pangkat_golongan'     => $this->faker->optional()->regexify('[IV]{1,3}/[a-d]'),
             'alamat_jalan'         => $this->faker->streetAddress,
             'rt'                   => $this->faker->optional()->numerify('0#'),
             'rw'                   => $this->faker->optional()->numerify('0#'),
@@ -50,7 +61,7 @@ class GuruFactory extends Factory
             'provinsi'             => $this->faker->state,
             'kodepos'              => $this->faker->postcode,
             'no_hp'                => $this->faker->phoneNumber,
-            'email'                => $this->faker->unique()->email, // ✅ Ganti safeEmail -> email
+            'email'                => $this->faker->unique()->email,
             'foto'                 => null,
             'status'               => $this->faker->randomElement(['Aktif', 'Tidak Aktif']),
         ];

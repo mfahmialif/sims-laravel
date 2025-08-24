@@ -24,7 +24,13 @@
     <!-- /Page Header -->
     <div class="row">
         <div class="col-sm-12">
-
+            <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
+                <i class="feather-info"></i>
+                <div>
+                    <strong>Informasi:</strong> Anda sedang mengedit wali kelas untuk
+                    <strong>Kelas {{ $kelas->angka }} ({{ $kelas->romawi }}) - {{ $kelasSub->sub }}</strong>.
+                </div>
+            </div>
             <div class="card">
                 <div class="card-body">
                     <form

@@ -2,6 +2,38 @@
 <div class="col-12">
     <h5 class="form-title"><span>Data Akun & Akademik</span></h5>
 </div>
+<div class="col-12 col-md-6">
+    <div class="input-block local-forms">
+        <label>Kelas <span class="login-danger">*</span></label>
+        <select class="form-control select2 @error('kelas_id') is-invalid @enderror" name="kelas_id" required>
+            <option value="">Pilih Kelas</option>
+            @foreach ($kelas as $item)
+                <option value="{{ $item->id }}" {{ old('kelas_id') == $item->id ? 'selected' : '' }}>
+                    {{ $item->angka }}
+                </option>
+            @endforeach
+        </select>
+        @error('tahun_pelajaran_id')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
+<div class="col-12 col-md-6">
+    <div class="input-block local-forms">
+        <label>Kurikulum <span class="login-danger">*</span></label>
+        <select class="form-control select2 @error('kurikulum_id') is-invalid @enderror" name="kurikulum_id" required>
+            <option value="">Pilih Kelas</option>
+            @foreach ($kurikulum as $item)
+                <option value="{{ $item->id }}" {{ old('kurikulum_id') == $item->id ? 'selected' : '' }}>
+                    {{ $item->nama }}
+                </option>
+            @endforeach
+        </select>
+        @error('tahun_pelajaran_id')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
 <div class="col-12">
     <div class="input-block local-forms">
         <label>Tahun Pelajaran <span class="login-danger">*</span></label>
@@ -523,8 +555,7 @@
 
         <div class="settings-btn upload-files-avator">
             <input type="file" name="foto" id="foto"
-                class="hide-input @error('foto') is-invalid @enderror"
-                accept=".jpg, .jpeg, .png"
+                class="hide-input @error('foto') is-invalid @enderror" accept=".jpg, .jpeg, .png"
                 onchange="handleFileUpload(this, 'file-info', 'upload-label')" />
 
             <label for="foto" id="file-info" class="file-info-text">Belum ada file</label>
@@ -549,8 +580,7 @@
 
         <div class="settings-btn upload-files-avator">
             <input type="file" name="akta_lahir_path" id="akta_lahir_path"
-                class="hide-input @error('akta_lahir_path') is-invalid @enderror"
-                accept=".pdf .jpg, .jpeg, .png"
+                class="hide-input @error('akta_lahir_path') is-invalid @enderror" accept=".pdf .jpg, .jpeg, .png"
                 onchange="handleFileUpload(this, 'file-info-akta', 'upload-label-akta')" />
 
             <label for="akta_lahir_path" id="file-info-akta" class="file-info-text">Belum ada file</label>

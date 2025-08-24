@@ -16,6 +16,18 @@
     <!-- /Page Header -->
 
     <div class="row">
+        <div class="col-12 col-md-12">
+            <div class="input-block local-forms">
+                <select class="form-control select2 filter-dt" id="filter_role_id" required>
+                    <option value="">Pilih Role</option>
+                    @foreach ($role as $item)
+                        <option value="{{ $item->id }}">
+                            {{ $item->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
         <div class="col-sm-12">
 
             <div class="card card-table show-entire">
@@ -71,6 +83,8 @@
                                 <tr>
                                     <th style="width: 5%">No</th>
                                     <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Role</th>
                                     <th>Email</th>
                                     <th>Action</th>
                                 </tr>
@@ -91,6 +105,11 @@
         $('#search-table').focus();
 
         var searchTimeout = null;
+
+        $('.filter-dt').change(function(e) {
+            e.preventDefault();
+            table1.ajax.reload();
+        });
 
         function searchDataTable(tableId, refresh = false) {
             var time = refresh ? 0 : 700;
@@ -121,7 +140,7 @@
                 ajax: {
                     url: url,
                     data: function(d) {
-                        // d.search = $('#search-table').val();
+                        d.role_id = $('#filter_role_id').val();
                     },
                 },
                 deferRender: true,
@@ -134,6 +153,16 @@
                     {
                         data: 'name',
                         name: 'name',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'username',
+                        name: 'username',
+                        className: "text-middle"
+                    },
+                    {
+                        data: 'role_nama',
+                        name: 'role_nama',
                         className: "text-middle"
                     },
                     {

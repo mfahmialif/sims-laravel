@@ -14,4 +14,6 @@ class Kelas extends Model
     {
         return $this->hasMany(KelasSub::class, 'kelas_id');
     }
+
+
 }

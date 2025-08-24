@@ -45,11 +45,6 @@
                         <div class="loginbox">
                             <div class="login-right">
                                 <div class="login-right-wrap">
-                                    <div class="account-logo">
-                                        <a href="{{ route('login') }}"><img
-                                                src="{{ asset('template') }}/assets/img/login-logo.png"
-                                                alt=""></a>
-                                    </div>
                                     @if ($errors->any())
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                             @foreach ($errors->all() as $error)
@@ -84,8 +79,8 @@
                                     <!-- /Form -->
 
                                     <div class="next-sign">
-                                        <p class="account-subtitle">Butuh bantuan untuk login? <u>Hubungi Operator</u>
-                                        </p>
+                                        {{-- Register --}}
+                                        <a href="{{ route('register') }}">Ingin daftar sebagai siswa di sini? <u>Daftar</u></a>
 
                                     </div>
                                 </div>

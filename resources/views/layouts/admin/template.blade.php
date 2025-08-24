@@ -24,7 +24,7 @@
     <!-- Datepicker CSS -->
     <link rel="stylesheet" href="{{ asset('template') }}/assets/css/bootstrap-datetimepicker.min.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="{{ asset('template') }}/assets/plugins/toastr-new/toastr.min.css">
 
     <!-- Datatables CSS -->
     <link rel="stylesheet" href="{{ asset('template') }}/assets/plugins/datatables/datatables.min.css">
@@ -46,7 +46,15 @@
 <body>
     <div class="main-wrapper">
         @include('layouts.admin.navbar')
-        @include('layouts.admin.sidebar')
+        @if (\Auth::user()->role->nama == 'guru')
+            @include('layouts.admin.sidebar-guru')
+        @elseif (\Auth::user()->role->nama == 'admin')
+            @include('layouts.admin.sidebar')
+        @elseif (\Auth::user()->role->nama == 'kepala sekolah')
+            @include('layouts.admin.sidebar-kepala')
+        @else
+            @include('layouts.admin.sidebar-siswa')
+        @endif
 
         <div class="page-wrapper">
             <div class="content">
@@ -311,9 +319,8 @@
     <script src="{{ asset('template') }}/assets/plugins/moment/moment.min.js"></script>
     <script src="{{ asset('template') }}/assets/js/bootstrap-datetimepicker.min.js"></script>
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="{{ asset('template') }}/assets/plugins/toastr-new/toastr.min.js"></script>
+    <script src="{{ asset('template') }}/assets/plugins/sweetalert-1/sweetalert.min.js"></script>
     <!-- Custom JS -->
     <script src="{{ asset('template') }}/assets/js/toastrconfig.js"></script>
     <script src="{{ asset('template') }}/assets/js/custom.js"></script>

@@ -49,11 +49,7 @@ class KelasWaliController extends Controller
                     <div class="d-flex align-items-center">
                         <img src="' . $row->foto . '" alt="Foto Guru" class="rounded-circle me-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div>
-                            <a href="' . route("admin.kelas.sub.wali.edit", [
-                    'kelas'     => $row->kelas_id,
-                    'kelasSub'  => $row->kelas_sub_id,
-                    'kelasWali' => $row->id,
-                ]) . '">' . $row->nama . '</a><br>
+                            ' . $row->nama . '<br>
                             <small>NIK: ' . ($row->nik ?? '-') . '</small><br>
                             <small>NIP: ' . ($row->nip ?? '-') . '</small>
                         </div>
@@ -95,7 +91,7 @@ class KelasWaliController extends Controller
         try {
             $request->validate($this->rules);
 
-            $cek = KelasWali::where('kelas_sub_id', $kelasSub->id)->where('guru_id', $request->kelas_sub_id)->first();
+            $cek = KelasWali::where('kelas_sub_id', $kelasSub->id)->where('guru_id', $request->guru_id)->first();
             if ($cek) {
                 throw new \Exception('Wali Kelas sudah ada');
             }

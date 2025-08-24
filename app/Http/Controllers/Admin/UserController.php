@@ -24,19 +24,26 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('admin.user.index');
+        $role = Role::all();
+        return view('admin.user.index', compact('role'));
     }
 
     public function data(Request $request)
     {
         $search = request('search.value');
-        $data   = User::select('*');
+        $data   = User::join('role', 'role.id', '=', 'users.role_id')
+            ->select('users.*', 'role.nama as role_nama');
         return DataTables::of($data)
             ->filter(function ($query) use ($search, $request) {
                 $query->where(function ($query) use ($search) {
-                    $query->orWhere('username', 'LIKE', "%$search%");
-                    $query->orWhere('name', 'LIKE', "%$search%");
-                    $query->orWhere('email', 'LIKE', "%$search%");
+                    $query->orWhere('users.username', 'LIKE', "%$search%");
+                    $query->orWhere('users.name', 'LIKE', "%$search%");
+                    $query->orWhere('users.email', 'LIKE', "%$search%");
+                    $query->orWhere('role.nama', 'LIKE', "%$search%");
+                });
+
+                $query->when($request->role_id, function ($q) use ($request) {
+                    $q->where('users.role_id', $request->role_id);
                 });
             })
             ->addColumn('action', function ($row) {

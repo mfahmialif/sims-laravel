@@ -99,17 +99,44 @@ class KurikulumController extends Controller
     }
     public function edit(Kurikulum $kurikulum)
     {
-        $tahun         = TahunPelajaran::all();
-        $mataPelajaran = MataPelajaran::all();
-        return view('admin.kurikulum.edit', compact('kurikulum', 'tahun', 'mataPelajaran'));
+        $tahunPelajaran = TahunPelajaran::all();
+        $mataPelajaran  = MataPelajaran::all();
+        $kurikulum      = $kurikulum->load('detail.jadwal');
+        return view('admin.kurikulum.edit', compact('kurikulum', 'tahunPelajaran', 'mataPelajaran'));
     }
     public function update(Request $request, Kurikulum $kurikulum)
     {
         try {
+            $this->rules = array_merge($this->rules, [
+                "mata_pelajaran_id" => "nullable",
+            ]);
             $request->validate($this->rules);
-            $kurikulum->tahun_pelajaran_id = $request->tahun;
-            $kurikulum->mata_pelajaran_id  = $request->pelajaran;
+
+            \DB::beginTransaction();
+
+            $kurikulum->tahun_pelajaran_id = $request->tahun_pelajaran_id;
+            $kurikulum->nama               = $request->nama;
             $kurikulum->save();
+
+            foreach ($kurikulum->detail as $detail) {
+                if ($detail->jadwal->count() < 1) {
+                    $detail->delete();
+                }
+            }
+
+            $kurikulumDetail = [];
+
+            if ($request->filled('mata_pelajaran_id')) {
+                foreach ($request->mata_pelajaran_id as $key => $value) {
+                    $kurikulumDetail[] = [
+                        'kurikulum_id'      => $kurikulum->id,
+                        'mata_pelajaran_id' => $value,
+                    ];
+                }
+                KurikulumDetail::insert($kurikulumDetail);
+            }
+
+            \DB::commit();
             return redirect()->route('admin.kurikulum.index')->with('success', 'Mata Pelajaran berhasil diupdate');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->route('admin.kurikulum.edit')
@@ -117,12 +144,14 @@ class KurikulumController extends Controller
                 ->withInput()
                 ->with('error', implode(' ', collect($e->errors())->flatten()->toArray()));
         } catch (\Throwable $th) {
+            \DB::rollback();
             return redirect()->route('admin.kurikulum.edit', ['kurikulum' => $kurikulum])->with('error', $th->getMessage())->withInput();
         }
     }
     public function destroy(Kurikulum $kurikulum)
     {
         try {
+            KurikulumDetail::where('kurikulum_id', $kurikulum->id)->delete();
             $kurikulum->delete();
             return response()->json([
                 'status'  => true,
@@ -133,7 +162,7 @@ class KurikulumController extends Controller
             if ($e->getCode() == '23000') {
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Mata Pelajaran tidak dapat dihapus karena masih digunakan oleh user.',
+                    'message' => 'Mata Pelajaran tidak dapat dihapus karena masih ada jadwal yang masih aktif.',
                 ]);
             }
 

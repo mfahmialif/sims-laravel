@@ -25,4 +25,10 @@ class KelasSub extends Model
     {
         return $this->hasMany(KelasWali::class, 'kelas_sub_id');
     }
+
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class, 'kelas_sub_id');
+    }
+
 }
